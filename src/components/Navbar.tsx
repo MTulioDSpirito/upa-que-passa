@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { Menu, X, Search, Bell, User, ChevronDown, Gamepad2, ShoppingBag, Star, Newspaper, Trophy } from "lucide-react";
 
@@ -41,6 +41,19 @@ const navItems = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function openDropdown(label: string) {
+    if (closeTimeout.current) clearTimeout(closeTimeout.current);
+    setActiveDropdown(label);
+  }
+
+  // Small delay before closing: a real mouse moving from the trigger down into
+  // the panel can still momentarily leave the hover region (slow movement,
+  // trackpad jitter). Without this, the menu can close before the pointer lands.
+  function scheduleCloseDropdown() {
+    closeTimeout.current = setTimeout(() => setActiveDropdown(null), 200);
+  }
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/95 backdrop-blur-md border-b border-purple-900/30">
@@ -64,8 +77,8 @@ export default function Navbar() {
               <div
                 key={item.label}
                 className="relative"
-                onMouseEnter={() => setActiveDropdown(item.label)}
-                onMouseLeave={() => setActiveDropdown(null)}
+                onMouseEnter={() => openDropdown(item.label)}
+                onMouseLeave={scheduleCloseDropdown}
               >
                 <Link
                   href={item.href}
@@ -75,16 +88,22 @@ export default function Navbar() {
                   {item.children && <ChevronDown className="w-3 h-3" />}
                 </Link>
                 {item.children && activeDropdown === item.label && (
-                  <div className="absolute top-full left-0 mt-1 w-48 bg-[#12121f] border border-purple-800/40 rounded-xl shadow-2xl shadow-purple-900/20 py-1">
-                    {item.children.map((child) => (
-                      <Link
-                        key={child.label}
-                        href={child.href}
-                        className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-purple-600/20 transition-colors"
-                      >
-                        {child.label}
-                      </Link>
-                    ))}
+                  // pt-1 (not mt-1 on the inner panel) keeps this whole wrapper — including the
+                  // gap above the visible panel — inside the parent's hover region. A margin-based
+                  // gap here left a dead strip with no element under the cursor, so moving from the
+                  // link down into the submenu fired onMouseLeave before the pointer arrived.
+                  <div className="absolute top-full left-0 pt-1 w-48">
+                    <div className="bg-[#12121f] border border-purple-800/40 rounded-xl shadow-2xl shadow-purple-900/20 py-1">
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.label}
+                          href={child.href}
+                          className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-purple-600/20 transition-colors"
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

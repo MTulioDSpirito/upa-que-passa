@@ -5,9 +5,9 @@ import Link from "next/link";
 import {
   LayoutDashboard, Gamepad2, Star, ShoppingBag, Users, MessageSquare,
   Newspaper, Trophy, Settings, BarChart3, TrendingUp, TrendingDown,
-  Eye, Plus, Edit, Trash2, Shield, Sparkles
+  Eye, Plus, Edit, Trash2, Shield, Sparkles, Construction, Heart
 } from "lucide-react";
-import { GAMES, LISTINGS, NEWS, USERS } from "@/lib/data";
+import { GAMES, LISTINGS, NEWS, USERS, REVIEWS, formatPrice, formatDate, formatScore, getScoreColor } from "@/lib/data";
 import AdminUserFooter, { type AdminUserSession } from "./AdminUserFooter";
 
 const SIDEBAR_ITEMS = [
@@ -23,6 +23,8 @@ const SIDEBAR_ITEMS = [
   { icon: Shield, label: "Moderação", id: "moderation" },
   { icon: Settings, label: "Configurações", id: "settings" },
 ];
+
+const NOT_YET_BUILT = ["comments", "ranking", "analytics", "moderation", "settings"];
 
 const STATS = [
   { label: "Usuários", value: "12.4k", change: +8.2, icon: Users, color: "text-blue-400 bg-blue-900/20 border-blue-800/20" },
@@ -240,13 +242,159 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
           </div>
         )}
 
-        {activeSection !== "dashboard" && (
-          <div className="flex items-center justify-center h-64 text-center">
-            <div>
-              <div className="text-5xl mb-4">🚧</div>
-              <h2 className="text-xl font-bold text-white mb-2 capitalize">{activeSection}</h2>
-              <p className="text-gray-500 text-sm">Seção em desenvolvimento</p>
+        {activeSection === "games" && (
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <h1 className="text-2xl font-black text-white">Jogos ({GAMES.length})</h1>
+              <button className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold rounded-xl transition-all">
+                <Plus className="w-4 h-4" /> Adicionar Jogo
+              </button>
             </div>
+            <div className="bg-[#111118] border border-white/5 rounded-2xl divide-y divide-white/5">
+              {GAMES.map((game) => (
+                <div key={game.id} className="flex items-center gap-4 p-4">
+                  <img src={game.cover} alt="" className="w-10 h-14 object-cover rounded-lg flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-white line-clamp-1">{game.title}</p>
+                    <p className="text-xs text-gray-500">{game.developer} · {game.platforms.join(", ")}</p>
+                  </div>
+                  <div className={`text-sm font-black ${getScoreColor(game.adminScore || 0)}`}>
+                    {formatScore(game.adminScore || 0)}
+                  </div>
+                  <div className="flex gap-1.5">
+                    <button className="p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors">
+                      <Edit className="w-3.5 h-3.5" />
+                    </button>
+                    <button className="p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors">
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeSection === "reviews" && (
+          <div>
+            <h1 className="text-2xl font-black text-white mb-6">Reviews ({REVIEWS.length})</h1>
+            <div className="bg-[#111118] border border-white/5 rounded-2xl divide-y divide-white/5">
+              {REVIEWS.map((review) => {
+                const game = GAMES.find((g) => g.id === review.gameId);
+                return (
+                  <div key={review.id} className="flex items-center gap-4 p-4">
+                    {game && <img src={game.cover} alt="" className="w-10 h-14 object-cover rounded-lg flex-shrink-0" />}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-white line-clamp-1">{review.title}</p>
+                      <p className="text-xs text-gray-500">
+                        {review.author} · {formatDate(review.publishedAt)} · <Heart className="w-3 h-3 inline" /> {review.likes}
+                      </p>
+                    </div>
+                    <div className={`text-sm font-black ${getScoreColor(review.overallScore)}`}>
+                      {formatScore(review.overallScore)}
+                    </div>
+                    <div className="flex gap-1.5">
+                      <button className="p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors">
+                        <Edit className="w-3.5 h-3.5" />
+                      </button>
+                      <button className="p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {activeSection === "users" && (
+          <div>
+            <h1 className="text-2xl font-black text-white mb-6">Usuários ({USERS.length})</h1>
+            <div className="bg-[#111118] border border-white/5 rounded-2xl divide-y divide-white/5">
+              {USERS.map((u) => (
+                <div key={u.id} className="flex items-center gap-4 p-4">
+                  <img src={u.avatar} alt="" className="w-9 h-9 rounded-full flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-white">{u.nickname}</p>
+                    <p className="text-xs text-gray-500">
+                      {u.city}/{u.state} · Nível {u.level} · {u.reviewsCount} reviews · {u.tradesCount} trocas
+                    </p>
+                  </div>
+                  <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
+                    u.reputation >= 95 ? "bg-green-900/30 text-green-400" : "bg-yellow-900/30 text-yellow-400"
+                  }`}>
+                    {u.reputation}%
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeSection === "marketplace" && (
+          <div>
+            <h1 className="text-2xl font-black text-white mb-6">Anúncios ({LISTINGS.length})</h1>
+            <div className="bg-[#111118] border border-white/5 rounded-2xl divide-y divide-white/5">
+              {LISTINGS.map((listing) => (
+                <div key={listing.id} className="flex items-center gap-4 p-4">
+                  <img src={listing.photos[0]} alt="" className="w-10 h-14 object-cover rounded-lg flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-white line-clamp-1">{listing.title}</p>
+                    <p className="text-xs text-gray-500">{listing.userNickname} · {listing.city}/{listing.state}</p>
+                  </div>
+                  <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
+                    listing.active ? "bg-green-900/30 text-green-400" : "bg-gray-800 text-gray-500"
+                  }`}>
+                    {listing.active ? "Ativo" : "Inativo"}
+                  </span>
+                  <div className="text-sm font-black text-green-400 flex-shrink-0">{formatPrice(listing.price)}</div>
+                  <button className="p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors flex-shrink-0">
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeSection === "news" && (
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <h1 className="text-2xl font-black text-white">Notícias ({NEWS.length})</h1>
+              <button className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold rounded-xl transition-all">
+                <Plus className="w-4 h-4" /> Nova Notícia
+              </button>
+            </div>
+            <div className="bg-[#111118] border border-white/5 rounded-2xl divide-y divide-white/5">
+              {NEWS.map((article) => (
+                <div key={article.id} className="flex items-center gap-4 p-4">
+                  <img src={article.cover} alt="" className="w-16 h-10 object-cover rounded-lg flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-white line-clamp-1">{article.title}</p>
+                    <p className="text-xs text-gray-500">{article.category} · {formatDate(article.publishedAt)}</p>
+                  </div>
+                  <div className="flex items-center gap-1 text-xs text-gray-500 flex-shrink-0">
+                    <Eye className="w-3.5 h-3.5" /> {article.views.toLocaleString("pt-BR")}
+                  </div>
+                  <button className="p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors flex-shrink-0">
+                    <Edit className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {NOT_YET_BUILT.includes(activeSection) && (
+          <div className="flex flex-col items-center justify-center h-64 text-center">
+            <Construction className="w-10 h-10 text-gray-600 mb-4" />
+            <h2 className="text-lg font-bold text-white mb-1">
+              {SIDEBAR_ITEMS.find((i) => i.id === activeSection)?.label}
+            </h2>
+            <p className="text-gray-500 text-sm max-w-xs">
+              Essa seção ainda não foi construída. As demais abas (Jogos, Reviews, Usuários, Marketplace, Notícias) já mostram os dados reais do site.
+            </p>
           </div>
         )}
       </main>
