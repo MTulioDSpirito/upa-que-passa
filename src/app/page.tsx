@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Star, Flame, ShoppingBag, Trophy, Newspaper, ChevronRight, TrendingUp, Users, MessageSquare, Gamepad2 } from "lucide-react";
+import { ArrowRight, Star, Flame, ShoppingBag, Trophy, Newspaper, ChevronRight, TrendingUp, Users, MessageSquare } from "lucide-react";
 import GameCard from "@/components/GameCard";
 import { GAMES, NEWS, LISTINGS, formatPrice, formatDate, getScoreColor, formatScore } from "@/lib/data";
 
@@ -19,85 +19,48 @@ export default function Home() {
   const latestNews = NEWS.slice(0, 3);
   const activeListings = LISTINGS.filter((l) => l.active).slice(0, 3);
 
+  const secondGame = featuredGames[1] ?? GAMES[1];
+
+  const trendingCards = [
+    ...NEWS.slice(0, 3).map((n) => ({
+      href: `/noticias/${n.slug}`,
+      image: n.cover,
+      badge: n.category,
+      title: n.title,
+    })),
+    secondGame && {
+      href: `/jogos/${secondGame.slug}`,
+      image: secondGame.cover,
+      badge: "Review",
+      title: secondGame.title,
+    },
+  ].filter((c): c is { href: string; image: string; badge: string; title: string } => !!c).slice(0, 4);
+
   return (
     <div className="bg-[#0a0a0f]">
-      {/* ─── HERO ─────────────────────────────────────────────── */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Banner image */}
-        <div className="absolute inset-0">
-          <img
-            src="/banner.jpg"
-            alt="Upa que Passa Banner"
-            className="w-full h-full object-cover object-center"
-          />
-          {/* Dark overlay com gradiente para manter legibilidade */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-[#0a0a0f]" />
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-900/40 via-transparent to-blue-900/40" />
-          {/* Glow effects sobre a imagem */}
-          <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-blue-600/15 rounded-full blur-[100px]" />
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-purple-900/40 border border-purple-500/30 rounded-full px-4 py-1.5 mb-6">
-            <Flame className="w-4 h-4 text-orange-400" />
-            <span className="text-sm text-purple-300 font-medium">Portal #1 de Jogos PS5 do Brasil</span>
-          </div>
-
-          {/* Logo / Title */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 tracking-tight">
-            <span className="text-white">UPA</span>{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">QUE</span>{" "}
-            <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">PASSA</span>
-          </h1>
-
-          <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            O maior portal brasileiro de <strong className="text-white">reviews</strong>,{" "}
-            <strong className="text-white">notas</strong> e{" "}
-            <strong className="text-white">compra, venda e troca</strong> de jogos de PlayStation 5.
-          </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-wrap gap-4 justify-center mb-16">
+      {/* ─── TRENDING STRIP ───────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 pt-6 pb-2">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {trendingCards.map((card) => (
             <Link
-              href="/reviews"
-              className="flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-semibold rounded-xl transition-all shadow-lg shadow-purple-900/40 hover:shadow-purple-900/60"
+              key={card.href}
+              href={card.href}
+              className="group relative aspect-[3/4] rounded-xl overflow-hidden bg-[#111118] border border-white/5"
             >
-              <Star className="w-5 h-5" />
-              Ver Reviews
+              <img
+                src={card.image}
+                alt={card.title}
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent" />
+              <span className="absolute top-2 left-2 text-[10px] font-bold uppercase tracking-wide bg-purple-600 text-white px-2 py-0.5 rounded">
+                {card.badge}
+              </span>
+              <h3 className="absolute bottom-0 left-0 right-0 p-3 text-white font-bold text-sm leading-tight line-clamp-3">
+                {card.title}
+              </h3>
             </Link>
-            <Link
-              href="/marketplace"
-              className="flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-semibold rounded-xl transition-all shadow-lg shadow-blue-900/40"
-            >
-              <ShoppingBag className="w-5 h-5" />
-              Marketplace
-            </Link>
-            <Link
-              href="/lancamentos"
-              className="flex items-center gap-2 px-8 py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-semibold rounded-xl transition-all"
-            >
-              <Gamepad2 className="w-5 h-5" />
-              Últimos Lançamentos
-            </Link>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-            {[
-              { label: "Jogos Avaliados", value: "500+", icon: "🎮" },
-              { label: "Usuários Ativos", value: "12k+", icon: "👥" },
-              { label: "Reviews Publicadas", value: "1.8k+", icon: "✍️" },
-              { label: "Trocas Realizadas", value: "850+", icon: "🤝" },
-            ].map((stat) => (
-              <div key={stat.label} className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-4">
-                <div className="text-2xl mb-1">{stat.icon}</div>
-                <div className="text-2xl font-black text-white">{stat.value}</div>
-                <div className="text-xs text-gray-500">{stat.label}</div>
-              </div>
-            ))}
-          </div>
+          ))}
         </div>
       </section>
 
