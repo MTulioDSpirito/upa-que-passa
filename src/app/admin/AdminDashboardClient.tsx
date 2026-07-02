@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   LayoutDashboard, Gamepad2, Star, ShoppingBag, Users, MessageSquare,
   Newspaper, Trophy, Settings, BarChart3, TrendingUp, TrendingDown,
-  Eye, Plus, Edit, Trash2, Shield, LogOut
+  Eye, Plus, Edit, Trash2, Shield, Sparkles
 } from "lucide-react";
 import { GAMES, LISTINGS, NEWS, USERS } from "@/lib/data";
+import AdminUserFooter, { type AdminUserSession } from "./AdminUserFooter";
 
 const SIDEBAR_ITEMS = [
   { icon: LayoutDashboard, label: "Dashboard", id: "dashboard" },
@@ -32,31 +33,18 @@ const STATS = [
   { label: "Visitas Hoje", value: "18.2k", change: +5.6, icon: Eye, color: "text-cyan-400 bg-cyan-900/20 border-cyan-800/20" },
 ];
 
-const ROLE_LABELS: Record<string, string> = {
-  EDITOR_CHEFE: "Editor-Chefe",
-  REPORTER: "Repórter",
-  CURADOR_NOTAS: "Curador(a) de Notas",
-  REDATOR_REVIEWS: "Redator(a) de Reviews",
-  QA_DADOS: "QA de Dados",
-};
-
-interface AdminUserSession {
-  name: string;
-  email: string;
-  role: string;
-}
-
 export default function AdminDashboardClient({ user }: { user: AdminUserSession }) {
-  const router = useRouter();
   const [activeSection, setActiveSection] = useState("dashboard");
-  const [loggingOut, setLoggingOut] = useState(false);
+  const [pendentesCount, setPendentesCount] = useState<number | null>(null);
 
-  async function handleLogout() {
-    setLoggingOut(true);
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/admin/login");
-    router.refresh();
-  }
+  useEffect(() => {
+    fetch("/api/admin/entregas")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) setPendentesCount(data.pendentes.length);
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)]">
@@ -69,6 +57,18 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
           </div>
         </div>
         <nav className="space-y-0.5 px-2 flex-1">
+          <Link
+            href="/admin/sugestoes"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-300 hover:text-white hover:bg-purple-600/10 border border-purple-700/20 bg-purple-600/5 transition-all mb-2"
+          >
+            <Sparkles className="w-4 h-4 text-purple-400" />
+            <span className="flex-1 text-left">Sugestões da Equipe</span>
+            {!!pendentesCount && (
+              <span className="text-xs font-bold bg-purple-600 text-white rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center">
+                {pendentesCount}
+              </span>
+            )}
+          </Link>
           {SIDEBAR_ITEMS.map((item) => (
             <button
               key={item.id}
@@ -85,21 +85,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
           ))}
         </nav>
 
-        {/* Logged in as */}
-        <div className="px-2 mt-4 pt-4 border-t border-white/5">
-          <div className="px-3 mb-2">
-            <p className="text-sm font-semibold text-white truncate">{user.name}</p>
-            <p className="text-xs text-purple-400">{ROLE_LABELS[user.role] ?? user.role}</p>
-          </div>
-          <button
-            onClick={handleLogout}
-            disabled={loggingOut}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-500 hover:text-red-400 hover:bg-red-900/10 transition-all disabled:opacity-60"
-          >
-            <LogOut className="w-4 h-4" />
-            {loggingOut ? "Saindo..." : "Sair"}
-          </button>
-        </div>
+        <AdminUserFooter user={user} />
       </aside>
 
       {/* Main */}

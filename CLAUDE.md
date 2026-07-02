@@ -33,6 +33,17 @@ The only real backend is the **admin login** for the 5-person content team. Ever
 
 `.env` holds `DATABASE_URL` and `AUTH_SECRET` (gitignored). If either is missing, login/session calls throw.
 
+### Content team automation (added 2026-07-02)
+
+`Equipe/` (project root, not under `src/`) holds the content team system — 5 personas (Vic/Kai/Vera/Theo/Dara) that research PS5 news/scores/reviews and hand off drafts for human admin review. Read `Equipe/AGENTS.md` first; it's the root contract.
+
+- `.claude/agents/*.md` — Claude Code subagent shims for each persona (required so `Task`/`Agent` can invoke them by name, e.g. `kai-reporter`).
+- `Equipe/Entregas/{pendentes,aprovados,rejeitados}/` — the draft queue. Kai/Vera/Theo write here; nothing touches `src/lib/data.ts` automatically.
+- A cloud routine (`RemoteTrigger`, id `trig_018q9aogsE5hLed31mjrpvgK`) runs daily at 08:07 America/Sao_Paulo against `https://github.com/MTulioDSpirito/upa-que-passa` (private repo — created 2026-07-02 specifically so the cloud agent has something to clone/push to). It researches, writes drafts to `Equipe/Entregas/pendentes/`, and pushes. **This means the local repo and GitHub can diverge** — `git pull` before assuming the queue is current.
+- `src/lib/entregas.ts` — reads/moves draft files (frontmatter parsed with `js-yaml`; format is `---\nyaml\n---\nbody`).
+- `/admin/sugestoes` — the review UI. Any of the 5 logged-in admins can approve (→ `aprovados/`, still just a file, a human still has to manually turn it into a `data.ts` entry per `Equipe/Operacoes/SOPs/SOP-001-adicionar-jogo.md` / `SOP-002-publicar-noticia.md`) or reject (→ `rejeitados/`, with a reason prepended as an HTML comment).
+- `src/app/api/admin/entregas/**` — these routes are **not** covered by `src/proxy.ts`'s matcher (`/admin/:path*` only matches page routes, not `/api/admin/...`). Each route checks `getSession()` itself. If you add more `/api/admin/*` routes, they need the same manual check.
+
 ### Data layer — mock content, no backend (games/news/reviews/marketplace)
 
 All content data lives in two files:
