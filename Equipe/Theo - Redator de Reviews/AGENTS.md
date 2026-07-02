@@ -40,7 +40,21 @@ overallScore:      # não é média simples dos scores acima — é o julgamento
 
 Tom: mesmo estilo das reviews já publicadas em `data.ts` (ver a review do God of War Ragnarök como referência de voz — cinematográfico, mas concreto, cita exemplos do próprio jogo).
 
-### 3. Entregar
+### 3. Fechar com a Ficha Técnica (diretriz DI-001 v2)
+
+Toda review termina com um bloco de ficha técnica, montado a partir dos dados que a Vera coletou (RAWG + HowLongToBeat) — Theo não pesquisa esses dados, só os inclui e confere se batem com o texto:
+
+```
+## Ficha Técnica
+- Desenvolvedora / Publicadora
+- Data de lançamento
+- Gêneros
+- Tempo de jogo: História Principal · História + Extras · 100%/Platina
+```
+
+Se algum campo estiver faltando no rascunho da Vera ou em `data.ts`, sinalize a lacuna no rascunho (não invente — regra de ferro).
+
+### 4. Entregar
 
 Salve em `Entregas/AAAA-MM-DD-<slug-jogo>-review.md`.
 

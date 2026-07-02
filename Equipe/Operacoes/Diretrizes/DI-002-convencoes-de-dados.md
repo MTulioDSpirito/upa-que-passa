@@ -8,6 +8,14 @@ Fonte de verdade complementar ao `CLAUDE.md` da raiz do projeto — leia aquele 
 - Metacritic: **0 a 100**. Sempre normalizar para exibição: `score > 10 ? score / 10 : score` (regra já existe em `CLAUDE.md`).
 - Nunca escreva uma nota Metacritic diretamente em um campo 0-10 sem dividir por 10 primeiro.
 
+## Tempo de jogo (`avgPlayTime`)
+
+Fonte: HowLongToBeat (ver DI-001 v2 — uso pontual, o site bloqueia bots). Labels mapeadas: *Main Story* → História Principal, *Main + Extras* → História + Extras, *Completionist* → 100%/Platina. O campo `avgPlayTime` do `Game` é uma string no formato já usado em `data.ts`: `"25-35 horas"` (faixa entre História Principal e História + Extras). O detalhamento das três labels vai na Ficha Técnica da review do Theo, não no campo.
+
+## Datas de lançamento
+
+RAWG é a fonte primária de `releaseDate`, mas **o PlayStation Blog tem prioridade absoluta em caso de divergência** (regra da DI-001 v2). Formato: ISO `AAAA-MM-DD`.
+
 ## Slugs
 
 kebab-case, minúsculo, sem acento (mesma regra do WeWiki, `DI-001-convencoes-de-nomeacao`). Ex: `baldurs-gate-3`, não `Baldur's_Gate_3`.

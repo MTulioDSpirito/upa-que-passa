@@ -32,7 +32,7 @@ Para cada `cover`, `photos[]`, `gallery[]`, imagem de notícia, avatar: rode
 curl -s -o /dev/null -w "%{http_code}\n" --max-time 10 "<url>"
 ```
 
-Só `200` passa. Qualquer outro código (404, 403, timeout) é rejeitado — peça uma URL alternativa a quem entregou o rascunho, ou busque você mesma em fontes verificadas (Steam CDN via API `store.steampowered.com/api/appdetails?appids=<id>`, Wikipedia/Wikimedia via infobox). Nunca solte comandos `curl` em loop de shell — rode um por vez ou em chamadas paralelas, loops de shell tendem a ser bloqueados por permissão neste ambiente.
+Só `200` passa. Qualquer outro código (404, 403, timeout) é rejeitado — peça uma URL alternativa a quem entregou o rascunho, ou busque você mesma em fontes verificadas (Steam CDN via API `store.steampowered.com/api/appdetails?appids=<id>`, Wikipedia/Wikimedia via infobox, ou **RAWG API** — o payload do jogo traz screenshots oficiais e trailers, ótimos para `gallery[]`; requer `RAWG_API_KEY` no `.env`, ver DI-001 v2 seção 4). Fonte aprovada na DI-001 **não dispensa o curl** — cada URL individual ainda é testada. Nunca solte comandos `curl` em loop de shell — rode um por vez ou em chamadas paralelas, loops de shell tendem a ser bloqueados por permissão neste ambiente.
 
 Se o Steam App ID for usado, confirme o nome do jogo batendo com a resposta da API antes de usar a imagem — já aconteceu de um App ID errado devolver a capa de outro jogo.
 

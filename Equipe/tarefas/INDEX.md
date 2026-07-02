@@ -1,3 +1,13 @@
 # Índice de Tarefas — Equipe de Conteúdo
 
-_Sem tarefas abertas ainda. Use `Equipe/tarefas/_modelo.md` como base e salve em `abertas/`, `em-andamento/` ou `concluidas/AAAA/MM/` conforme o status._
+## Abertas
+
+_Nenhuma._
+
+## Em andamento
+
+_Nenhuma._
+
+## Concluídas
+
+- [tsk-2026-07-02-001 — Gerar chaves de API gratuitas (RAWG, IGDB, News API, OpenCritic)](concluidas/2026/07/tsk-2026-07-02-001-chaves-de-api.md) — concluída em 2026-07-02. RAWG validada (200); IGDB/News API/RapidAPI adiadas como opcionais.
