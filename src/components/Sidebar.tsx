@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Star, Gamepad2, Newspaper, ShoppingBag, Trophy, Rocket, Search, Bell, User } from "lucide-react";
+import { Home, Star, Gamepad2, Newspaper, ShoppingBag, Trophy, Rocket, Search, Bell, User, UserPlus } from "lucide-react";
 
 export const NAV_ITEMS = [
   { label: "Home", href: "/", icon: Home },
@@ -65,13 +65,20 @@ export default function Sidebar() {
         </button>
       </div>
 
-      <div className="mt-auto px-3 pt-4">
+      <div className="mt-auto px-3 pt-4 space-y-2">
         <Link
           href="/login"
           className="btn-press flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-[#0d0d18] bg-amber-400 hover:bg-amber-300 rounded-xl transition-all"
         >
           <User className="w-4 h-4" />
           Entrar
+        </Link>
+        <Link
+          href="/cadastrar"
+          className="btn-press flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-amber-400 border border-amber-500/30 hover:bg-amber-500/10 rounded-xl transition-all"
+        >
+          <UserPlus className="w-4 h-4" />
+          Cadastrar
         </Link>
       </div>
     </aside>
