@@ -1,63 +1,18 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, Search, Bell, User, ChevronDown, Gamepad2, ShoppingBag, Star, Newspaper, Trophy } from "lucide-react";
-
-const navItems = [
-  { label: "Home", href: "/" },
-  {
-    label: "Reviews",
-    href: "/reviews",
-    children: [
-      { label: "Todas Reviews", href: "/reviews" },
-      { label: "Melhores do Ano", href: "/ranking" },
-      { label: "Reviews da Comunidade", href: "/reviews/comunidade" },
-    ],
-  },
-  {
-    label: "Jogos",
-    href: "/jogos",
-    children: [
-      { label: "Catálogo PS5", href: "/jogos" },
-      { label: "Lançamentos", href: "/lancamentos" },
-      { label: "Em Breve", href: "/lancamentos#em-breve" },
-    ],
-  },
-  { label: "Notícias", href: "/noticias" },
-  {
-    label: "Marketplace",
-    href: "/marketplace",
-    children: [
-      { label: "Todos os Anúncios", href: "/marketplace" },
-      { label: "Vender Jogo", href: "/marketplace/vender" },
-      { label: "Trocas", href: "/marketplace/trocas" },
-      { label: "Comprar", href: "/marketplace/comprar" },
-    ],
-  },
-  { label: "Ranking", href: "/ranking" },
-];
+import { usePathname } from "next/navigation";
+import { Menu, X, Search, Bell, User, Gamepad2 } from "lucide-react";
+import { SidebarNavLinks } from "./Sidebar";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  function openDropdown(label: string) {
-    if (closeTimeout.current) clearTimeout(closeTimeout.current);
-    setActiveDropdown(label);
-  }
-
-  // Small delay before closing: a real mouse moving from the trigger down into
-  // the panel can still momentarily leave the hover region (slow movement,
-  // trackpad jitter). Without this, the menu can close before the pointer lands.
-  function scheduleCloseDropdown() {
-    closeTimeout.current = setTimeout(() => setActiveDropdown(null), 200);
-  }
+  const pathname = usePathname();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/95 backdrop-blur-md border-b border-purple-900/30">
-      <div className="max-w-7xl mx-auto px-4">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/95 backdrop-blur-md border-b border-amber-900/10">
+      <div className="px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
@@ -71,66 +26,21 @@ export default function Navbar() {
             </span>
           </Link>
 
-          {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-1">
-            {navItems.map((item) => (
-              <div
-                key={item.label}
-                className="relative"
-                onMouseEnter={() => openDropdown(item.label)}
-                onMouseLeave={scheduleCloseDropdown}
-              >
-                <Link
-                  href={item.href}
-                  className="flex items-center gap-1 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all"
-                >
-                  {item.label}
-                  {item.children && <ChevronDown className="w-3 h-3" />}
-                </Link>
-                {item.children && activeDropdown === item.label && (
-                  // pt-1 (not mt-1 on the inner panel) keeps this whole wrapper — including the
-                  // gap above the visible panel — inside the parent's hover region. A margin-based
-                  // gap here left a dead strip with no element under the cursor, so moving from the
-                  // link down into the submenu fired onMouseLeave before the pointer arrived.
-                  <div className="absolute top-full left-0 pt-1 w-48">
-                    <div className="bg-[#12121f] border border-purple-800/40 rounded-xl shadow-2xl shadow-purple-900/20 py-1">
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.label}
-                          href={child.href}
-                          className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-purple-600/20 transition-colors"
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Right side */}
-          <div className="flex items-center gap-2">
-            <button className="hidden md:flex items-center gap-2 px-3 py-1.5 text-sm text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-all border border-white/10">
+          {/* Right side — only on mobile/tablet. The desktop Sidebar already has
+              search/notifications/entrar, so these would just duplicate it at lg+. */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <button className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-all border border-white/10 btn-press">
               <Search className="w-4 h-4" />
-              <span className="text-xs">Buscar...</span>
-              <kbd className="text-xs bg-white/10 px-1 rounded">⌘K</kbd>
+              <span className="text-xs hidden sm:inline">Buscar...</span>
             </button>
-            <button className="relative p-2 text-gray-400 hover:text-white transition-colors">
+            <button className="relative p-2 text-gray-400 hover:text-white transition-colors btn-press">
               <Bell className="w-5 h-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-purple-500 rounded-full" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-amber-500 rounded-full" />
             </button>
-            <Link
-              href="/login"
-              className="hidden md:flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg hover:from-purple-500 hover:to-blue-500 transition-all"
-            >
-              <User className="w-4 h-4" />
-              Entrar
-            </Link>
             <button
-              className="lg:hidden p-2 text-gray-400 hover:text-white"
+              className="lg:hidden p-2 text-gray-400 hover:text-white btn-press"
               onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Abrir menu"
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -138,40 +48,21 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu — the sidebar only renders on lg+, so mobile gets the full nav here */}
       {mobileOpen && (
-        <div className="lg:hidden bg-[#0d0d18] border-t border-purple-900/30 px-4 py-4 space-y-1">
-          {navItems.map((item) => (
-            <div key={item.label}>
-              <Link
-                href={item.href}
-                className="block px-4 py-3 text-gray-300 hover:text-white hover:bg-purple-600/20 rounded-lg transition-colors font-medium"
-                onClick={() => setMobileOpen(false)}
-              >
-                {item.label}
-              </Link>
-              {item.children && (
-                <div className="ml-4 mt-1 space-y-1">
-                  {item.children.map((child) => (
-                    <Link
-                      key={child.label}
-                      href={child.href}
-                      className="block px-4 py-2 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      {child.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-          <div className="pt-4 border-t border-white/10">
+        <div className="lg:hidden bg-[#0d0d18] border-t border-amber-900/10 py-4">
+          <SidebarNavLinks pathname={pathname} onNavigate={() => setMobileOpen(false)} />
+          <div className="px-3 pt-4 mt-4 border-t border-white/10 space-y-2">
+            <button className="btn-press w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+              <Search className="w-4 h-4" />
+              Buscar
+            </button>
             <Link
               href="/login"
-              className="block w-full text-center px-4 py-3 text-white font-semibold bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl"
               onClick={() => setMobileOpen(false)}
+              className="btn-press flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-[#0d0d18] bg-amber-400 hover:bg-amber-300 rounded-xl transition-all"
             >
+              <User className="w-4 h-4" />
               Entrar / Cadastrar
             </Link>
           </div>

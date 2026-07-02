@@ -104,7 +104,7 @@ export default function SugestoesClient({ user }: { user: AdminUserSession }) {
         <nav className="px-2 flex-1">
           <Link
             href="/admin"
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-500 hover:text-white hover:bg-white/5 transition-all"
+            className="btn-press w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-500 hover:text-white hover:bg-white/5 transition-all"
           >
             <ArrowLeft className="w-4 h-4" />
             Voltar ao Dashboard
@@ -123,7 +123,7 @@ export default function SugestoesClient({ user }: { user: AdminUserSession }) {
           </div>
           <button
             onClick={handleRefresh}
-            className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-sm font-semibold rounded-xl transition-all"
+            className="btn-press flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-sm font-semibold rounded-xl transition-all"
           >
             <RefreshCw className="w-4 h-4" />
             Atualizar
@@ -157,14 +157,14 @@ export default function SugestoesClient({ user }: { user: AdminUserSession }) {
                   <button
                     onClick={() => handleAprovar(entrega.filename)}
                     disabled={busy === entrega.filename}
-                    className="flex items-center gap-1.5 px-3 py-2 bg-green-600/20 text-green-400 border border-green-700/30 hover:bg-green-600/30 text-sm font-semibold rounded-xl transition-all disabled:opacity-50"
+                    className="btn-press flex items-center gap-1.5 px-3 py-2 bg-green-600/20 text-green-400 border border-green-700/30 hover:bg-green-600/30 text-sm font-semibold rounded-xl transition-all disabled:opacity-50"
                   >
                     <Check className="w-4 h-4" /> Aprovar
                   </button>
                   <button
                     onClick={() => setRejectingFile(rejectingFile === entrega.filename ? null : entrega.filename)}
                     disabled={busy === entrega.filename}
-                    className="flex items-center gap-1.5 px-3 py-2 bg-red-600/20 text-red-400 border border-red-700/30 hover:bg-red-600/30 text-sm font-semibold rounded-xl transition-all disabled:opacity-50"
+                    className="btn-press flex items-center gap-1.5 px-3 py-2 bg-red-600/20 text-red-400 border border-red-700/30 hover:bg-red-600/30 text-sm font-semibold rounded-xl transition-all disabled:opacity-50"
                   >
                     <X className="w-4 h-4" /> Rejeitar
                   </button>
@@ -205,7 +205,7 @@ export default function SugestoesClient({ user }: { user: AdminUserSession }) {
                   <button
                     onClick={() => handleRejeitar(entrega.filename)}
                     disabled={busy === entrega.filename}
-                    className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-semibold rounded-xl transition-all disabled:opacity-50"
+                    className="btn-press px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-semibold rounded-xl transition-all disabled:opacity-50"
                   >
                     Confirmar
                   </button>

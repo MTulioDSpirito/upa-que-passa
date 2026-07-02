@@ -61,7 +61,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
         <nav className="space-y-0.5 px-2 flex-1">
           <Link
             href="/admin/sugestoes"
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-300 hover:text-white hover:bg-purple-600/10 border border-purple-700/20 bg-purple-600/5 transition-all mb-2"
+            className="btn-press w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-300 hover:text-white hover:bg-purple-600/10 border border-purple-700/20 bg-purple-600/5 transition-all mb-2"
           >
             <Sparkles className="w-4 h-4 text-purple-400" />
             <span className="flex-1 text-left">Sugestões da Equipe</span>
@@ -75,7 +75,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
             <button
               key={item.id}
               onClick={() => setActiveSection(item.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
+              className={`btn-press w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
                 activeSection === item.id
                   ? "bg-purple-600/20 text-purple-300 border border-purple-700/30"
                   : "text-gray-500 hover:text-white hover:bg-white/5"
@@ -100,7 +100,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                 <p className="text-gray-500 text-sm">Visão geral do portal</p>
               </div>
               <div className="flex gap-2">
-                <button className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold rounded-xl transition-all">
+                <button className="btn-press flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold rounded-xl transition-all">
                   <Plus className="w-4 h-4" />
                   Adicionar Jogo
                 </button>
@@ -146,10 +146,10 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                         <p className="text-xs text-gray-500">{game.developer}</p>
                       </div>
                       <div className="flex gap-1.5">
-                        <button className="p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors">
+                        <button className="btn-press p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors">
                           <Edit className="w-3.5 h-3.5" />
                         </button>
-                        <button className="p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors">
+                        <button className="btn-press p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors">
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
@@ -202,7 +202,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                         R$ {listing.price.toFixed(2)}
                       </div>
                       <div className="flex gap-1.5">
-                        <button className="p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors">
+                        <button className="btn-press p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors">
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
@@ -246,7 +246,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
           <div>
             <div className="flex items-center justify-between mb-6">
               <h1 className="text-2xl font-black text-white">Jogos ({GAMES.length})</h1>
-              <button className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold rounded-xl transition-all">
+              <button className="btn-press flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold rounded-xl transition-all">
                 <Plus className="w-4 h-4" /> Adicionar Jogo
               </button>
             </div>
@@ -262,10 +262,10 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                     {formatScore(game.adminScore || 0)}
                   </div>
                   <div className="flex gap-1.5">
-                    <button className="p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors">
+                    <button className="btn-press p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors">
                       <Edit className="w-3.5 h-3.5" />
                     </button>
-                    <button className="p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors">
+                    <button className="btn-press p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors">
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
@@ -294,10 +294,10 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                       {formatScore(review.overallScore)}
                     </div>
                     <div className="flex gap-1.5">
-                      <button className="p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors">
+                      <button className="btn-press p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors">
                         <Edit className="w-3.5 h-3.5" />
                       </button>
-                      <button className="p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors">
+                      <button className="btn-press p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors">
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
@@ -349,7 +349,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                     {listing.active ? "Ativo" : "Inativo"}
                   </span>
                   <div className="text-sm font-black text-green-400 flex-shrink-0">{formatPrice(listing.price)}</div>
-                  <button className="p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors flex-shrink-0">
+                  <button className="btn-press p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors flex-shrink-0">
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -362,7 +362,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
           <div>
             <div className="flex items-center justify-between mb-6">
               <h1 className="text-2xl font-black text-white">Notícias ({NEWS.length})</h1>
-              <button className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold rounded-xl transition-all">
+              <button className="btn-press flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold rounded-xl transition-all">
                 <Plus className="w-4 h-4" /> Nova Notícia
               </button>
             </div>
@@ -377,7 +377,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                   <div className="flex items-center gap-1 text-xs text-gray-500 flex-shrink-0">
                     <Eye className="w-3.5 h-3.5" /> {article.views.toLocaleString("pt-BR")}
                   </div>
-                  <button className="p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors flex-shrink-0">
+                  <button className="btn-press p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors flex-shrink-0">
                     <Edit className="w-3.5 h-3.5" />
                   </button>
                 </div>
