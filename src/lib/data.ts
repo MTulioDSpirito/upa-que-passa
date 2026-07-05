@@ -188,7 +188,7 @@ export const GAMES: Game[] = [
     metacriticScore: 84,
     openCriticScore: 84,
     userScore: 8.1,
-    adminScore: 8.5,
+    adminScore: 8.4,
     siteScores: [
       { site: "IGN", score: 9 },
       { site: "Metacritic", score: 84 },
@@ -387,6 +387,133 @@ export const GAMES: Game[] = [
     ],
     worldAvg: 8.0,
     tags: ["exclusivo", "mundo-aberto", "samurai"],
+  },
+  {
+    id: "11",
+    slug: "clair-obscur-expedition-33",
+    title: "Clair Obscur: Expedition 33",
+    cover: "https://media.rawg.io/media/games/466/4667f17fdee9ebbcea2049e54f8e2b96.jpg",
+    gallery: [
+      "https://media.rawg.io/media/screenshots/1e4/1e4dcb884c03242be7dab30fad77d7b2.jpg",
+      "https://media.rawg.io/media/screenshots/22c/22c350e84e9f320b389cdabf0c213f7f.jpg",
+    ],
+    description: "Clair Obscur: Expedition 33 é um RPG de combate por turnos com mecânicas de ação em tempo real, desenvolvido pela Sandfall Interactive e publicado pela Kepler Interactive.",
+    synopsis: "Uma vez por ano, a Pintora acorda e pinta em seu monólito um número amaldiçoado — e todos que chegam àquela idade se transformam em fumaça e desaparecem. A cada ano que passa, o número diminui e mais gente é apagada. A Expedição 33 parte em uma missão final para destruir a Pintora antes que ela possa pintar a morte outra vez, explorando um mundo de fantasia inspirado na Belle Époque francesa e enfrentando inimigos devastadores.",
+    developer: "Sandfall Interactive",
+    publisher: "Kepler Interactive",
+    engine: "Unreal Engine 5",
+    releaseDate: "2025-04-24",
+    suggestedPrice: 199.00,
+    platforms: ["PS5", "PC", "Xbox"],
+    genres: ["RPG", "Aventura"],
+    online: false,
+    offline: true,
+    maxPlayers: 1,
+    languages: ["Inglês", "Francês", "Italiano", "Alemão", "Espanhol", "Japonês", "Coreano", "Polonês", "Português (BR)", "Russo", "Chinês Simplificado", "Chinês Tradicional", "Tcheco", "Indonésio", "Espanhol (Latino-Americano)", "Tailandês", "Turco", "Ucraniano", "Vietnamita", "Árabe"],
+    subtitles: ["Inglês", "Francês", "Italiano", "Alemão", "Espanhol", "Japonês", "Coreano", "Polonês", "Português (BR)", "Russo", "Chinês Simplificado", "Chinês Tradicional", "Tcheco", "Indonésio", "Espanhol (Latino-Americano)", "Tailandês", "Turco", "Ucraniano", "Vietnamita", "Árabe"],
+    dubbing: ["Inglês", "Francês"],
+    ageRating: "16+",
+    links: [
+      { label: "Steam", url: "https://store.steampowered.com/app/1903340/" },
+      { label: "Site Oficial", url: "https://www.expedition33.com" },
+    ],
+    metacriticScore: 93,
+    openCriticScore: 92,
+    userScore: 9.7,
+    siteScores: [
+      { site: "IGN", score: 9.0 },
+      { site: "GameSpot", score: 9.0 },
+      { site: "Eurogamer", score: 8.0, url: "https://www.eurogamer.net/clair-obscur-expedition-33-review" },
+      { site: "Push Square", score: 9.0 },
+      { site: "Metacritic", score: 9.3, url: "https://www.metacritic.com/game/clair-obscur-expedition-33/" },
+      { site: "OpenCritic", score: 9.2, url: "https://opencritic.com/game/18026/clair-obscur-expedition-33" },
+    ],
+    worldAvg: 8.9,
+  },
+  {
+    id: "12",
+    slug: "split-fiction",
+    title: "Split Fiction",
+    cover: "https://media.rawg.io/media/games/02a/02ac22b3b90717dabaa535640c38534c.jpg",
+    gallery: [
+      "https://media.rawg.io/media/screenshots/dc1/dc10dd68a2e7472b7ed40feda3a16c54.jpg",
+      "https://media.rawg.io/media/screenshots/ea9/ea9e37dc1b36db3401a6b308d766198b.jpg",
+      "https://media.rawg.io/media/screenshots/e4b/e4bee3c261abe04f869b6f429852a00d.jpg",
+    ],
+    description: "Split Fiction é uma aventura cooperativa de ação desenvolvida pela Hazelight Studios (criadora de It Takes Two) e publicada pela Electronic Arts.",
+    synopsis: "Mio e Zoe, duas escritoras de estilos opostos — uma de ficção científica, outra de fantasia —, ficam presas dentro de suas próprias histórias depois de serem conectadas a uma máquina projetada para roubar ideias criativas. Juntas, precisam dominar uma variedade de habilidades e superar desafios diversos alternando entre mundos de ficção científica e fantasia para escapar com suas memórias intactas.",
+    developer: "Hazelight Studios",
+    publisher: "Electronic Arts",
+    engine: "Unreal Engine 5",
+    releaseDate: "2025-03-06",
+    suggestedPrice: 199.00,
+    platforms: ["PS5", "PC", "Xbox"],
+    genres: ["Ação", "Aventura", "Cooperativo"],
+    online: true,
+    offline: true,
+    maxPlayers: 2,
+    languages: ["Inglês", "Francês", "Italiano", "Alemão", "Espanhol", "Japonês", "Coreano", "Polonês", "Português (BR)", "Chinês Simplificado", "Chinês Tradicional"],
+    subtitles: ["Inglês", "Francês", "Italiano", "Alemão", "Espanhol", "Japonês", "Coreano", "Polonês", "Português (BR)", "Chinês Simplificado", "Chinês Tradicional"],
+    dubbing: ["Inglês", "Francês", "Italiano", "Alemão", "Espanhol", "Japonês", "Chinês Simplificado"],
+    ageRating: "14+",
+    links: [
+      { label: "Steam", url: "https://store.steampowered.com/app/2001120/" },
+      { label: "Site Oficial (EA)", url: "https://www.ea.com/games/split-fiction/split-fiction" },
+    ],
+    metacriticScore: 91,
+    openCriticScore: 91,
+    userScore: 8.6,
+    siteScores: [
+      { site: "GameSpot", score: 10.0 },
+      { site: "Eurogamer", score: 10.0, url: "https://www.eurogamer.net/split-fiction-review" },
+      { site: "Push Square", score: 10.0 },
+      { site: "Metacritic", score: 9.1, url: "https://www.metacritic.com/game/split-fiction/" },
+      { site: "OpenCritic", score: 9.1, url: "https://opencritic.com/game/18192/split-fiction" },
+    ],
+    worldAvg: 9.6,
+  },
+  {
+    id: "13",
+    slug: "stellar-blade",
+    title: "Stellar Blade",
+    cover: "https://media.rawg.io/media/games/fbd/fbdef5455da4c4033bed896e1540f6a1.jpg",
+    gallery: [
+      "https://media.rawg.io/media/screenshots/0c9/0c98c2913de0c48b57a49aacff794096.jpg",
+      "https://media.rawg.io/media/screenshots/c5e/c5e5c6f19c0642b20e113b49a994e442.jpg",
+      "https://media.rawg.io/media/screenshots/b22/b22c889fa194ddf811c528eb215bfcb5.jpg",
+    ],
+    description: "Stellar Blade é um jogo de ação e aventura desenvolvido pela coreana SHIFT UP e publicado pela Sony Interactive Entertainment (PlayStation Publishing LLC).",
+    synopsis: "Em um futuro pós-apocalíptico, a Terra foi devastada por criaturas estranhas e poderosas, e o que restou da raça humana fugiu para uma Colônia no espaço. Vinda da Colônia, EVE chega aos restos desolados do planeta com uma missão clara: salvar a humanidade reconquistando a Terra dos Naytiba, a força hostil que a destruiu. Mas, ao enfrentar os Naytiba um a um e reunir pistas sobre o passado nas ruínas da civilização humana, ela percebe que sua missão está longe de ser simples.",
+    developer: "SHIFT UP",
+    publisher: "Sony Interactive Entertainment (PlayStation Publishing LLC)",
+    engine: "Unreal Engine 4 (build 4.26)",
+    releaseDate: "2024-04-26",
+    suggestedPrice: 249.90,
+    platforms: ["PS5", "PC"],
+    genres: ["Ação", "Aventura", "RPG"],
+    online: false,
+    offline: true,
+    maxPlayers: 1,
+    languages: ["Inglês", "Francês", "Italiano", "Alemão", "Espanhol", "Árabe", "Holandês", "Sueco", "Espanhol (Latino-Americano)", "Tailandês", "Dinamarquês", "Turco", "Norueguês", "Finlandês", "Português (BR)", "Português (Portugal)", "Russo", "Chinês Simplificado", "Chinês Tradicional", "Japonês", "Coreano", "Polonês"],
+    subtitles: ["Inglês", "Francês", "Italiano", "Alemão", "Espanhol", "Árabe", "Holandês", "Sueco", "Espanhol (Latino-Americano)", "Tailandês", "Dinamarquês", "Turco", "Norueguês", "Finlandês", "Português (BR)", "Português (Portugal)", "Russo", "Chinês Simplificado", "Chinês Tradicional", "Japonês", "Coreano", "Polonês"],
+    dubbing: ["Inglês", "Francês", "Italiano", "Alemão", "Espanhol", "Espanhol (Latino-Americano)", "Português (BR)", "Chinês Simplificado", "Japonês", "Coreano"],
+    ageRating: "16+",
+    links: [
+      { label: "Steam", url: "https://store.steampowered.com/app/3489700/" },
+      { label: "Site Oficial (PlayStation)", url: "https://www.playstation.com/en-us/games/stellar-blade/" },
+    ],
+    metacriticScore: 82,
+    openCriticScore: 81,
+    userScore: 9.2,
+    siteScores: [
+      { site: "IGN", score: 7.0 },
+      { site: "GameSpot", score: 8.0 },
+      { site: "Eurogamer", score: 8.0, url: "https://www.eurogamer.net/stellar-blade-review" },
+      { site: "Push Square", score: 8.0 },
+      { site: "Metacritic", score: 8.2, url: "https://www.metacritic.com/game/stellar-blade/" },
+      { site: "OpenCritic", score: 8.1, url: "https://opencritic.com/game/16510/stellar-blade" },
+    ],
+    worldAvg: 7.9,
   },
 ];
 
@@ -587,6 +714,112 @@ Ainda assim, poucos jogos de terror recentes arriscam tanto quanto Alan Wake 2 �
     overallScore: 9.0,
     author: "Theo · Redação UQP",
     publishedAt: "2026-07-02",
+    likes: 0,
+  },
+  {
+    id: "5",
+    gameId: "3",
+    title: "Final Fantasy XVI — Um Épico Sombrio que Troca o RPG Clássico por Espadas e Espetáculo",
+    text: `Existe uma cena, ainda nas primeiras horas de Final Fantasy XVI, em que dois Eikons colidem no céu e o chão inteiro racha sob o impacto — e o jogo, sem pudor, transforma isso numa sequência jogável, não numa cutscene passiva. É a declaração de intenções mais honesta que a Square Enix poderia dar: este não é o Final Fantasy que você jogou nos anos 2000, com menus de comando e grupos de quatro. É um épico de ação que usa a mitologia da série — cristais, invocações, o fim do mundo — como matéria-prima para o espetáculo mais puro que a franquia já produziu.
+
+O combate é, sem exagero, o melhor já visto num Final Fantasy. Com Ryota Suzuki, veterano de Devil May Cry 5, na direção de sistema, Clive Rosfield controla como um espadachim de action game de verdade: combos aéreos, esquivas cronometradas, contra-ataques que abrem janelas de dano absurdas. Os poderes dos Eikons — o gancho de fogo de Ifrit, o teleporte relâmpago de Ramuh, a foice congelante de Garuda — se acumulam ao longo da campanha e podem ser trocados livremente, criando combos que lembram mais Bayonetta do que qualquer RPG por turnos. É viciante do primeiro ao último encontro, mesmo quando o desafio raramente sobe além do confortável.
+
+E então vêm os Eikons de verdade — as invocações gigantes se enfrentando em sequências que apagam a linha entre jogo e cinema. Ifrit contra Garuda em pleno ar, Bahamut e Odin trocando golpes que reformam a paisagem ao redor, o confronto final com escala que ultrapassa qualquer coisa que a série já tentou. São, provavelmente, as melhores batalhas de invocação já feitas em um jogo — visualmente arrebatadoras, mecanicamente simples o suficiente para nunca tirar o jogador do assombro, e amplificadas por uma trilha de Masayoshi Soken que sobe e desce de intensidade em tempo real junto com a ação.
+
+A história aposta em um tom que a franquia raramente arriscou: political drama sombrio, com escravidão institucionalizada dos Portadores, traições dinásticas e violência gráfica que earn o rating 18+. Clive carrega a vingança pela morte do irmão Joshua como motor emocional, mas é o elenco ao redor que dá textura ao mundo — Jill Warrick, refém política que esconde décadas de dor sob uma fachada gentil; Cid, o rebelde carismático que aglutina Portadores fugitivos; e Torgal, o lobo-companheiro que, apesar de simples na IA, se torna o coração silencioso de cada cutscene em que aparece. É uma história que demora para amarrar todas as pontas, mas quando amarra — sobretudo no terço final — acerta com uma força rara na série.
+
+O problema é tudo que fica entre as cutscenes principais. As "open zones" do jogo — áreas maiores e mais abertas conectadas por corredores lineares — são uma solução inteligente para evitar o vazio de um mundo aberto genérico, mas as side quests que povoam essas áreas raramente aproveitam o espaço: são, majoritariamente, recados de "fale com esta pessoa, busque este item, volte" sem qualquer liberdade de resolução, num contraste direto com os Contratos de Caça, que ao menos dão uma razão mecânica (loot, chocobos, itens de crafting) para existir. E a reta intermediária da campanha, especialmente as missões de reconstrução do Covil Aterrissado, transforma o ritmo antes elétrico em uma sucessão de tarefas administrativas que travam a história bem no momento em que ela deveria acelerar.
+
+Também vale dizer, para quem vem pela bagagem RPG da série: Final Fantasy XVI esvaziou quase todo o esqueleto tradicional do gênero. Não há grupo controlável, não há classes, não há builds profundas de equipamento — Clive é o único personagem jogável do início ao fim, e a progressão se resume a acessórios e à ordem em que você equipa habilidades de Eikon. É uma escolha de design coerente com a ambição de ser um action game de primeira linha, mas deixa o "RPG" do título carregando menos peso mecânico do que qualquer entrada numerada recente.
+
+No quesito técnico, o PS5 oferece dois modos: Qualidade, em 2160p e 30fps upscalado, e Performance, em 1440p e 60fps upscalado — mas o Performance derrapa para a faixa dos 40fps em cenas de maior carga, principalmente durante os Eikons com mais partículas na tela, e as cutscenes ficam travadas em 30fps independentemente do modo escolhido. Não chega a comprometer a experiência, mas é um recordatório de que a ambição visual do jogo (e ela é real — os visuais de Valisthea, especialmente em Qualidade, são de tirar o fôlego) testa os limites do hardware de console.
+
+Final Fantasy XVI não é o Final Fantasy que vai satisfazer quem sonha com um retorno ao ATB clássico ou aos grupos de quatro heróis — e não tenta ser. É, em vez disso, uma prova de que a Square Enix consegue produzir um action-RPG de altíssimo nível quando decide abraçar totalmente o gênero, com Eikons que vão ficar na memória de qualquer jogador que os viu na tela por muito tempo depois dos créditos.`,
+    pros: [
+      "Batalhas de Eikon são espetáculos de câmera, escala e coreografia que redefinem o que uma luta de RPG pode parecer na tela",
+      "Sistema de combate dirigido por Ryota Suzuki (Devil May Cry 5) entrega combos, esquivas e finalizadores com a fluidez de um action game puro-sangue",
+      "Trilha sonora orquestral de Masayoshi Soken é um dos pontos mais altos da trilogia sonora da franquia, com temas que mudam de intensidade em tempo real durante os Eikons",
+      "Tom adulto e político — escravidão dos Portadores, disputas de poder entre reinos, violência explícita — dá à história um peso raramente visto na série",
+      "Torgal, o lobo-companheiro, e o vínculo entre Clive e Jill sustentam o lado emocional da trama sem depender de exagero",
+    ],
+    cons: [
+      "A maioria das side quests é fetch quest disfarçada: buscar item, falar com quatro NPCs, voltar — sem a liberdade que os Contratos de Caça (Hunts) oferecem",
+      "O RPG tradicional foi esvaziado: não há controle de grupo, sistema de classes ou build profunda — Clive é o único personagem jogável do início ao fim",
+      "Ritmo cai visivelmente na reta intermediária, sobretudo nas missões de reconstrução do Covil Aterrissado, que travam a história por horas de tarefas administrativas",
+      "Modo Performance promete 60fps mas derrapa para a faixa dos 40fps sob estresse, e as cutscenes ficam travadas em 30fps em qualquer modo",
+    ],
+    conclusion: "Final Fantasy XVI é o Final Fantasy mais sombrio, mais cinematográfico e mais tecnicamente afiado em combate que a série já produziu, sustentado por batalhas de Eikon que redefinem o que um confronto de RPG pode parecer. A generosidade da campanha esbarra em side quests de recado e numa estrutura que, vez ou outra, trata o jogador como espectador — mas quando o jogo quer impressionar, poucos títulos da geração impressionam tanto.",
+    scores: {
+      graphics: 9.5,
+      gameplay: 9.0,
+      fun: 9.0,
+      story: 9.0,
+      soundtrack: 9.5,
+      performance: 7.5,
+      replay: 6.5,
+      multiplayer: 0,
+      difficulty: 6.5,
+      visual: 9.5,
+      ai: 7.0,
+      optimization: 7.5,
+      content: 8.0,
+    },
+    overallScore: 8.8,
+    author: "Theo · Redação UQP",
+    publishedAt: "2026-07-05",
+    likes: 0,
+  },
+  {
+    id: "6",
+    gameId: "5",
+    title: "Hogwarts Legacy — A Fantasia de Hogwarts Perfeita, Presa Dentro de um Mundo Aberto Comum",
+    text: `Os primeiros vinte minutos de Hogwarts Legacy são, talvez, a melhor carta de intenção que um jogo de licença já escreveu. Você atravessa o saguão principal pela primeira vez, escuta o silêncio reverente do Grande Salão antes do jantar, vê uma escadaria se mover sozinha para outro andar e um retrato resmungar algo sobre sua roupa. A Avalanche Software não fez apenas "um jogo de Harry Potter" — reconstruiu Hogwarts como um lugar que parece existir independentemente de você, cheio de segredos, salas trancadas e rotinas que seguem acontecendo mesmo quando a câmera não está olhando.
+
+É essa reconstrução do castelo, mais do que qualquer sistema de jogo, que sustenta a experiência. As quatro salas comunais têm identidade visual própria (o verde-esmeralda claustrofóbico da Sonserina embaixo do lago é particularmente inspirado), as aulas de Herbologia, Poções e Trato das Criaturas Mágicas viram desculpas legítimas para explorar sistemas de crafting que se conectam à Sala Precisa — sua base pessoal, onde cultivar plantas, destilar poções e criar um santuário para criaturas resgatadas de caçadores furtivos dá ao jogador uma sensação real de posse sobre aquele mundo. A escolha da casa, o feitiço de Patrono, o visual do uniforme: são camadas de personalização que, mesmo cosméticas em grande parte, fazem a fantasia de "ser um bruxo em Hogwarts" funcionar de um jeito que nenhum outro jogo da licença tinha conseguido antes.
+
+O combate parte de uma ideia inteligente: cada feitiço tem uma cor de efeito e uma função tática — Levioso e Arresto Momentum imobilizam, Confringo e Bombarda causam dano de área, Accio puxa o inimigo para perto de um combo de melee improvisado com um caldeirão. Encadear esses efeitos em sequências fluidas, trocando de feitiço no meio do combo enquanto desvia de feitiços vindos de todos os lados, tem uma coreografia satisfatória nas primeiras vinte, trinta horas. O problema é que o jogo raramente força o jogador a evoluir esse vocabulário: os inimigos não mudam de comportamento de forma significativa ao longo da campanha, e chefes — sejam duelistas rivais ou criaturas maiores — costumam ter apenas dois ou três padrões de ataque, o que estica lutas que deveriam ser climáticas até elas perderem a tensão.
+
+A trama principal, centrada na descoberta do Repositório e no vilão Victor Rookwood, é onde o jogo menos surpreende: é previsível quase do início, os antagonistas são rasos e a resolução segue passo a passo o que qualquer jogador experiente em ficção de fantasia já espera. O contraste fica evidente porque, ao lado dessa espinha dorsal morna, estão as melhores side quests do jogo — em especial a arco de Sebastian Sallow, o colega sonserino disposto a mergulhar em magia das trevas para tentar curar a maldição que consome sua irmã Anne. É ali, nas decisões pessoais sobre até onde ir por alguém que você ama, que Hogwarts Legacy encontra a complexidade moral que a trama principal nunca alcança — reforçada pela liberdade real de aprender e usar as três Maldições Imperdoáveis (incluindo Avada Kedavra) sem qualquer penalidade mecânica, só o peso narrativo da escolha.
+
+Fora dos muros do castelo e das ruas encantadoras de Hogsmeade, porém, o mundo aberto de Feldcroft, Forte de Cumaru e companhia perde identidade rápido. É um mapa bonito de sobrevoar — a vassoura, liberada a partir de certo ponto da campanha, transforma a exploração numa das melhores sensações do jogo —, mas cheio de acampamentos de bandidos, fortes e cavernas que seguem exatamente a mesma fórmula repetida dezenas de vezes. Combinado à falta de evolução no design de encontros, isso faz a segunda metade do jogo — que ainda tem 30 a 60 horas de conteúdo pela frente — arriscar cansar quem já saciou a curiosidade sobre o castelo nas primeiras dezenas de horas.
+
+No lançamento, a versão de PS5 também carregou problemas técnicos reais: o Modo Performance, prometendo 60fps estáveis, sofria quedas de quadro perceptíveis em áreas densas como Hogsmeade, além de pop-in agressivo de vegetação e NPCs durante deslocamentos rápidos de vassoura, e inconsistências de iluminação entre cenas. A Avalanche Software lançou uma sucessão de patches ao longo dos meses seguintes que estabilizaram consideravelmente a experiência, mas o estado de lançamento ficou abaixo do polimento visual do próprio castelo — uma ironia, já que é justamente ali que o jogo mais precisa impressionar.
+
+Vale registrar, também, que Hogwarts Legacy carregou desde o anúncio uma controvérsia pública ligada à autora da franquia — um fator que ajuda a explicar por que a nota de usuários do jogo (bem mais baixa que a média da crítica especializada) diverge tanto da recepção profissional. É um contexto que não muda a qualidade técnica do produto entregue, mas é relevante para entender por que o público e a imprensa não caminharam totalmente juntos neste caso.
+
+No fim, Hogwarts Legacy cumpre a promessa mais difícil de qualquer jogo baseado em licença: fazer o fã sentir, de verdade, que está ali, dentro daquele universo. O preço dessa imersão é um mundo aberto e uma trama principal que não acompanham a mesma altura — mas para quem só queria vestir o uniforme e andar pelos corredores de Hogwarts, a experiência entrega exatamente o que promete.`,
+    pros: [
+      "O castelo de Hogwarts é reconstruído com um nível de detalhe e vida (escadas móveis, retratos que comentam sua passagem, salas comunais exclusivas por casa) que por si só justifica a experiência",
+      "Sistema de combate por combos de feitiços (Confringo, Depulso, Accio, Arresto Momentum) é vistoso e satisfatório nas primeiras dezenas de horas, sobretudo ao encadear feitiços de controle com dano",
+      "Missões de companheiros — em especial a de Sebastian Sallow em busca de magia das trevas para curar a irmã — são o ponto mais forte da escrita, muito acima da trama principal",
+      "Customização de personagem, feitiços de casa, voo de vassoura e a liberdade de aprender magia negra (incluindo as Maldições Imperdoáveis) sem travar o progresso dão uma sensação real de escolha",
+      "Room of Requirement funciona como base pessoal completa — cultivo de plantas, preparo de poções, criação de criaturas mágicas resgatadas — e vira o hub que amarra os sistemas paralelos do jogo",
+    ],
+    cons: [
+      "Fora de Hogwarts e Hogsmeade, o mundo aberto perde identidade rápido: aldeias, acampamentos de bandidos e forte da mesma fórmula se repetem por todo o mapa",
+      "A trama principal em torno do Repositório e do vilão Rookwood é previsível e genérica, com antagonistas rasos — o que contrasta com a qualidade das side quests de personagem",
+      "Chefes de combate costumam ter só dois ou três padrões de ataque, o que torna lutas mais longas repetitivas em vez de desafiadoras",
+      "No lançamento, o desempenho no PS5 foi instável — quedas de quadro e pop-in agressivo em Hogsmeade e no Modo Performance — e exigiu vários patches da Avalanche Software para estabilizar",
+    ],
+    conclusion: "Hogwarts Legacy entrega, com um nível de detalhe quase obsessivo, a fantasia definitiva de ser um estudante em Hogwarts — o castelo é, sozinho, um dos melhores cenários já construídos em um jogo. Fora dos seus corredores, porém, vira um mundo aberto genérico, com uma trama principal previsível e atividades que se repetem cedo demais. É mágico enquanto dura o encantamento, e visivelmente mundano quando ele acaba.",
+    scores: {
+      graphics: 9.0,
+      gameplay: 7.5,
+      fun: 8.5,
+      story: 6.5,
+      soundtrack: 8.5,
+      performance: 6.5,
+      replay: 6.5,
+      multiplayer: 0,
+      difficulty: 6.0,
+      visual: 9.0,
+      ai: 6.0,
+      optimization: 6.5,
+      content: 8.0,
+    },
+    overallScore: 8.4,
+    author: "Theo · Redação UQP",
+    publishedAt: "2026-07-05",
     likes: 0,
   },
 ];
