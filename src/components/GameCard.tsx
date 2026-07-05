@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import { Star, Heart, Eye } from "lucide-react";
 import { Game } from "@/lib/types";
 import { getScoreColor, formatScore } from "@/lib/data";
+import { useUserSession } from "@/hooks/useUserSession";
 
 interface GameCardProps {
   game: Game;
@@ -13,6 +16,28 @@ interface GameCardProps {
 export default function GameCard({ game, compact = false }: GameCardProps) {
   const score = game.adminScore || game.worldAvg || game.userScore;
   const scoreColor = getScoreColor(score);
+  const [favorited, setFavorited] = useState(false);
+  const currentUser = useUserSession();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  async function handleToggleFavorite(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!currentUser) {
+      router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+      return;
+    }
+    const res = await fetch("/api/favorites", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ gameId: game.id }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setFavorited(data.favorited);
+    }
+  }
 
   if (compact) {
     return (
@@ -87,8 +112,12 @@ export default function GameCard({ game, compact = false }: GameCardProps) {
               <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
               <span className="text-xs text-gray-400">{game.userScore.toFixed(1)} usuários</span>
             </div>
-            <button className="p-1 text-gray-600 hover:text-red-400 transition-colors">
-              <Heart className="w-4 h-4" />
+            <button
+              onClick={handleToggleFavorite}
+              className={`p-1 transition-colors ${favorited ? "text-red-400" : "text-gray-600 hover:text-red-400"}`}
+              aria-label="Favoritar"
+            >
+              <Heart className={`w-4 h-4 ${favorited ? "fill-red-400" : ""}`} />
             </button>
           </div>
         </div>

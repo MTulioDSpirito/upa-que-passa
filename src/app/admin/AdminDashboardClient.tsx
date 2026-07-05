@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { GAMES, LISTINGS, NEWS, USERS, REVIEWS, formatPrice, formatDate, formatScore, getScoreColor } from "@/lib/data";
 import AdminUserFooter, { type AdminUserSession } from "./AdminUserFooter";
+import EditUserModal, { type AdminSiteUser } from "./EditUserModal";
 
 const SIDEBAR_ITEMS = [
   { icon: LayoutDashboard, label: "Dashboard", id: "dashboard" },
@@ -38,6 +39,8 @@ const STATS = [
 export default function AdminDashboardClient({ user }: { user: AdminUserSession }) {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [pendentesCount, setPendentesCount] = useState<number | null>(null);
+  const [siteUsers, setSiteUsers] = useState<AdminSiteUser[] | null>(null);
+  const [editingUser, setEditingUser] = useState<AdminSiteUser | null>(null);
 
   useEffect(() => {
     fetch("/api/admin/entregas")
@@ -47,6 +50,16 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
       })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (activeSection !== "users" || siteUsers !== null) return;
+    fetch("/api/admin/users")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) setSiteUsers(data.users);
+      })
+      .catch(() => {});
+  }, [activeSection, siteUsers]);
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)]">
@@ -310,25 +323,56 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
 
         {activeSection === "users" && (
           <div>
-            <h1 className="text-2xl font-black text-white mb-6">Usuários ({USERS.length})</h1>
-            <div className="bg-[#111118] border border-white/5 rounded-2xl divide-y divide-white/5">
-              {USERS.map((u) => (
-                <div key={u.id} className="flex items-center gap-4 p-4">
-                  <img src={u.avatar} alt="" className="w-9 h-9 rounded-full flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-white">{u.nickname}</p>
-                    <p className="text-xs text-gray-500">
-                      {u.city}/{u.state} · Nível {u.level} · {u.reviewsCount} reviews · {u.tradesCount} trocas
-                    </p>
+            <h1 className="text-2xl font-black text-white mb-6">
+              Usuários cadastrados ({siteUsers?.length ?? "..."})
+            </h1>
+            {siteUsers === null ? (
+              <p className="text-sm text-gray-500">Carregando...</p>
+            ) : siteUsers.length === 0 ? (
+              <p className="text-sm text-gray-500">
+                Nenhum usuário se cadastrou ainda. Contas reais aparecem aqui conforme as pessoas usam o /cadastrar do site.
+              </p>
+            ) : (
+              <div className="bg-[#111118] border border-white/5 rounded-2xl divide-y divide-white/5">
+                {siteUsers.map((u) => (
+                  <div key={u.id} className="flex items-center gap-4 p-4">
+                    <img
+                      src={u.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(u.nickname)}`}
+                      alt=""
+                      className="w-9 h-9 rounded-full flex-shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-white">{u.nickname}</p>
+                      <p className="text-xs text-gray-500">
+                        {u.email} · {[u.city, u.state].filter(Boolean).join("/") || "Local não informado"} · desde {formatDate(u.createdAt.slice(0, 10))}
+                      </p>
+                    </div>
+                    <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
+                      u.active ? "bg-green-900/30 text-green-400" : "bg-red-900/30 text-red-400"
+                    }`}>
+                      {u.active ? "Ativo" : "Banido"}
+                    </span>
+                    <button
+                      onClick={() => setEditingUser(u)}
+                      className="btn-press p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors flex-shrink-0"
+                    >
+                      <Edit className="w-3.5 h-3.5" />
+                    </button>
                   </div>
-                  <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
-                    u.reputation >= 95 ? "bg-green-900/30 text-green-400" : "bg-yellow-900/30 text-yellow-400"
-                  }`}>
-                    {u.reputation}%
-                  </span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
+
+            {editingUser && (
+              <EditUserModal
+                user={editingUser}
+                onClose={() => setEditingUser(null)}
+                onSaved={(updated) => {
+                  setSiteUsers((prev) => prev?.map((u) => (u.id === updated.id ? updated : u)) ?? null);
+                  setEditingUser(null);
+                }}
+              />
+            )}
           </div>
         )}
 

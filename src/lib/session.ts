@@ -1,6 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 
 export const SESSION_COOKIE = "upa_session";
+export const USER_SESSION_COOKIE = "upa_user_session";
 const SESSION_DURATION_SECONDS = 60 * 60 * 24 * 7; // 7 dias
 export const SESSION_COOKIE_MAX_AGE = SESSION_DURATION_SECONDS;
 
@@ -15,6 +16,8 @@ export interface SessionPayload {
   name: string;
   email: string;
   role: string;
+  // Ausente = sessão de admin (tokens emitidos antes desta mudança continuam válidos).
+  kind?: "admin" | "user";
   [key: string]: unknown;
 }
 

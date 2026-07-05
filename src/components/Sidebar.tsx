@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Star, Gamepad2, Newspaper, ShoppingBag, Trophy, Rocket, Search, Bell, User, UserPlus } from "lucide-react";
+import { Home, Star, Gamepad2, Newspaper, ShoppingBag, Trophy, Rocket, Search, Bell, User, UserPlus, LogOut } from "lucide-react";
+import { useUserSession } from "@/hooks/useUserSession";
 
 export const NAV_ITEMS = [
   { label: "Home", href: "/", icon: Home },
@@ -39,6 +41,80 @@ export function SidebarNavLinks({ pathname, onNavigate }: { pathname: string; on
   );
 }
 
+// Shared "Conta" block: anonymous visitors see Entrar/Cadastrar (unchanged);
+// logged-in users see avatar+nickname+logout. Reused by Sidebar (desktop) and
+// Navbar's mobile drawer, same pattern as SidebarNavLinks above.
+export function AccountAuthBlock({ onNavigate }: { onNavigate?: () => void }) {
+  const user = useUserSession();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  if (user === undefined) {
+    return <div className="h-[88px]" />;
+  }
+
+  if (user === null) {
+    return (
+      <>
+        <Link
+          href="/login"
+          onClick={onNavigate}
+          className="btn-press flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-[#0d0d18] bg-amber-400 hover:bg-amber-300 rounded-xl transition-all"
+        >
+          <User className="w-4 h-4" />
+          Entrar
+        </Link>
+        <Link
+          href="/cadastrar"
+          onClick={onNavigate}
+          className="btn-press flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-amber-400 border border-amber-500/30 hover:bg-amber-500/10 rounded-xl transition-all"
+        >
+          <UserPlus className="w-4 h-4" />
+          Cadastrar
+        </Link>
+      </>
+    );
+  }
+
+  async function handleLogout() {
+    setLoggingOut(true);
+    await fetch("/api/auth/user-logout", { method: "POST" });
+    onNavigate?.();
+    // Navegação completa: este componente vive no layout raiz e não remonta
+    // sozinho, então precisa de um reload de verdade para refletir o logout.
+    window.location.href = "/";
+  }
+
+  return (
+    <Link
+      href="/perfil"
+      onClick={onNavigate}
+      className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 transition-all group"
+    >
+      <img
+        src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.nickname)}`}
+        alt={user.nickname}
+        className="w-9 h-9 rounded-lg flex-shrink-0"
+      />
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold text-white truncate group-hover:text-amber-400 transition-colors">{user.nickname}</p>
+      </div>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleLogout();
+        }}
+        disabled={loggingOut}
+        className="p-1.5 text-gray-500 hover:text-red-400 transition-colors disabled:opacity-60"
+        aria-label="Sair"
+      >
+        <LogOut className="w-4 h-4" />
+      </button>
+    </Link>
+  );
+}
+
 // Persistent left navigation rail, IGN-style. Desktop only (lg+) — the mobile
 // equivalent is the drawer in Navbar.tsx, which reuses NAV_ITEMS/SidebarNavLinks
 // above so the two never drift apart. Amber accent is intentional: distinct from
@@ -66,20 +142,7 @@ export default function Sidebar() {
       </div>
 
       <div className="mt-auto px-3 pt-4 space-y-2">
-        <Link
-          href="/login"
-          className="btn-press flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-[#0d0d18] bg-amber-400 hover:bg-amber-300 rounded-xl transition-all"
-        >
-          <User className="w-4 h-4" />
-          Entrar
-        </Link>
-        <Link
-          href="/cadastrar"
-          className="btn-press flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-amber-400 border border-amber-500/30 hover:bg-amber-500/10 rounded-xl transition-all"
-        >
-          <UserPlus className="w-4 h-4" />
-          Cadastrar
-        </Link>
+        <AccountAuthBlock />
       </div>
     </aside>
   );

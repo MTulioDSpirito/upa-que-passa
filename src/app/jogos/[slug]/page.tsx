@@ -1,7 +1,8 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import {
   Star, Heart, Share2, ExternalLink, ChevronRight, Users, Clock, Globe,
   Monitor, Calendar, Tag, Play, ThumbsUp, ThumbsDown, AlertTriangle,
@@ -10,6 +11,7 @@ import {
 import { GAMES, REVIEWS, getScoreColor, formatScore, formatDate, formatPrice } from "@/lib/data";
 import ScoreBadge from "@/components/ScoreBadge";
 import GameCard from "@/components/GameCard";
+import { useUserSession } from "@/hooks/useUserSession";
 
 interface Props { params: Promise<{ slug: string }> }
 
@@ -45,6 +47,37 @@ export default function GamePage({ params }: Props) {
   const [activeTab, setActiveTab] = useState<"review" | "scores" | "gallery" | "marketplace">("review");
   const [userScore, setUserScore] = useState(0);
   const [hoveredScore, setHoveredScore] = useState(0);
+  const [favorited, setFavorited] = useState(false);
+  const currentUser = useUserSession();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (!currentUser || !game) return;
+    fetch("/api/favorites")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) setFavorited(data.gameIds.includes(game.id));
+      })
+      .catch(() => {});
+  }, [currentUser, game]);
+
+  async function handleToggleFavorite() {
+    if (!game) return;
+    if (!currentUser) {
+      router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+      return;
+    }
+    const res = await fetch("/api/favorites", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ gameId: game.id }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setFavorited(data.favorited);
+    }
+  }
 
   if (!game) {
     return (
@@ -151,9 +184,12 @@ export default function GamePage({ params }: Props) {
                   <Star className="w-4 h-4" />
                   Avaliar Jogo
                 </button>
-                <button className="flex items-center gap-2 px-5 py-2.5 bg-white/5 border border-white/10 text-white font-semibold rounded-xl hover:bg-white/10 transition-all">
-                  <Heart className="w-4 h-4" />
-                  Favoritar
+                <button
+                  onClick={handleToggleFavorite}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-white/5 border border-white/10 text-white font-semibold rounded-xl hover:bg-white/10 transition-all"
+                >
+                  <Heart className={`w-4 h-4 ${favorited ? "fill-red-500 text-red-500" : ""}`} />
+                  {favorited ? "Favoritado" : "Favoritar"}
                 </button>
                 <button className="flex items-center gap-2 px-5 py-2.5 bg-white/5 border border-white/10 text-white font-semibold rounded-xl hover:bg-white/10 transition-all">
                   <ShoppingBag className="w-4 h-4" />

@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Search, Bell, User, UserPlus, Gamepad2 } from "lucide-react";
-import { SidebarNavLinks } from "./Sidebar";
+import { Menu, X, Search, Bell, Gamepad2 } from "lucide-react";
+import { SidebarNavLinks, AccountAuthBlock } from "./Sidebar";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -57,22 +57,7 @@ export default function Navbar() {
               <Search className="w-4 h-4" />
               Buscar
             </button>
-            <Link
-              href="/login"
-              onClick={() => setMobileOpen(false)}
-              className="btn-press flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-[#0d0d18] bg-amber-400 hover:bg-amber-300 rounded-xl transition-all"
-            >
-              <User className="w-4 h-4" />
-              Entrar
-            </Link>
-            <Link
-              href="/cadastrar"
-              onClick={() => setMobileOpen(false)}
-              className="btn-press flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-amber-400 border border-amber-500/30 hover:bg-amber-500/10 rounded-xl transition-all"
-            >
-              <UserPlus className="w-4 h-4" />
-              Cadastrar
-            </Link>
+            <AccountAuthBlock onNavigate={() => setMobileOpen(false)} />
           </div>
         </div>
       )}

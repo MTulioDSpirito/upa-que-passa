@@ -8,7 +8,34 @@ export default function CadastrarPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({ nickname: "", email: "", password: "", console: "PS5", terms: false });
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const update = (k: string, v: unknown) => setForm((f) => ({ ...f, [k]: v }));
+
+  async function handleRegister() {
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nickname: form.nickname,
+          email: form.email,
+          password: form.password,
+          console: form.console,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? "Não foi possível criar a conta.");
+        return;
+      }
+      setStep(2);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const inputClass = "w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500/50 transition-colors";
 
@@ -90,12 +117,18 @@ export default function CadastrarPage() {
                 </span>
               </label>
 
+              {error && (
+                <div className="text-sm text-red-400 bg-red-900/20 border border-red-800/30 rounded-xl px-4 py-2.5">
+                  {error}
+                </div>
+              )}
+
               <button
-                onClick={() => setStep(2)}
-                disabled={!form.nickname || !form.email || !form.password || !form.terms}
+                onClick={handleRegister}
+                disabled={!form.nickname || !form.email || !form.password || !form.terms || loading}
                 className="w-full py-3.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-xl disabled:opacity-40 hover:from-purple-500 hover:to-blue-500 transition-all"
               >
-                Criar Conta →
+                {loading ? "Criando conta..." : "Criar Conta →"}
               </button>
             </div>
           )}
@@ -106,13 +139,17 @@ export default function CadastrarPage() {
                 <CheckCircle className="w-8 h-8 text-green-400" />
               </div>
               <h2 className="text-2xl font-black text-white mb-2">Conta Criada!</h2>
-              <p className="text-gray-400 mb-2">
-                Bem-vindo ao Upa que Passa, <strong className="text-white">{form.nickname}</strong>!
+              <p className="text-gray-400 mb-8">
+                Bem-vindo ao Upa que Passa, <strong className="text-white">{form.nickname}</strong>! Sua conta já está ativa e você já entrou.
               </p>
-              <p className="text-sm text-gray-500 mb-8">
-                Verifique seu e-mail <strong className="text-gray-300">{form.email}</strong> para ativar sua conta.
-              </p>
-              <Link href="/" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-xl hover:from-purple-500 hover:to-blue-500 transition-all">
+              <Link
+                href="/"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.href = "/";
+                }}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-xl hover:from-purple-500 hover:to-blue-500 transition-all"
+              >
                 <Gamepad2 className="w-4 h-4" />
                 Ir para a Home
               </Link>

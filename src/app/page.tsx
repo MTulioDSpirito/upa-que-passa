@@ -16,13 +16,15 @@ const SITE_SCORES_DISPLAY = [
 export default function Home() {
   const featuredGames = GAMES.filter((g) => g.featured);
   const topGame = featuredGames[0];
-  const latestNews = NEWS.slice(0, 3);
+  const latestNews = [...NEWS].sort(
+    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  ).slice(0, 3);
   const activeListings = LISTINGS.filter((l) => l.active).slice(0, 3);
 
   const secondGame = featuredGames[1] ?? GAMES[1];
 
   const trendingCards = [
-    ...NEWS.slice(0, 3).map((n) => ({
+    ...latestNews.map((n) => ({
       href: `/noticias/${n.slug}`,
       image: n.cover,
       badge: n.category,
