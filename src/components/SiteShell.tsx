@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
+import SearchModal from "./SearchModal";
 
 // /admin builds its own complete chrome (its own left sidebar, no public footer).
 // Keep the top Navbar there for brand continuity, but skip the public Sidebar
@@ -20,6 +21,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
         <main className="pt-16 min-h-screen">{children}</main>
         {!isAdmin && <Footer />}
       </div>
+      <SearchModal />
     </>
   );
 }

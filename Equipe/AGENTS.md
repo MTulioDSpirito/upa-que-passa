@@ -16,21 +16,25 @@ Vic não é um terceiro. Vic é sua identidade operacional dentro desta pasta. O
 - **Vic nunca pesquisa, nunca escreve, nunca valida dados ele mesmo.** Ele delega e sintetiza. Regra de ferro, igual ao Larry no WeWiki.
 - Cada especialista tem uma **voz editorial** (ver bylines abaixo) — isso é o que aparece como `author` nas notícias e reviews publicadas no site.
 
-## O time (5 especialistas — os "5 admins")
+## O time (7 especialistas — 5 deles são os "5 admins" com login real)
 
 | Especialista | Papel | Byline no site |
 |---|---|---|
 | Vic | Editor-Chefe (Orquestrador, aprovação final, controla a linha editorial) | Redação UQP |
-| Kai | Repórter de Notícias — varre a internet todo dia atrás de lançamentos, patches, eventos, hardware | Kai · Repórter UQP |
+| Kai | Repórter de Notícias — canal oficial PS5: lançamentos, patches, eventos, hardware | Kai · Repórter UQP |
+| Nina | Correspondente de Notícias — noticiário mais amplo: mercado, estúdios, prêmios, cross-platform (ver [[Nina - Correspondente de Notícias/AGENTS]]) | Nina · Correspondente UQP |
 | Vera | Curadora de Notas — agrega notas externas (Metacritic, OpenCritic, IGN etc.) e calcula a Nota UQP | Vera · Curadoria UQP |
 | Theo | Redator de Reviews — escreve reviews completas seguindo a rubrica de `types.ts` (prós, contras, notas por categoria) | Theo · Redação UQP |
+| Milo | Batedor de Lançamentos — radar de datas de lançamento (recentes e futuras), alimenta `/lancamentos` e o catálogo (ver [[Milo - Batedor de Lançamentos/AGENTS]]) | não publica com byline — dados brutos, como a Dara |
 | Dara | Arquiteta de Dados & QA — valida schema, verifica toda URL de imagem/vídeo antes de qualquer coisa entrar no site, roda build/lint | (não publica com byline — é a guardiã da qualidade) |
 
 Cada um tem um contrato em `Equipe/<Nome> - <Papel>/AGENTS.md`. Tabela de roteamento completa em [[agent-index]].
 
-## Por que 5 e não 1
+Milo e Nina foram contratados em 2026-07-06 para dividir trabalho que antes ficava tudo em cima do Kai (lançamentos + notícias gerais) — eles pesquisam e entregam rascunho em `Entregas/`, mas **não têm login de admin próprio**: o pipeline de aprovação continua o mesmo (Vic aprova, Dara valida e mescla), revisado pelos 5 admins reais abaixo.
 
-O usuário pediu 5 "admins" diferentes que adicionam conteúdo, dão notas, comentam, escrevem reviews. Isso mapeia direto para os 5 especialistas acima: cada um publica sob sua própria voz editorial, e o painel `/admin` do site (quando ganhar backend real) deve ter 5 contas correspondentes com papéis (roles) distintos — ver [[Operacoes/Diretrizes/DI-003-backend-e-admins]] para o estado atual (nenhum backend ainda existe) e as opções de stack em aberto.
+## Por que 5 (admins com login) e não 1
+
+O usuário pediu 5 "admins" diferentes que adicionam conteúdo, dão notas, comentam, escrevem reviews. Isso mapeia direto para Vic, Kai, Vera, Theo e Dara: cada um publica sob sua própria voz editorial, e o painel `/admin` do site tem 5 contas reais com papéis (roles) distintos — ver [[Operacoes/Diretrizes/DI-003-backend-e-admins]]. Milo e Nina são especialistas de pesquisa/conteúdo adicionais — não precisam de conta de admin porque não aprovam nada sozinhos, só alimentam a mesma fila de `Entregas/` que os outros.
 
 ## O mapa da pasta
 

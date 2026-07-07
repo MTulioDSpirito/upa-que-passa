@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Star, Gamepad2, Newspaper, ShoppingBag, Trophy, Rocket, Search, Bell, User, UserPlus, LogOut } from "lucide-react";
 import { useUserSession } from "@/hooks/useUserSession";
+import { openSearch } from "./SearchModal";
 
 export const NAV_ITEMS = [
   { label: "Home", href: "/", icon: Home },
@@ -129,7 +130,10 @@ export default function Sidebar() {
 
       <div className="mt-6 px-3 space-y-0.5">
         <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-gray-600">Conta</div>
-        <button className="btn-press w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+        <button
+          onClick={openSearch}
+          className="btn-press w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all"
+        >
           <Search className="w-4 h-4" />
           Buscar
           <kbd className="ml-auto text-[10px] bg-white/10 px-1.5 py-0.5 rounded">⌘K</kbd>

@@ -14,8 +14,8 @@ interface GameCardProps {
 }
 
 export default function GameCard({ game, compact = false }: GameCardProps) {
-  const score = game.adminScore || game.worldAvg || game.userScore;
-  const scoreColor = getScoreColor(score);
+  const score = game.adminScore || game.worldAvg || game.userScore || undefined;
+  const scoreColor = score ? getScoreColor(score) : "text-gray-500";
   const [favorited, setFavorited] = useState(false);
   const currentUser = useUserSession();
   const router = useRouter();
@@ -52,7 +52,7 @@ export default function GameCard({ game, compact = false }: GameCardProps) {
             {game.title}
           </p>
           <p className="text-xs text-gray-500">{game.developer}</p>
-          <span className={`text-sm font-bold ${scoreColor}`}>{formatScore(score)}</span>
+          <span className={`text-sm font-bold ${scoreColor}`}>{score ? formatScore(score) : "—"}</span>
         </div>
       </Link>
     );
@@ -72,12 +72,13 @@ export default function GameCard({ game, compact = false }: GameCardProps) {
 
           {/* Score Badge */}
           <div className={`absolute top-2 right-2 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black text-black ${
+            !score ? "bg-gray-400" :
             score >= 9 ? "bg-green-400" :
             score >= 7.5 ? "bg-lime-400" :
             score >= 6 ? "bg-yellow-400" :
             "bg-red-400"
           }`}>
-            {formatScore(score)}
+            {score ? formatScore(score) : "—"}
           </div>
 
           {/* Platforms */}
@@ -109,8 +110,10 @@ export default function GameCard({ game, compact = false }: GameCardProps) {
           {/* Footer */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
-              <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-              <span className="text-xs text-gray-400">{game.userScore.toFixed(1)} usuários</span>
+              <Star className={`w-3 h-3 ${game.userScore ? "text-yellow-400 fill-yellow-400" : "text-gray-600"}`} />
+              <span className="text-xs text-gray-400">
+                {game.userScore ? `${game.userScore.toFixed(1)} usuários` : "Sem notas de usuários"}
+              </span>
             </div>
             <button
               onClick={handleToggleFavorite}

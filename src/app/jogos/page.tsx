@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { Search, Filter, SlidersHorizontal, Grid, List } from "lucide-react";
 import GameCard from "@/components/GameCard";
-import { GAMES, getScoreColor, formatScore } from "@/lib/data";
+import { getScoreColor, formatScore } from "@/lib/data";
+import { useAllGames } from "@/hooks/useAllGames";
 
 const GENRES = ["Todos", "Ação", "Aventura", "RPG", "FPS", "Corrida", "Esporte", "Terror", "Indie", "Plataforma", "Estratégia"];
 const SORT_OPTIONS = [
@@ -19,8 +20,9 @@ export default function JogosPage() {
   const [genre, setGenre] = useState("Todos");
   const [sort, setSort] = useState("score");
   const [view, setView] = useState<"grid" | "list">("grid");
+  const [games] = useAllGames();
 
-  const filtered = GAMES
+  const filtered = games
     .filter((g) => {
       const matchSearch = g.title.toLowerCase().includes(search.toLowerCase()) ||
         g.developer.toLowerCase().includes(search.toLowerCase());
@@ -39,7 +41,7 @@ export default function JogosPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-black text-white mb-2">Catálogo de Jogos PS5</h1>
-        <p className="text-gray-400">{GAMES.length} jogos avaliados · atualizado diariamente</p>
+        <p className="text-gray-400">{games.length} jogos avaliados · atualizado diariamente</p>
       </div>
 
       {/* Filters */}
@@ -134,8 +136,8 @@ export default function JogosPage() {
                 </div>
               </div>
               <div className="text-right">
-                <div className={`text-2xl font-black ${getScoreColor(game.adminScore || 0)}`}>
-                  {formatScore(game.adminScore || game.userScore)}
+                <div className={`text-2xl font-black ${game.adminScore || game.worldAvg ? getScoreColor(game.adminScore || game.worldAvg || 0) : "text-gray-500"}`}>
+                  {game.adminScore || game.worldAvg ? formatScore(game.adminScore || game.worldAvg || 0) : "—"}
                 </div>
                 <div className="text-xs text-gray-500">Nota UQP</div>
               </div>

@@ -107,8 +107,10 @@ export default function ReviewsPage() {
                 </h3>
                 <p className="text-xs text-gray-500 mb-2">{game.developer}</p>
                 <div className="flex items-center gap-2">
-                  <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                  <span className={`text-sm font-bold ${getScoreColor(game.userScore)}`}>{game.userScore}</span>
+                  <Star className={`w-3 h-3 ${game.userScore ? "text-yellow-400 fill-yellow-400" : "text-gray-600"}`} />
+                  <span className={`text-sm font-bold ${game.userScore ? getScoreColor(game.userScore) : "text-gray-500"}`}>
+                    {game.userScore || "—"}
+                  </span>
                   <span className="text-xs text-gray-600">usuários</span>
                 </div>
                 <div className="mt-1">

@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { ArrowRight, Star, Flame, ShoppingBag, Trophy, Newspaper, ChevronRight, TrendingUp, Users, MessageSquare } from "lucide-react";
 import GameCard from "@/components/GameCard";
-import { GAMES, NEWS, LISTINGS, formatPrice, formatDate, getScoreColor, formatScore } from "@/lib/data";
+import { NEWS, LISTINGS, formatPrice, formatDate, getScoreColor, formatScore } from "@/lib/data";
+import { useAllGames } from "@/hooks/useAllGames";
 
 const SITE_SCORES_DISPLAY = [
   { site: "IGN", logo: "🎮" },
@@ -14,8 +15,12 @@ const SITE_SCORES_DISPLAY = [
 ];
 
 export default function Home() {
+  const [GAMES] = useAllGames();
   const featuredGames = GAMES.filter((g) => g.featured);
-  const topGame = featuredGames[0];
+  // Prefer a featured game that already has an editorial "Nota UQP" (adminScore) for the hero,
+  // since the scores row below is built around that field — falls back to the first featured
+  // game if none has one yet (e.g. freshly added titles awaiting a full review).
+  const topGame = featuredGames.find((g) => g.adminScore) ?? featuredGames[0];
   const latestNews = [...NEWS].sort(
     (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   ).slice(0, 3);
@@ -101,13 +106,13 @@ export default function Home() {
                 {/* Scores row */}
                 <div className="grid grid-cols-3 gap-3 mb-6">
                   {[
-                    { label: "Nota UQP", score: topGame.adminScore! },
-                    { label: "Metacritic", score: topGame.metacriticScore! / 10 },
-                    { label: "Usuários", score: topGame.userScore },
+                    { label: "Nota UQP", score: topGame.adminScore },
+                    { label: "Metacritic", score: topGame.metacriticScore ? topGame.metacriticScore / 10 : undefined },
+                    { label: "Usuários", score: topGame.userScore || undefined },
                   ].map((s) => (
                     <div key={s.label} className="bg-white/5 rounded-xl p-3 text-center">
-                      <div className={`text-2xl font-black ${getScoreColor(s.score)}`}>
-                        {formatScore(s.score)}
+                      <div className={`text-2xl font-black ${s.score ? getScoreColor(s.score) : "text-gray-500"}`}>
+                        {s.score ? formatScore(s.score) : "—"}
                       </div>
                       <div className="text-xs text-gray-500 mt-0.5">{s.label}</div>
                     </div>

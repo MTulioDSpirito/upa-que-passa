@@ -1,15 +1,51 @@
 import Link from "next/link";
 import { Calendar, Clock, Gamepad2 } from "lucide-react";
 import { GAMES, formatDate } from "@/lib/data";
+import { readAdminGames } from "@/lib/adminGames";
+import { Game } from "@/lib/types";
+
+export const dynamic = "force-dynamic";
 
 const UPCOMING = [
-  { id: "u1", title: "GTA VI", developer: "Rockstar Games", releaseDate: "2025-05-26", cover: "https://images.igdb.com/igdb/image/upload/t_cover_big/co6cl8.png", platforms: ["PS5", "Xbox Series X"], genres: ["Ação", "Open World"] },
-  { id: "u2", title: "Death Stranding 2: On The Beach", developer: "Kojima Productions", releaseDate: "2025-06-26", cover: "https://image.api.playstation.com/vulcan/ap/rnd/202311/0200/1c1fec05ac63e93bc0db65d7028d63aad72b08f59a94e88b.png", platforms: ["PS5"], genres: ["Aventura", "Ação"] },
-  { id: "u3", title: "Wolverine", developer: "Insomniac Games", releaseDate: "2025-12-31", cover: "https://upload.wikimedia.org/wikipedia/en/5/5a/Marvels_Wolverine_cover.jpg", platforms: ["PS5"], genres: ["Ação"] },
+  { id: "u1", title: "Assassin's Creed Black Flag Resynced", developer: "Ubisoft Montpellier", releaseDate: "2026-07-09", cover: "https://media.rawg.io/media/screenshots/990/99088f6f170459244defd7afd9fce096.jpg", platforms: ["PS5", "Xbox Series X|S", "PC"], genres: ["Ação", "Aventura"] },
+  { id: "u2", title: "Marvel's Wolverine", developer: "Insomniac Games", releaseDate: "2026-09-15", cover: "https://media.rawg.io/media/games/28d/28d61be51ec0411e24c28f71122dcaaf.jpeg", platforms: ["PS5"], genres: ["Ação", "Aventura"] },
+  { id: "u3", title: "GTA VI", developer: "Rockstar Games", releaseDate: "2026-11-19", cover: "https://media.rawg.io/media/games/734/7342a1cd82c8997ec620084ae4c2e7e4.jpg", platforms: ["PS5", "Xbox Series X|S"], genres: ["Ação", "Mundo Aberto"] },
 ];
 
-export default function LancamentosPage() {
-  const recentGames = [...GAMES].sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime());
+const RECENT_WINDOW_DAYS = 180;
+
+function selectRecentGames(games: Game[]): Game[] {
+  const now = Date.now();
+  const cutoff = now - RECENT_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+  return games
+    .filter((g) => {
+      const releaseTime = new Date(g.releaseDate).getTime();
+      return releaseTime <= now && releaseTime >= cutoff;
+    })
+    .sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime());
+}
+
+function selectUpcomingAdminGames(adminGames: Game[]) {
+  const now = Date.now();
+  return adminGames
+    .filter((g) => new Date(g.releaseDate).getTime() > now)
+    .map((g) => ({
+      id: g.id,
+      title: g.title,
+      developer: g.developer,
+      releaseDate: g.releaseDate,
+      cover: g.cover,
+      platforms: g.platforms,
+      genres: g.genres,
+    }));
+}
+
+export default async function LancamentosPage() {
+  const adminGames = await readAdminGames();
+  const recentGames = selectRecentGames([...GAMES, ...adminGames]);
+  const upcoming = [...UPCOMING, ...selectUpcomingAdminGames(adminGames)].sort(
+    (a, b) => new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime()
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
@@ -25,7 +61,7 @@ export default function LancamentosPage() {
           Em Breve
         </h2>
         <div className="grid md:grid-cols-3 gap-5">
-          {UPCOMING.map((game) => (
+          {upcoming.map((game) => (
             <div key={game.id} className="bg-[#111118] border border-white/5 rounded-2xl overflow-hidden">
               <div className="relative h-64 overflow-hidden">
                 <img src={game.cover} alt={game.title} className="w-full h-full object-cover" />
@@ -60,6 +96,12 @@ export default function LancamentosPage() {
           <Gamepad2 className="w-6 h-6 text-purple-400" />
           Lançamentos Recentes
         </h2>
+        {recentGames.length === 0 && (
+          <div className="text-center py-12 text-gray-500">
+            <Gamepad2 className="w-8 h-8 mx-auto mb-3 text-gray-600" />
+            <p>Nenhum lançamento nos últimos {RECENT_WINDOW_DAYS} dias.</p>
+          </div>
+        )}
         <div className="space-y-3">
           {recentGames.map((game) => (
             <Link

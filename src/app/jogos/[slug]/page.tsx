@@ -8,10 +8,11 @@ import {
   Monitor, Calendar, Tag, Play, ThumbsUp, ThumbsDown, AlertTriangle,
   MessageSquare, ShoppingBag, BarChart3, Gamepad2
 } from "lucide-react";
-import { GAMES, REVIEWS, getScoreColor, formatScore, formatDate, formatPrice } from "@/lib/data";
+import { REVIEWS, getScoreColor, formatScore, formatDate, formatPrice } from "@/lib/data";
 import ScoreBadge from "@/components/ScoreBadge";
 import GameCard from "@/components/GameCard";
 import { useUserSession } from "@/hooks/useUserSession";
+import { useAllGames } from "@/hooks/useAllGames";
 
 interface Props { params: Promise<{ slug: string }> }
 
@@ -42,7 +43,8 @@ const MOCK_COMMENTS = [
 
 export default function GamePage({ params }: Props) {
   const { slug } = use(params);
-  const game = GAMES.find((g) => g.slug === slug);
+  const [games] = useAllGames();
+  const game = games.find((g) => g.slug === slug);
   const review = REVIEWS.find((r) => r.gameId === game?.id);
   const [activeTab, setActiveTab] = useState<"review" | "scores" | "gallery" | "marketplace">("review");
   const [userScore, setUserScore] = useState(0);
@@ -163,10 +165,10 @@ export default function GamePage({ params }: Props) {
                   </div>
                 )}
                 <div className="flex flex-col items-center">
-                  <div className={`w-16 h-16 rounded-xl border flex items-center justify-center text-xl font-black ${getScoreColor(game.userScore)} bg-white/5 border-white/10`}>
-                    {formatScore(game.userScore)}
+                  <div className={`w-16 h-16 rounded-xl border flex items-center justify-center text-xl font-black bg-white/5 border-white/10 ${game.userScore ? getScoreColor(game.userScore) : "text-gray-500"}`}>
+                    {game.userScore ? formatScore(game.userScore) : "—"}
                   </div>
-                  <span className="text-xs text-gray-500 mt-1">Usuários</span>
+                  <span className="text-xs text-gray-500 mt-1">{game.userScore ? "Usuários" : "Sem notas ainda"}</span>
                 </div>
                 {game.worldAvg && (
                   <div className="flex flex-col items-center">
@@ -544,7 +546,7 @@ export default function GamePage({ params }: Props) {
             <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
               <h3 className="font-bold text-white mb-4">Você pode gostar</h3>
               <div className="space-y-1">
-                {GAMES.filter((g) => g.id !== game.id && g.genres.some((genre) => game.genres.includes(genre))).slice(0, 4).map((g) => (
+                {games.filter((g) => g.id !== game.id && g.genres.some((genre) => game.genres.includes(genre))).slice(0, 4).map((g) => (
                   <GameCard key={g.id} game={g} compact />
                 ))}
               </div>

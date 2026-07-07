@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Search, Bell, Gamepad2 } from "lucide-react";
 import { SidebarNavLinks, AccountAuthBlock } from "./Sidebar";
+import { openSearch } from "./SearchModal";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -29,7 +30,10 @@ export default function Navbar() {
           {/* Right side — only on mobile/tablet. The desktop Sidebar already has
               search/notifications/entrar, so these would just duplicate it at lg+. */}
           <div className="flex items-center gap-2 lg:hidden">
-            <button className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-all border border-white/10 btn-press">
+            <button
+              onClick={openSearch}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-all border border-white/10 btn-press"
+            >
               <Search className="w-4 h-4" />
               <span className="text-xs hidden sm:inline">Buscar...</span>
             </button>
@@ -53,7 +57,13 @@ export default function Navbar() {
         <div className="lg:hidden bg-[#0d0d18] border-t border-amber-900/10 py-4">
           <SidebarNavLinks pathname={pathname} onNavigate={() => setMobileOpen(false)} />
           <div className="px-3 pt-4 mt-4 border-t border-white/10 space-y-2">
-            <button className="btn-press w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+            <button
+              onClick={() => {
+                setMobileOpen(false);
+                openSearch();
+              }}
+              className="btn-press w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all"
+            >
               <Search className="w-4 h-4" />
               Buscar
             </button>

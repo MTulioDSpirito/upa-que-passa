@@ -7,9 +7,11 @@ import {
   Newspaper, Trophy, Settings, BarChart3, TrendingUp, TrendingDown,
   Eye, Plus, Edit, Trash2, Shield, Sparkles, Construction, Heart
 } from "lucide-react";
-import { GAMES, LISTINGS, NEWS, USERS, REVIEWS, formatPrice, formatDate, formatScore, getScoreColor } from "@/lib/data";
+import { LISTINGS, NEWS, USERS, REVIEWS, formatPrice, formatDate, formatScore, getScoreColor } from "@/lib/data";
 import AdminUserFooter, { type AdminUserSession } from "./AdminUserFooter";
 import EditUserModal, { type AdminSiteUser } from "./EditUserModal";
+import AddGameModal from "./AddGameModal";
+import { useAllGames } from "@/hooks/useAllGames";
 
 const SIDEBAR_ITEMS = [
   { icon: LayoutDashboard, label: "Dashboard", id: "dashboard" },
@@ -41,6 +43,8 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
   const [pendentesCount, setPendentesCount] = useState<number | null>(null);
   const [siteUsers, setSiteUsers] = useState<AdminSiteUser[] | null>(null);
   const [editingUser, setEditingUser] = useState<AdminSiteUser | null>(null);
+  const [addingGame, setAddingGame] = useState(false);
+  const [allGames, addGame] = useAllGames();
 
   useEffect(() => {
     fetch("/api/admin/entregas")
@@ -113,7 +117,10 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                 <p className="text-gray-500 text-sm">Visão geral do portal</p>
               </div>
               <div className="flex gap-2">
-                <button className="btn-press flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold rounded-xl transition-all">
+                <button
+                  onClick={() => setAddingGame(true)}
+                  className="btn-press flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold rounded-xl transition-all"
+                >
                   <Plus className="w-4 h-4" />
                   Adicionar Jogo
                 </button>
@@ -151,7 +158,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                   </button>
                 </div>
                 <div className="space-y-3">
-                  {GAMES.slice(0, 4).map((game) => (
+                  {allGames.slice(-4).reverse().map((game) => (
                     <div key={game.id} className="flex items-center gap-3">
                       <img src={game.cover} alt="" className="w-10 h-14 object-cover rounded-lg" />
                       <div className="flex-1 min-w-0">
@@ -258,13 +265,16 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
         {activeSection === "games" && (
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-2xl font-black text-white">Jogos ({GAMES.length})</h1>
-              <button className="btn-press flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold rounded-xl transition-all">
+              <h1 className="text-2xl font-black text-white">Jogos ({allGames.length})</h1>
+              <button
+                onClick={() => setAddingGame(true)}
+                className="btn-press flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold rounded-xl transition-all"
+              >
                 <Plus className="w-4 h-4" /> Adicionar Jogo
               </button>
             </div>
             <div className="bg-[#111118] border border-white/5 rounded-2xl divide-y divide-white/5">
-              {GAMES.map((game) => (
+              {allGames.map((game) => (
                 <div key={game.id} className="flex items-center gap-4 p-4">
                   <img src={game.cover} alt="" className="w-10 h-14 object-cover rounded-lg flex-shrink-0" />
                   <div className="flex-1 min-w-0">
@@ -293,7 +303,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
             <h1 className="text-2xl font-black text-white mb-6">Reviews ({REVIEWS.length})</h1>
             <div className="bg-[#111118] border border-white/5 rounded-2xl divide-y divide-white/5">
               {REVIEWS.map((review) => {
-                const game = GAMES.find((g) => g.id === review.gameId);
+                const game = allGames.find((g) => g.id === review.gameId);
                 return (
                   <div key={review.id} className="flex items-center gap-4 p-4">
                     {game && <img src={game.cover} alt="" className="w-10 h-14 object-cover rounded-lg flex-shrink-0" />}
@@ -442,6 +452,16 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
           </div>
         )}
       </main>
+
+      {addingGame && (
+        <AddGameModal
+          onClose={() => setAddingGame(false)}
+          onSaved={(game) => {
+            addGame(game);
+            setAddingGame(false);
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -26,6 +26,7 @@ export default async function PerfilPage() {
         city: user.city,
         state: user.state,
         bio: user.bio,
+        console: user.console,
         createdAt: user.createdAt.toISOString(),
       }}
       favoriteGameIds={favorites.map((f) => f.gameId)}

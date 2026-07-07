@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Star, MessageSquare, ShoppingBag, Trophy, Settings } from "lucide-react";
 import { GAMES, getScoreColor } from "@/lib/data";
+import EditProfileModal, { type EditableProfile } from "./EditProfileModal";
 
 interface PerfilUser {
   nickname: string;
@@ -10,19 +12,31 @@ interface PerfilUser {
   city: string | null;
   state: string | null;
   bio: string | null;
+  console: string | null;
   createdAt: string;
 }
 
 export default function PerfilClient({
-  user,
+  user: initialUser,
   favoriteGameIds,
 }: {
   user: PerfilUser;
   favoriteGameIds: string[];
 }) {
+  const [user, setUser] = useState(initialUser);
+  const [editing, setEditing] = useState(false);
   const favoriteGames = GAMES.filter((g) => favoriteGameIds.includes(g.id));
   const avatar = user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.nickname)}`;
   const location = [user.city, user.state].filter(Boolean).join(", ");
+
+  function handleSaved(updated: EditableProfile) {
+    setUser((prev) => ({ ...prev, ...updated }));
+    setEditing(false);
+    // O avatar/nickname também aparecem no Navbar/Sidebar (AccountAuthBlock), que lê a
+    // sessão via useUserSession() uma vez no mount e não reage a mudanças locais aqui —
+    // mesmo motivo pelo qual o logout já força um reload completo (ver Sidebar.tsx).
+    window.location.reload();
+  }
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
@@ -34,7 +48,10 @@ export default function PerfilClient({
             backgroundSize: "40px 40px",
           }}
         />
-        <button className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 bg-black/40 backdrop-blur text-white text-xs rounded-lg hover:bg-black/60 transition-all">
+        <button
+          onClick={() => setEditing(true)}
+          className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 bg-black/40 backdrop-blur text-white text-xs rounded-lg hover:bg-black/60 transition-all"
+        >
           <Settings className="w-3.5 h-3.5" />
           Editar Perfil
         </button>
@@ -108,6 +125,21 @@ export default function PerfilClient({
           </div>
         )}
       </div>
+
+      {editing && (
+        <EditProfileModal
+          profile={{
+            nickname: user.nickname,
+            avatar: user.avatar,
+            city: user.city,
+            state: user.state,
+            bio: user.bio,
+            console: user.console,
+          }}
+          onClose={() => setEditing(false)}
+          onSaved={handleSaved}
+        />
+      )}
     </div>
   );
 }

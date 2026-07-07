@@ -104,14 +104,14 @@ export default function RankingPage() {
                 </div>
                 <div className="text-right hidden md:block">
                   <div className="text-sm font-semibold text-gray-400 flex items-center gap-1">
-                    <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                    {game.userScore.toFixed(1)}
+                    <Star className={`w-3 h-3 ${game.userScore ? "text-yellow-400 fill-yellow-400" : "text-gray-600"}`} />
+                    {game.userScore ? game.userScore.toFixed(1) : "—"}
                   </div>
                   <div className="text-xs text-gray-600">Usuários</div>
                 </div>
                 <div className="text-right">
-                  <div className={`text-2xl font-black ${getScoreColor(game.adminScore || 0)}`}>
-                    {formatScore(game.adminScore || game.userScore)}
+                  <div className={`text-2xl font-black ${game.adminScore || game.worldAvg ? getScoreColor(game.adminScore || game.worldAvg || 0) : "text-gray-500"}`}>
+                    {game.adminScore || game.worldAvg ? formatScore(game.adminScore || game.worldAvg || 0) : "—"}
                   </div>
                   <div className="text-xs text-gray-600">Nota UQP</div>
                 </div>
