@@ -21,9 +21,11 @@ export default function Home() {
   // since the scores row below is built around that field — falls back to the first featured
   // game if none has one yet (e.g. freshly added titles awaiting a full review).
   const topGame = featuredGames.find((g) => g.adminScore) ?? featuredGames[0];
-  const latestNews = [...NEWS].sort(
+  const sortedNews = [...NEWS].sort(
     (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  ).slice(0, 3);
+  );
+  const latestNews = sortedNews.slice(0, 3);
+  const moreNews = sortedNews.slice(3, 6);
   const activeListings = LISTINGS.filter((l) => l.active).slice(0, 3);
 
   const secondGame = featuredGames[1] ?? GAMES[1];
@@ -66,6 +68,114 @@ export default function Home() {
               <h3 className="absolute bottom-0 left-0 right-0 p-3 text-white font-bold text-sm leading-tight line-clamp-3">
                 {card.title}
               </h3>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── NOTÍCIAS ────────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <Newspaper className="w-6 h-6 text-blue-400" />
+            <h2 className="text-2xl font-black text-white">Últimas Notícias</h2>
+          </div>
+          <Link href="/noticias" className="flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 transition-colors">
+            Ver todas <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-5">
+          {moreNews.map((news) => (
+            <Link
+              key={news.id}
+              href={`/noticias/${news.slug}`}
+              className="group block bg-[#111118] border border-white/5 rounded-2xl overflow-hidden hover:border-blue-500/20 transition-all"
+            >
+              <div className="relative h-48 overflow-hidden">
+                <img
+                  src={news.cover}
+                  alt={news.title}
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute top-3 left-3">
+                  <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full font-medium">
+                    {news.category}
+                  </span>
+                </div>
+              </div>
+              <div className="p-4">
+                <h3 className="font-bold text-white group-hover:text-blue-400 transition-colors leading-tight mb-2 line-clamp-2">
+                  {news.title}
+                </h3>
+                <p className="text-sm text-gray-500 line-clamp-2 mb-3">{news.excerpt}</p>
+                <div className="flex items-center justify-between text-xs text-gray-500">
+                  <span>{formatDate(news.publishedAt)}</span>
+                  <span>{news.views.toLocaleString("pt-BR")} views</span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── MARKETPLACE ─────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <ShoppingBag className="w-6 h-6 text-green-400" />
+            <h2 className="text-2xl font-black text-white">Marketplace</h2>
+            <span className="text-xs bg-green-900/30 text-green-400 border border-green-800/30 px-2 py-0.5 rounded-full">
+              Compre e Troque
+            </span>
+          </div>
+          <Link href="/marketplace" className="flex items-center gap-1 text-sm text-green-400 hover:text-green-300 transition-colors">
+            Ver todos <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-5">
+          {activeListings.map((listing) => (
+            <Link
+              key={listing.id}
+              href={`/marketplace/${listing.id}`}
+              className="group bg-[#111118] border border-white/5 rounded-2xl overflow-hidden hover:border-green-500/20 transition-all"
+            >
+              <div className="relative h-40 overflow-hidden">
+                <img
+                  src={listing.photos[0]}
+                  alt={listing.title}
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute top-3 left-3 flex gap-2">
+                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                    listing.condition === "lacrado" ? "bg-green-600 text-white" :
+                    listing.condition === "como novo" ? "bg-blue-600 text-white" :
+                    "bg-yellow-600 text-white"
+                  }`}>
+                    {listing.condition.charAt(0).toUpperCase() + listing.condition.slice(1)}
+                  </span>
+                  {listing.acceptsTrade && (
+                    <span className="text-xs px-2 py-1 rounded-full font-medium bg-purple-600 text-white">
+                      Aceita Troca
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="p-4">
+                <h3 className="font-semibold text-white group-hover:text-green-400 transition-colors mb-1 line-clamp-2">
+                  {listing.title}
+                </h3>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xl font-black text-green-400">{formatPrice(listing.price)}</span>
+                  <span className="text-xs text-gray-500">{listing.city} / {listing.state}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <img src={listing.userAvatar} alt="" className="w-6 h-6 rounded-full" />
+                  <span className="text-xs text-gray-500">{listing.userNickname}</span>
+                  <span className="ml-auto text-xs text-yellow-400">⭐ {listing.userReputation}%</span>
+                </div>
+              </div>
             </Link>
           ))}
         </div>
@@ -178,114 +288,6 @@ export default function Home() {
                 ))}
               </div>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ─── NOTÍCIAS ────────────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <Newspaper className="w-6 h-6 text-blue-400" />
-            <h2 className="text-2xl font-black text-white">Últimas Notícias</h2>
-          </div>
-          <Link href="/noticias" className="flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 transition-colors">
-            Ver todas <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-5">
-          {latestNews.map((news, i) => (
-            <Link
-              key={news.id}
-              href={`/noticias/${news.slug}`}
-              className="group block bg-[#111118] border border-white/5 rounded-2xl overflow-hidden hover:border-blue-500/20 transition-all"
-            >
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src={news.cover}
-                  alt={news.title}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute top-3 left-3">
-                  <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full font-medium">
-                    {news.category}
-                  </span>
-                </div>
-              </div>
-              <div className="p-4">
-                <h3 className="font-bold text-white group-hover:text-blue-400 transition-colors leading-tight mb-2 line-clamp-2">
-                  {news.title}
-                </h3>
-                <p className="text-sm text-gray-500 line-clamp-2 mb-3">{news.excerpt}</p>
-                <div className="flex items-center justify-between text-xs text-gray-500">
-                  <span>{formatDate(news.publishedAt)}</span>
-                  <span>{news.views.toLocaleString("pt-BR")} views</span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* ─── MARKETPLACE ─────────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <ShoppingBag className="w-6 h-6 text-green-400" />
-            <h2 className="text-2xl font-black text-white">Marketplace</h2>
-            <span className="text-xs bg-green-900/30 text-green-400 border border-green-800/30 px-2 py-0.5 rounded-full">
-              Compre e Troque
-            </span>
-          </div>
-          <Link href="/marketplace" className="flex items-center gap-1 text-sm text-green-400 hover:text-green-300 transition-colors">
-            Ver todos <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-5">
-          {activeListings.map((listing) => (
-            <Link
-              key={listing.id}
-              href={`/marketplace/${listing.id}`}
-              className="group bg-[#111118] border border-white/5 rounded-2xl overflow-hidden hover:border-green-500/20 transition-all"
-            >
-              <div className="relative h-40 overflow-hidden">
-                <img
-                  src={listing.photos[0]}
-                  alt={listing.title}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute top-3 left-3 flex gap-2">
-                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                    listing.condition === "lacrado" ? "bg-green-600 text-white" :
-                    listing.condition === "como novo" ? "bg-blue-600 text-white" :
-                    "bg-yellow-600 text-white"
-                  }`}>
-                    {listing.condition.charAt(0).toUpperCase() + listing.condition.slice(1)}
-                  </span>
-                  {listing.acceptsTrade && (
-                    <span className="text-xs px-2 py-1 rounded-full font-medium bg-purple-600 text-white">
-                      Aceita Troca
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className="p-4">
-                <h3 className="font-semibold text-white group-hover:text-green-400 transition-colors mb-1 line-clamp-2">
-                  {listing.title}
-                </h3>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xl font-black text-green-400">{formatPrice(listing.price)}</span>
-                  <span className="text-xs text-gray-500">{listing.city} / {listing.state}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <img src={listing.userAvatar} alt="" className="w-6 h-6 rounded-full" />
-                  <span className="text-xs text-gray-500">{listing.userNickname}</span>
-                  <span className="ml-auto text-xs text-yellow-400">⭐ {listing.userReputation}%</span>
-                </div>
-              </div>
-            </Link>
           ))}
         </div>
       </section>
