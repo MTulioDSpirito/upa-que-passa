@@ -129,7 +129,7 @@ export default function Sidebar() {
       <SidebarNavLinks pathname={pathname} />
 
       <div className="mt-6 px-3 space-y-0.5">
-        <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-gray-600">Conta</div>
+        <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-gray-500">Conta</div>
         <button
           onClick={openSearch}
           className="btn-press w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all"

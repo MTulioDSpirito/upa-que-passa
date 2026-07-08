@@ -14,12 +14,23 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Was hardcoded to Arial, which silently overrode the Geist font already
+     loaded via next/font in layout.tsx — the whole site rendered in the
+     browser's Arial fallback instead of the intended typeface. */
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Display font (Russo One) for brand wordmark and big headings — deliberately
+   used sparingly (logo, hero titles, score call-outs), not for body copy. */
+.font-display {
+  font-family: var(--font-display), var(--font-geist-sans), sans-serif;
+  letter-spacing: 0.01em;
 }
 
 /* Click/tap feedback */
@@ -82,10 +93,26 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
               linear-gradient(135deg, #7c3aed, #3b82f6) border-box;
 }
 
-/* Card hover effects */
+/* Soft ambient glow for hero/section tops — used sparingly, not on every card */
+.hero-glow-bg {
+  position: relative;
+}
+.hero-glow-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse 60% 45% at 50% 0%, rgba(124, 58, 237, 0.18), transparent 70%);
+  pointer-events: none;
+}
+
+/* Card hover effects — transform+shadow only (no `all`, keeps hover cheap) */
+.game-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
 .game-card:hover {
   transform: translateY(-4px);
-  transition: all 0.3s ease;
+  box-shadow: 0 16px 32px -12px rgba(124, 58, 237, 0.35), 0 4px 10px -6px rgba(0, 0, 0, 0.5);
 }
 
 /* Score colors */
@@ -123,4 +150,16 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
 }
 .animate-slide-up {
   animation: slide-up 0.5s ease-out forwards;
+}
+
+/* Respect the user's OS-level motion preference: shrink every animation/
+   transition to effectively instant instead of disabling feedback entirely
+   (so state still changes, it just doesn't move). */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

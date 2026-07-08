@@ -442,7 +442,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
 
         {NOT_YET_BUILT.includes(activeSection) && (
           <div className="flex flex-col items-center justify-center h-64 text-center">
-            <Construction className="w-10 h-10 text-gray-600 mb-4" />
+            <Construction className="w-10 h-10 text-gray-500 mb-4" />
             <h2 className="text-lg font-bold text-white mb-1">
               {SIDEBAR_ITEMS.find((i) => i.id === activeSection)?.label}
             </h2>

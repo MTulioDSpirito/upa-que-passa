@@ -95,7 +95,7 @@ export default function Home() {
                   </span>
                 ))}
               </div>
-              <h3 className="text-xl sm:text-2xl font-black text-white mb-2">{topGame.title}</h3>
+              <h3 className="font-display text-xl sm:text-2xl text-white mb-2">{topGame.title}</h3>
               <p className="text-gray-400 text-sm leading-relaxed mb-4 line-clamp-2">{topGame.synopsis}</p>
 
               {/* Scores row */}
@@ -218,7 +218,7 @@ export default function Home() {
                   {news.title}
                 </h3>
                 <p className="text-sm text-gray-500 line-clamp-2 mb-3">{news.excerpt}</p>
-                <div className="flex items-center justify-between text-xs text-gray-600">
+                <div className="flex items-center justify-between text-xs text-gray-500">
                   <span>{formatDate(news.publishedAt)}</span>
                   <span>{news.views.toLocaleString("pt-BR")} views</span>
                 </div>
@@ -307,7 +307,7 @@ export default function Home() {
                   className="flex items-center gap-4 bg-[#111118] border border-white/5 rounded-xl p-3 hover:border-purple-500/20 transition-all group"
                 >
                   <span className={`text-2xl font-black w-8 text-center ${
-                    i === 0 ? "text-yellow-400" : i === 1 ? "text-gray-300" : i === 2 ? "text-orange-400" : "text-gray-600"
+                    i === 0 ? "text-yellow-400" : i === 1 ? "text-gray-300" : i === 2 ? "text-orange-400" : "text-gray-500"
                   }`}>
                     #{i + 1}
                   </span>

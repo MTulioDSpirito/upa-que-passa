@@ -198,10 +198,10 @@ export default function MarketplacePage() {
 
                 {/* Stats + CTA */}
                 <div className="flex items-center gap-3">
-                  <span className="text-xs text-gray-600 flex items-center gap-1">
+                  <span className="text-xs text-gray-500 flex items-center gap-1">
                     <Eye className="w-3 h-3" /> {listing.views}
                   </span>
-                  <span className="text-xs text-gray-600 flex items-center gap-1">
+                  <span className="text-xs text-gray-500 flex items-center gap-1">
                     <Heart className="w-3 h-3" /> {listing.favorites}
                   </span>
                   <Link

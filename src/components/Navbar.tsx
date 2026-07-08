@@ -20,7 +20,7 @@ export default function Navbar() {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center">
               <Gamepad2 className="w-5 h-5 text-white" />
             </div>
-            <span className="font-black text-lg tracking-tight">
+            <span className="font-display text-lg tracking-tight">
               <span className="text-white">UPA</span>
               <span className="text-purple-400"> QUE</span>
               <span className="text-blue-400"> PASSA</span>

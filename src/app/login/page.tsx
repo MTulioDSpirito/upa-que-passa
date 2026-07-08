@@ -82,7 +82,7 @@ function LoginForm() {
 
           <div className="flex items-center gap-3 mb-6">
             <div className="flex-1 h-px bg-white/10" />
-            <span className="text-xs text-gray-600">ou com email</span>
+            <span className="text-xs text-gray-500">ou com email</span>
             <div className="flex-1 h-px bg-white/10" />
           </div>
 

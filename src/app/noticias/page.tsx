@@ -68,7 +68,7 @@ export default function NoticiasPage() {
                 {featured.title}
               </h2>
               <p className="text-gray-400 text-sm leading-relaxed mb-4">{featured.excerpt}</p>
-              <div className="flex items-center gap-4 text-xs text-gray-600">
+              <div className="flex items-center gap-4 text-xs text-gray-500">
                 <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {formatDate(featured.publishedAt)}</span>
                 <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {featured.views.toLocaleString("pt-BR")}</span>
                 <span className="flex items-center gap-1"><Heart className="w-3 h-3" /> {featured.likes}</span>
@@ -97,7 +97,7 @@ export default function NoticiasPage() {
                 {article.title}
               </h3>
               <p className="text-sm text-gray-500 line-clamp-2 mb-3">{article.excerpt}</p>
-              <div className="flex items-center gap-3 text-xs text-gray-600">
+              <div className="flex items-center gap-3 text-xs text-gray-500">
                 <span>{formatDate(article.publishedAt)}</span>
                 <span>•</span>
                 <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {article.views.toLocaleString("pt-BR")}</span>

@@ -39,7 +39,7 @@ export default function VenderPage() {
             }`}>
               {step > s.n ? <CheckCircle className="w-4 h-4" /> : s.n}
             </div>
-            <span className={`text-sm hidden sm:block ${step >= s.n ? "text-white" : "text-gray-600"}`}>{s.label}</span>
+            <span className={`text-sm hidden sm:block ${step >= s.n ? "text-white" : "text-gray-500"}`}>{s.label}</span>
             {i < 3 && <div className={`flex-1 h-0.5 w-8 ${step > s.n ? "bg-purple-600" : "bg-white/10"}`} />}
           </div>
         ))}
@@ -67,7 +67,7 @@ export default function VenderPage() {
               <div className="border-2 border-dashed border-white/10 rounded-xl p-8 text-center hover:border-purple-500/30 transition-colors cursor-pointer">
                 <Upload className="w-8 h-8 text-gray-500 mx-auto mb-2" />
                 <p className="text-sm text-gray-500">Arraste fotos ou clique para selecionar</p>
-                <p className="text-xs text-gray-600 mt-1">Até 8 fotos · JPG, PNG · Máx. 5MB cada</p>
+                <p className="text-xs text-gray-500 mt-1">Até 8 fotos · JPG, PNG · Máx. 5MB cada</p>
               </div>
             </div>
 

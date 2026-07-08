@@ -378,7 +378,7 @@ export default function GamePage({ params }: Props) {
                               <span className={`text-sm font-bold ${getScoreColor(comment.score)}`}>
                                 ★ {comment.score}
                               </span>
-                              <span className="text-xs text-gray-600">{formatDate(comment.date)}</span>
+                              <span className="text-xs text-gray-500">{formatDate(comment.date)}</span>
                             </div>
                             <p className="text-sm text-gray-300 leading-relaxed">{comment.text}</p>
                             <div className="flex items-center gap-4 mt-3">
@@ -389,7 +389,7 @@ export default function GamePage({ params }: Props) {
                                 <ThumbsDown className="w-3 h-3" /> {comment.dislikes}
                               </button>
                               <button className="text-xs text-gray-500 hover:text-white transition-colors">Responder</button>
-                              <button className="text-xs text-gray-600 hover:text-red-400 transition-colors ml-auto">
+                              <button className="text-xs text-gray-500 hover:text-red-400 transition-colors ml-auto">
                                 <AlertTriangle className="w-3 h-3" />
                               </button>
                             </div>
@@ -483,7 +483,7 @@ export default function GamePage({ params }: Props) {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-16 text-gray-600">
+                  <div className="text-center py-16 text-gray-500">
                     <div className="text-5xl mb-3">🖼️</div>
                     <p>Galeria em breve</p>
                   </div>
@@ -501,7 +501,7 @@ export default function GamePage({ params }: Props) {
                     Anunciar
                   </Link>
                 </div>
-                <div className="text-center py-16 text-gray-600">
+                <div className="text-center py-16 text-gray-500">
                   <div className="text-5xl mb-3">🛒</div>
                   <p>Nenhum anúncio disponível para este jogo</p>
                   <Link href="/marketplace/vender" className="text-green-400 hover:text-green-300 text-sm mt-2 inline-block">

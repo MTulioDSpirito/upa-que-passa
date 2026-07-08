@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { Russo_One } from "next/font/google";
 import "./globals.css";
 import SiteShell from "@/components/SiteShell";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
+const russoOne = Russo_One({ subsets: ["latin"], weight: "400", variable: "--font-display" });
 
 export const metadata: Metadata = {
   title: "Upa que Passa — Reviews, Notas e Marketplace de Jogos PS5",
@@ -18,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={geist.variable}>
+    <html lang="pt-BR" className={`${geist.variable} ${russoOne.variable}`}>
       <body className="bg-[#0a0a0f] text-white antialiased">
         <SiteShell>{children}</SiteShell>
       </body>

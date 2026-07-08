@@ -151,7 +151,7 @@ export default function SugestoesClient({ user }: { user: AdminUserSession }) {
                     {draftType(entrega.filename)}
                   </span>
                   <h3 className="text-lg font-bold text-white mt-2">{draftTitle(entrega)}</h3>
-                  <p className="text-xs text-gray-600 mt-0.5">{entrega.filename}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{entrega.filename}</p>
                 </div>
                 <div className="flex gap-2 flex-shrink-0">
                   <button

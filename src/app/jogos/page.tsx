@@ -124,7 +124,7 @@ export default function JogosPage() {
               href={`/jogos/${game.slug}`}
               className="flex items-center gap-4 bg-[#111118] border border-white/5 rounded-xl p-4 hover:border-purple-500/20 transition-all group"
             >
-              <span className="text-lg font-black text-gray-600 w-8 text-center">#{i + 1}</span>
+              <span className="text-lg font-black text-gray-500 w-8 text-center">#{i + 1}</span>
               <img src={game.cover} alt={game.title} className="w-12 h-16 object-cover rounded-lg flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <h3 className="font-bold text-white group-hover:text-purple-300 transition-colors">{game.title}</h3>

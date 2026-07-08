@@ -67,7 +67,7 @@ export default function ReviewsPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 text-xs text-gray-600">
+                  <div className="flex items-center gap-4 text-xs text-gray-500">
                     <span className="flex items-center gap-1"><User className="w-3 h-3" /> {review.author}</span>
                     <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {formatDate(review.publishedAt)}</span>
                     <span className="flex items-center gap-1"><ThumbsUp className="w-3 h-3" /> {review.likes} curtidas</span>
@@ -80,7 +80,7 @@ export default function ReviewsPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 text-gray-600">
+          <div className="text-center py-16 text-gray-500">
             <div className="text-5xl mb-3">✍️</div>
             <p>Nenhuma review publicada ainda</p>
           </div>
@@ -107,11 +107,11 @@ export default function ReviewsPage() {
                 </h3>
                 <p className="text-xs text-gray-500 mb-2">{game.developer}</p>
                 <div className="flex items-center gap-2">
-                  <Star className={`w-3 h-3 ${game.userScore ? "text-yellow-400 fill-yellow-400" : "text-gray-600"}`} />
+                  <Star className={`w-3 h-3 ${game.userScore ? "text-yellow-400 fill-yellow-400" : "text-gray-500"}`} />
                   <span className={`text-sm font-bold ${game.userScore ? getScoreColor(game.userScore) : "text-gray-500"}`}>
                     {game.userScore || "—"}
                   </span>
-                  <span className="text-xs text-gray-600">usuários</span>
+                  <span className="text-xs text-gray-500">usuários</span>
                 </div>
                 <div className="mt-1">
                   <span className={`text-xs font-semibold ${getScoreColor(game.adminScore || 0)}`}>

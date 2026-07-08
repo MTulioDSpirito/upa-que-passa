@@ -12,7 +12,7 @@ export default function Footer() {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center">
                 <Gamepad2 className="w-5 h-5 text-white" />
               </div>
-              <span className="font-black text-lg">
+              <span className="font-display text-lg">
                 <span className="text-white">UPA</span>
                 <span className="text-purple-400"> QUE</span>
                 <span className="text-blue-400"> PASSA</span>
@@ -22,10 +22,17 @@ export default function Footer() {
               O maior portal brasileiro de reviews, notas e marketplace de jogos de PlayStation 5.
             </p>
             <div className="flex gap-3">
-              {[Tv2, Play, Radio, Music, Video].map((Icon, i) => (
+              {[
+                { Icon: Tv2, label: "Twitch" },
+                { Icon: Play, label: "YouTube" },
+                { Icon: Radio, label: "Discord" },
+                { Icon: Music, label: "TikTok" },
+                { Icon: Video, label: "Kick" },
+              ].map(({ Icon, label }) => (
                 <a
-                  key={i}
+                  key={label}
                   href="#"
+                  aria-label={label}
                   className="w-8 h-8 flex items-center justify-center bg-white/5 hover:bg-purple-600/30 rounded-lg text-gray-400 hover:text-white transition-all"
                 >
                   <Icon className="w-4 h-4" />
@@ -79,7 +86,7 @@ export default function Footer() {
 
         <div className="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-500">
-            © 2024 Upa que Passa. Todos os direitos reservados. Site não afiliado à Sony Interactive Entertainment.
+            © {new Date().getFullYear()} Upa que Passa. Todos os direitos reservados. Site não afiliado à Sony Interactive Entertainment.
           </p>
           <div className="flex gap-4">
             <Link href="#" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Termos de Uso</Link>

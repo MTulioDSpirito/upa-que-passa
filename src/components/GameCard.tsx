@@ -110,14 +110,14 @@ export default function GameCard({ game, compact = false }: GameCardProps) {
           {/* Footer */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
-              <Star className={`w-3 h-3 ${game.userScore ? "text-yellow-400 fill-yellow-400" : "text-gray-600"}`} />
+              <Star className={`w-3 h-3 ${game.userScore ? "text-yellow-400 fill-yellow-400" : "text-gray-500"}`} />
               <span className="text-xs text-gray-400">
                 {game.userScore ? `${game.userScore.toFixed(1)} usuários` : "Sem notas de usuários"}
               </span>
             </div>
             <button
               onClick={handleToggleFavorite}
-              className={`p-1 transition-colors ${favorited ? "text-red-400" : "text-gray-600 hover:text-red-400"}`}
+              className={`p-1 transition-colors ${favorited ? "text-red-400" : "text-gray-500 hover:text-red-400"}`}
               aria-label="Favoritar"
             >
               <Heart className={`w-4 h-4 ${favorited ? "fill-red-400" : ""}`} />

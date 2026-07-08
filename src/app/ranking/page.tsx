@@ -78,7 +78,7 @@ export default function RankingPage() {
                 i === 0 ? "text-yellow-400" :
                 i === 1 ? "text-gray-400" :
                 i === 2 ? "text-orange-400" :
-                "text-gray-700"
+                "text-gray-500"
               }`}>
                 #{i + 1}
               </div>
@@ -100,20 +100,20 @@ export default function RankingPage() {
               <div className="flex items-center gap-4">
                 <div className="text-right hidden md:block">
                   <div className="text-sm font-semibold text-gray-400">{game.metacriticScore || "—"}</div>
-                  <div className="text-xs text-gray-600">Metacritic</div>
+                  <div className="text-xs text-gray-500">Metacritic</div>
                 </div>
                 <div className="text-right hidden md:block">
                   <div className="text-sm font-semibold text-gray-400 flex items-center gap-1">
-                    <Star className={`w-3 h-3 ${game.userScore ? "text-yellow-400 fill-yellow-400" : "text-gray-600"}`} />
+                    <Star className={`w-3 h-3 ${game.userScore ? "text-yellow-400 fill-yellow-400" : "text-gray-500"}`} />
                     {game.userScore ? game.userScore.toFixed(1) : "—"}
                   </div>
-                  <div className="text-xs text-gray-600">Usuários</div>
+                  <div className="text-xs text-gray-500">Usuários</div>
                 </div>
                 <div className="text-right">
                   <div className={`text-2xl font-black ${game.adminScore || game.worldAvg ? getScoreColor(game.adminScore || game.worldAvg || 0) : "text-gray-500"}`}>
                     {game.adminScore || game.worldAvg ? formatScore(game.adminScore || game.worldAvg || 0) : "—"}
                   </div>
-                  <div className="text-xs text-gray-600">Nota UQP</div>
+                  <div className="text-xs text-gray-500">Nota UQP</div>
                 </div>
               </div>
             </Link>

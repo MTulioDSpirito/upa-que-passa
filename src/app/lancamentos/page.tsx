@@ -102,7 +102,7 @@ export default async function LancamentosPage() {
         </h2>
         {recentGames.length === 0 && (
           <div className="text-center py-12 text-gray-500">
-            <Gamepad2 className="w-8 h-8 mx-auto mb-3 text-gray-600" />
+            <Gamepad2 className="w-8 h-8 mx-auto mb-3 text-gray-500" />
             <p>Nenhum lançamento nos últimos {RECENT_WINDOW_DAYS} dias.</p>
           </div>
         )}

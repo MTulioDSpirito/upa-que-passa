@@ -112,7 +112,7 @@ function AdminLoginForm() {
             </button>
           </form>
 
-          <p className="text-center text-xs text-gray-600 mt-6">
+          <p className="text-center text-xs text-gray-500 mt-6">
             Acesso restrito à Equipe de Conteúdo. Sem cadastro público.
           </p>
         </div>
