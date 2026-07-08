@@ -45,7 +45,7 @@ export default function GameCard({ game, compact = false }: GameCardProps) {
         <img
           src={game.cover}
           alt={game.title}
-          className="w-12 h-16 object-cover rounded-lg flex-shrink-0"
+          className="w-12 h-16 object-cover object-center rounded-lg flex-shrink-0"
         />
         <div className="min-w-0">
           <p className="text-sm font-semibold text-white group-hover:text-purple-400 transition-colors line-clamp-2">
@@ -66,7 +66,7 @@ export default function GameCard({ game, compact = false }: GameCardProps) {
           <img
             src={game.cover}
             alt={game.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 

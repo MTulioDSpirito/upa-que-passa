@@ -57,7 +57,7 @@ export default function Home() {
               <img
                 src={card.image}
                 alt={card.title}
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent" />
               <span className="absolute top-2 left-2 text-[10px] font-bold uppercase tracking-wide bg-purple-600 text-white px-2 py-0.5 rounded">
@@ -73,61 +73,55 @@ export default function Home() {
 
       {/* ─── DESTAQUE DO MOMENTO ─────────────────────────────── */}
       {topGame && (
-        <section className="max-w-7xl mx-auto px-4 py-16">
-          <div className="flex items-center gap-3 mb-8">
-            <Flame className="w-6 h-6 text-orange-400" />
-            <h2 className="text-2xl font-black text-white">Destaque do Momento</h2>
+        <section className="max-w-7xl mx-auto px-4 py-8">
+          <div className="flex items-center gap-3 mb-5">
+            <Flame className="w-5 h-5 text-orange-400" />
+            <h2 className="text-xl font-black text-white">Destaque do Momento</h2>
           </div>
-          <div className="relative rounded-3xl overflow-hidden bg-[#111118] border border-purple-800/20">
-            <div className="grid md:grid-cols-2 gap-0">
-              {/* Image side */}
-              <div className="relative h-72 md:h-auto">
-                <img
-                  src={topGame.cover}
-                  alt={topGame.title}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#111118] hidden md:block" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#111118] via-transparent to-transparent md:hidden" />
+          <div className="relative rounded-2xl overflow-hidden bg-[#111118] border border-purple-800/20 p-5 flex gap-5 flex-wrap sm:flex-nowrap">
+            {/* Cover */}
+            <img
+              src={topGame.cover}
+              alt={topGame.title}
+              className="w-32 h-44 sm:w-40 sm:h-56 object-cover object-center rounded-xl shadow-lg shadow-black/40 flex-shrink-0"
+            />
+
+            {/* Info */}
+            <div className="flex-1 min-w-0 flex flex-col justify-center py-1">
+              <div className="flex gap-2 mb-2">
+                {topGame.genres.slice(0, 3).map((g) => (
+                  <span key={g} className="text-xs text-purple-400 bg-purple-900/30 px-2 py-1 rounded-full">
+                    {g}
+                  </span>
+                ))}
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-white mb-2">{topGame.title}</h3>
+              <p className="text-gray-400 text-sm leading-relaxed mb-4 line-clamp-2">{topGame.synopsis}</p>
+
+              {/* Scores row */}
+              <div className="grid grid-cols-3 gap-2 mb-4 max-w-sm">
+                {[
+                  { label: "Nota UQP", score: topGame.adminScore },
+                  { label: "Metacritic", score: topGame.metacriticScore ? topGame.metacriticScore / 10 : undefined },
+                  { label: "Usuários", score: topGame.userScore || undefined },
+                ].map((s) => (
+                  <div key={s.label} className="bg-white/5 rounded-lg p-2 text-center">
+                    <div className={`text-lg font-black ${s.score ? getScoreColor(s.score) : "text-gray-500"}`}>
+                      {s.score ? formatScore(s.score) : "—"}
+                    </div>
+                    <div className="text-[10px] text-gray-500 mt-0.5">{s.label}</div>
+                  </div>
+                ))}
               </div>
 
-              {/* Info side */}
-              <div className="p-8 flex flex-col justify-center">
-                <div className="flex gap-2 mb-3">
-                  {topGame.genres.slice(0, 3).map((g) => (
-                    <span key={g} className="text-xs text-purple-400 bg-purple-900/30 px-2 py-1 rounded-full">
-                      {g}
-                    </span>
-                  ))}
-                </div>
-                <h3 className="text-3xl md:text-4xl font-black text-white mb-3">{topGame.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3">{topGame.synopsis}</p>
-
-                {/* Scores row */}
-                <div className="grid grid-cols-3 gap-3 mb-6">
-                  {[
-                    { label: "Nota UQP", score: topGame.adminScore },
-                    { label: "Metacritic", score: topGame.metacriticScore ? topGame.metacriticScore / 10 : undefined },
-                    { label: "Usuários", score: topGame.userScore || undefined },
-                  ].map((s) => (
-                    <div key={s.label} className="bg-white/5 rounded-xl p-3 text-center">
-                      <div className={`text-2xl font-black ${s.score ? getScoreColor(s.score) : "text-gray-500"}`}>
-                        {s.score ? formatScore(s.score) : "—"}
-                      </div>
-                      <div className="text-xs text-gray-500 mt-0.5">{s.label}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex gap-3">
-                  <Link
-                    href={`/jogos/${topGame.slug}`}
-                    className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-xl hover:from-purple-500 hover:to-blue-500 transition-all"
-                  >
-                    Ver Review Completa
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
+              <div className="flex gap-3">
+                <Link
+                  href={`/jogos/${topGame.slug}`}
+                  className="flex items-center gap-2 px-5 py-2 text-sm bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-xl hover:from-purple-500 hover:to-blue-500 transition-all"
+                >
+                  Ver Review Completa
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
             </div>
           </div>
@@ -164,7 +158,7 @@ export default function Home() {
           {GAMES.slice(0, 4).map((game) => (
             <div key={game.id} className="bg-[#111118] border border-white/5 rounded-2xl p-5 hover:border-purple-500/20 transition-all">
               <div className="flex gap-4 mb-4">
-                <img src={game.cover} alt={game.title} className="w-14 h-20 object-cover rounded-lg flex-shrink-0" />
+                <img src={game.cover} alt={game.title} className="w-14 h-20 object-cover object-center rounded-lg flex-shrink-0" />
                 <div>
                   <h3 className="font-bold text-white mb-1">{game.title}</h3>
                   <p className="text-xs text-gray-500 mb-2">{game.developer} · {new Date(game.releaseDate).getFullYear()}</p>
@@ -211,7 +205,7 @@ export default function Home() {
                 <img
                   src={news.cover}
                   alt={news.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute top-3 left-3">
                   <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full font-medium">
@@ -260,7 +254,7 @@ export default function Home() {
                 <img
                   src={listing.photos[0]}
                   alt={listing.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute top-3 left-3 flex gap-2">
                   <span className={`text-xs px-2 py-1 rounded-full font-medium ${
@@ -317,7 +311,7 @@ export default function Home() {
                   }`}>
                     #{i + 1}
                   </span>
-                  <img src={game.cover} alt={game.title} className="w-10 h-14 object-cover rounded-lg" />
+                  <img src={game.cover} alt={game.title} className="w-10 h-14 object-cover object-center rounded-lg" />
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-white group-hover:text-purple-300 transition-colors text-sm line-clamp-1">
                       {game.title}
