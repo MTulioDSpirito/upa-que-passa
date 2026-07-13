@@ -63,7 +63,7 @@ export default function SearchModal() {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/60 z-[100]" />
         <Dialog.Content
-          className="fixed top-[15%] left-1/2 -translate-x-1/2 w-full max-w-lg bg-[#111118] border border-white/10 rounded-2xl p-4 z-[101]"
+          className="fixed top-[15%] left-1/2 -translate-x-1/2 w-full max-w-lg bg-[#0f0f18] border border-white/10 rounded-2xl p-4 z-[101]"
           onOpenAutoFocus={(e) => {
             e.preventDefault();
             document.getElementById("upa-search-input")?.focus();

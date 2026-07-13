@@ -17,7 +17,7 @@ export default function NewsArticlePage({ params }: Props) {
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-gray-500">
         <div className="text-6xl mb-4">📰</div>
         <h1 className="text-2xl font-bold text-white mb-2">Notícia não encontrada</h1>
-        <Link href="/noticias" className="text-blue-400 hover:text-blue-300">← Voltar às notícias</Link>
+        <Link href="/noticias" className="text-[#0072ce] hover:text-blue-300">← Voltar às notícias</Link>
       </div>
     );
   }
@@ -34,7 +34,7 @@ export default function NewsArticlePage({ params }: Props) {
       </div>
 
       {/* Category */}
-      <span className="text-xs text-white bg-blue-600 px-3 py-1 rounded-full mb-4 inline-block">{article.category}</span>
+      <span className="text-xs text-white bg-[#0072ce] px-3 py-1 rounded-full mb-4 inline-block">{article.category}</span>
 
       <h1 className="text-3xl md:text-4xl font-black text-white leading-tight mb-4">{article.title}</h1>
 
@@ -59,7 +59,7 @@ export default function NewsArticlePage({ params }: Props) {
       </div>
 
       {/* Content */}
-      <div className="bg-[#111118] border border-white/5 rounded-3xl p-8 mb-8">
+      <div className="bg-[#0f0f18] border border-white/5 rounded-3xl p-8 mb-8">
         <p className="text-lg text-gray-300 font-medium leading-relaxed mb-6 border-l-4 border-purple-600 pl-4">
           {article.excerpt}
         </p>
@@ -104,11 +104,11 @@ export default function NewsArticlePage({ params }: Props) {
           <h2 className="text-xl font-bold text-white mb-5">Notícias Relacionadas</h2>
           <div className="grid md:grid-cols-3 gap-4">
             {related.map((rel) => (
-              <Link key={rel.id} href={`/noticias/${rel.slug}`} className="group bg-[#111118] border border-white/5 rounded-2xl overflow-hidden hover:border-blue-500/20 transition-all">
+              <Link key={rel.id} href={`/noticias/${rel.slug}`} className="group bg-[#0f0f18] border border-white/5 rounded-2xl overflow-hidden hover:border-blue-500/20 transition-all">
                 <img src={rel.cover} alt={rel.title} className="w-full h-36 object-cover group-hover:scale-105 transition-transform" />
                 <div className="p-4">
-                  <span className="text-xs text-blue-400">{rel.category}</span>
-                  <h3 className="text-sm font-semibold text-white group-hover:text-blue-400 transition-colors mt-1 line-clamp-2">{rel.title}</h3>
+                  <span className="text-xs text-[#0072ce]">{rel.category}</span>
+                  <h3 className="text-sm font-semibold text-white group-hover:text-[#0072ce] transition-colors mt-1 line-clamp-2">{rel.title}</h3>
                 </div>
               </Link>
             ))}

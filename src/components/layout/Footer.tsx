@@ -15,7 +15,7 @@ export default function Footer() {
               <span className="font-display text-lg">
                 <span className="text-white">UPA</span>
                 <span className="text-purple-400"> QUE</span>
-                <span className="text-blue-400"> PASSA</span>
+                <span className="text-[#0072ce]"> PASSA</span>
               </span>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed mb-4">

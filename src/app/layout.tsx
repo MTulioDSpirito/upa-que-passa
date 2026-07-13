@@ -16,12 +16,15 @@ export const metadata: Metadata = {
     description: "O maior portal brasileiro de reviews e marketplace de jogos PS5",
     type: "website",
   },
+  icons: {
+    icon: "/logo-icon.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${geist.variable} ${russoOne.variable}`}>
-      <body className="bg-[#0a0a0f] text-white antialiased">
+      <body className="bg-[#07070a] text-white antialiased">
         <SiteShell>{children}</SiteShell>
       </body>
     </html>

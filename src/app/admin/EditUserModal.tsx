@@ -55,7 +55,7 @@ export default function EditUserModal({
     <Dialog.Root open onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/60 z-[100]" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-[#111118] border border-white/10 rounded-2xl p-6 z-[101]">
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-[#0f0f18] border border-white/10 rounded-2xl p-6 z-[101]">
           <div className="flex items-center justify-between mb-5">
             <Dialog.Title className="text-lg font-bold text-white">Editar usuário</Dialog.Title>
             <Dialog.Close className="text-gray-500 hover:text-white transition-colors">

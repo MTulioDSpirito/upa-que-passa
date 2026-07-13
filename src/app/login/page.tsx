@@ -55,12 +55,12 @@ function LoginForm() {
           <h1 className="text-3xl font-black text-white">
             <span className="text-white">UPA</span>
             <span className="text-purple-400"> QUE</span>
-            <span className="text-blue-400"> PASSA</span>
+            <span className="text-[#0072ce]"> PASSA</span>
           </h1>
           <p className="text-gray-500 mt-1">Bem-vindo de volta!</p>
         </div>
 
-        <div className="bg-[#111118] border border-white/5 rounded-3xl p-8">
+        <div className="bg-[#0f0f18] border border-white/5 rounded-3xl p-8">
           <h2 className="text-xl font-bold text-white mb-6">Entrar na sua conta</h2>
 
           {/* OAuth */}

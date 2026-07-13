@@ -72,7 +72,7 @@ export default function RankingPage() {
             <Link
               key={game.id}
               href={`/jogos/${game.slug}`}
-              className="flex items-center gap-4 bg-[#111118] border border-white/5 rounded-xl p-4 hover:border-purple-500/20 transition-all group"
+              className="flex items-center gap-4 bg-[#0f0f18] border border-white/5 rounded-xl p-4 hover:border-purple-500/20 transition-all group"
             >
               <div className={`text-xl font-black w-10 text-center ${
                 i === 0 ? "text-yellow-400" :
