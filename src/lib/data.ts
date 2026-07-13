@@ -1,4 +1,3 @@
-import { Game, Review, User, Listing, NewsArticle } from "./types";
 import { GAMES } from "@/mocks/games";
 import { REVIEWS } from "@/mocks/reviews";
 import { USERS } from "@/mocks/users";

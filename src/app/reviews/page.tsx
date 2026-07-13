@@ -32,7 +32,7 @@ export default function ReviewsPage() {
               <Link
                 key={review.id}
                 href={`/jogos/${game!.slug}#review`}
-                className="group flex gap-5 bg-[#111118] border border-white/5 rounded-3xl overflow-hidden hover:border-purple-500/20 transition-all p-0"
+                className="group flex gap-5 bg-[#0f0f18] border border-white/5 rounded-3xl overflow-hidden hover:border-purple-500/20 transition-all p-0"
               >
                 <div className="relative w-48 h-48 flex-shrink-0 overflow-hidden">
                   <img src={game!.cover} alt={game!.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
@@ -90,7 +90,7 @@ export default function ReviewsPage() {
       {/* Games without reviews */}
       <section>
         <h2 className="text-xl font-bold text-white mb-5 flex items-center gap-2">
-          <Gamepad2 className="w-5 h-5 text-blue-400" />
+          <Gamepad2 className="w-5 h-5 text-[#0072ce]" />
           Avaliações da Comunidade
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -98,7 +98,7 @@ export default function ReviewsPage() {
             <Link
               key={game.id}
               href={`/jogos/${game.slug}`}
-              className="group flex gap-3 bg-[#111118] border border-white/5 rounded-2xl p-4 hover:border-purple-500/20 transition-all"
+              className="group flex gap-3 bg-[#0f0f18] border border-white/5 rounded-2xl p-4 hover:border-purple-500/20 transition-all"
             >
               <img src={game.cover} alt={game.title} className="w-16 h-20 object-cover rounded-lg flex-shrink-0" />
               <div className="flex-1 min-w-0">

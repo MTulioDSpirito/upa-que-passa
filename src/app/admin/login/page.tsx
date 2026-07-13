@@ -56,7 +56,7 @@ function AdminLoginForm() {
           </p>
         </div>
 
-        <div className="bg-[#111118] border border-white/5 rounded-3xl p-8">
+        <div className="bg-[#0f0f18] border border-white/5 rounded-3xl p-8">
           <h2 className="text-xl font-bold text-white mb-6">Entrar com sua conta de equipe</h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">

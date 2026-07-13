@@ -30,7 +30,7 @@ const SIDEBAR_ITEMS = [
 const NOT_YET_BUILT = ["comments", "ranking", "analytics", "moderation", "settings"];
 
 const STATS = [
-  { label: "Usuários", value: "12.4k", change: +8.2, icon: Users, color: "text-blue-400 bg-blue-900/20 border-blue-800/20" },
+  { label: "Usuários", value: "12.4k", change: +8.2, icon: Users, color: "text-[#0072ce] bg-blue-900/20 border-blue-800/20" },
   { label: "Jogos Cadastrados", value: "500+", change: +2.1, icon: Gamepad2, color: "text-purple-400 bg-purple-900/20 border-purple-800/20" },
   { label: "Reviews Publicadas", value: "1.8k", change: +12.5, icon: Star, color: "text-yellow-400 bg-yellow-900/20 border-yellow-800/20" },
   { label: "Anúncios Ativos", value: "324", change: +18.7, icon: ShoppingBag, color: "text-green-400 bg-green-900/20 border-green-800/20" },
@@ -68,7 +68,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
   return (
     <div className="flex min-h-[calc(100vh-4rem)]">
       {/* Sidebar */}
-      <aside className="w-56 bg-[#0d0d18] border-r border-white/5 py-6 flex-shrink-0 flex flex-col sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
+      <aside className="w-56 bg-[#0f0f18] border-r border-white/5 py-6 flex-shrink-0 flex flex-col sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
         <div className="px-4 mb-6">
           <div className="flex items-center gap-2">
             <Shield className="w-5 h-5 text-purple-400" />
@@ -130,7 +130,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
             {/* Stats Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
               {STATS.map((stat) => (
-                <div key={stat.label} className={`bg-[#111118] border rounded-2xl p-5 ${stat.color}`}>
+                <div key={stat.label} className={`bg-[#0f0f18] border rounded-2xl p-5 ${stat.color}`}>
                   <div className="flex items-start justify-between mb-3">
                     <stat.icon className="w-5 h-5" />
                     <span className={`text-xs font-semibold flex items-center gap-0.5 ${stat.change > 0 ? "text-green-400" : "text-red-400"}`}>
@@ -147,7 +147,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
             {/* Recent activity */}
             <div className="grid md:grid-cols-2 gap-6">
               {/* Recent games */}
-              <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+              <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-white">Jogos Recentes</h3>
                   <button
@@ -166,7 +166,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                         <p className="text-xs text-gray-500">{game.developer}</p>
                       </div>
                       <div className="flex gap-1.5">
-                        <button className="btn-press p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors">
+                        <button className="btn-press p-1.5 bg-blue-900/20 text-[#0072ce] rounded-lg hover:bg-blue-900/40 transition-colors">
                           <Edit className="w-3.5 h-3.5" />
                         </button>
                         <button className="btn-press p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors">
@@ -179,7 +179,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
               </div>
 
               {/* Recent users */}
-              <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+              <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-white">Usuários Recentes</h3>
                   <button
@@ -208,7 +208,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
               </div>
 
               {/* Marketplace overview */}
-              <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+              <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5">
                 <h3 className="font-bold text-white mb-4">Anúncios Ativos</h3>
                 <div className="space-y-3">
                   {LISTINGS.filter((l) => l.active).map((listing) => (
@@ -232,7 +232,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
               </div>
 
               {/* News overview */}
-              <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+              <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-white">Últimas Notícias</h3>
                   <button className="flex items-center gap-1 text-xs text-purple-400 hover:text-purple-300">
@@ -250,7 +250,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                         </div>
                       </div>
                       <div className="flex gap-1.5">
-                        <button className="p-1.5 bg-blue-900/20 text-blue-400 rounded-lg">
+                        <button className="p-1.5 bg-blue-900/20 text-[#0072ce] rounded-lg">
                           <Edit className="w-3.5 h-3.5" />
                         </button>
                       </div>
@@ -273,7 +273,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                 <Plus className="w-4 h-4" /> Adicionar Jogo
               </button>
             </div>
-            <div className="bg-[#111118] border border-white/5 rounded-2xl divide-y divide-white/5">
+            <div className="bg-[#0f0f18] border border-white/5 rounded-2xl divide-y divide-white/5">
               {allGames.map((game) => (
                 <div key={game.id} className="flex items-center gap-4 p-4">
                   <img src={game.cover} alt="" className="w-10 h-14 object-cover rounded-lg flex-shrink-0" />
@@ -285,7 +285,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                     {formatScore(game.adminScore || 0)}
                   </div>
                   <div className="flex gap-1.5">
-                    <button className="btn-press p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors">
+                    <button className="btn-press p-1.5 bg-blue-900/20 text-[#0072ce] rounded-lg hover:bg-blue-900/40 transition-colors">
                       <Edit className="w-3.5 h-3.5" />
                     </button>
                     <button className="btn-press p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors">
@@ -301,7 +301,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
         {activeSection === "reviews" && (
           <div>
             <h1 className="text-2xl font-black text-white mb-6">Reviews ({REVIEWS.length})</h1>
-            <div className="bg-[#111118] border border-white/5 rounded-2xl divide-y divide-white/5">
+            <div className="bg-[#0f0f18] border border-white/5 rounded-2xl divide-y divide-white/5">
               {REVIEWS.map((review) => {
                 const game = allGames.find((g) => g.id === review.gameId);
                 return (
@@ -317,7 +317,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                       {formatScore(review.overallScore)}
                     </div>
                     <div className="flex gap-1.5">
-                      <button className="btn-press p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors">
+                      <button className="btn-press p-1.5 bg-blue-900/20 text-[#0072ce] rounded-lg hover:bg-blue-900/40 transition-colors">
                         <Edit className="w-3.5 h-3.5" />
                       </button>
                       <button className="btn-press p-1.5 bg-red-900/20 text-red-400 rounded-lg hover:bg-red-900/40 transition-colors">
@@ -343,7 +343,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                 Nenhum usuário se cadastrou ainda. Contas reais aparecem aqui conforme as pessoas usam o /cadastrar do site.
               </p>
             ) : (
-              <div className="bg-[#111118] border border-white/5 rounded-2xl divide-y divide-white/5">
+              <div className="bg-[#0f0f18] border border-white/5 rounded-2xl divide-y divide-white/5">
                 {siteUsers.map((u) => (
                   <div key={u.id} className="flex items-center gap-4 p-4">
                     <img
@@ -364,7 +364,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                     </span>
                     <button
                       onClick={() => setEditingUser(u)}
-                      className="btn-press p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors flex-shrink-0"
+                      className="btn-press p-1.5 bg-blue-900/20 text-[#0072ce] rounded-lg hover:bg-blue-900/40 transition-colors flex-shrink-0"
                     >
                       <Edit className="w-3.5 h-3.5" />
                     </button>
@@ -389,7 +389,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
         {activeSection === "marketplace" && (
           <div>
             <h1 className="text-2xl font-black text-white mb-6">Anúncios ({LISTINGS.length})</h1>
-            <div className="bg-[#111118] border border-white/5 rounded-2xl divide-y divide-white/5">
+            <div className="bg-[#0f0f18] border border-white/5 rounded-2xl divide-y divide-white/5">
               {LISTINGS.map((listing) => (
                 <div key={listing.id} className="flex items-center gap-4 p-4">
                   <img src={listing.photos[0]} alt="" className="w-10 h-14 object-cover rounded-lg flex-shrink-0" />
@@ -420,7 +420,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                 <Plus className="w-4 h-4" /> Nova Notícia
               </button>
             </div>
-            <div className="bg-[#111118] border border-white/5 rounded-2xl divide-y divide-white/5">
+            <div className="bg-[#0f0f18] border border-white/5 rounded-2xl divide-y divide-white/5">
               {NEWS.map((article) => (
                 <div key={article.id} className="flex items-center gap-4 p-4">
                   <img src={article.cover} alt="" className="w-16 h-10 object-cover rounded-lg flex-shrink-0" />
@@ -431,7 +431,7 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
                   <div className="flex items-center gap-1 text-xs text-gray-500 flex-shrink-0">
                     <Eye className="w-3.5 h-3.5" /> {article.views.toLocaleString("pt-BR")}
                   </div>
-                  <button className="btn-press p-1.5 bg-blue-900/20 text-blue-400 rounded-lg hover:bg-blue-900/40 transition-colors flex-shrink-0">
+                  <button className="btn-press p-1.5 bg-blue-900/20 text-[#0072ce] rounded-lg hover:bg-blue-900/40 transition-colors flex-shrink-0">
                     <Edit className="w-3.5 h-3.5" />
                   </button>
                 </div>

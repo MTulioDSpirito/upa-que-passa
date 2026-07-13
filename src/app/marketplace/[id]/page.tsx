@@ -39,7 +39,7 @@ export default function ListingPage({ params }: Props) {
         {/* Photos + Main info */}
         <div className="lg:col-span-2 space-y-6">
           {/* Photo gallery */}
-          <div className="bg-[#111118] border border-white/5 rounded-2xl overflow-hidden">
+          <div className="bg-[#0f0f18] border border-white/5 rounded-2xl overflow-hidden">
             <div className="relative aspect-video">
               <img
                 src={listing.photos[photoIdx]}
@@ -81,7 +81,7 @@ export default function ListingPage({ params }: Props) {
           </div>
 
           {/* Listing details */}
-          <div className="bg-[#111118] border border-white/5 rounded-2xl p-6">
+          <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-6">
             <div className="flex items-start justify-between gap-4 mb-4">
               <h1 className="text-2xl font-black text-white leading-tight">{listing.title}</h1>
               <div className="flex gap-2">
@@ -97,7 +97,7 @@ export default function ListingPage({ params }: Props) {
             <div className="flex items-center gap-3 flex-wrap mb-4">
               <span className={`text-sm px-3 py-1 rounded-full font-semibold ${
                 listing.condition === "lacrado" ? "bg-green-600/20 text-green-400 border border-green-700/30" :
-                listing.condition === "como novo" ? "bg-blue-600/20 text-blue-400 border border-blue-700/30" :
+                listing.condition === "como novo" ? "bg-[#0072ce]/20 text-[#0072ce] border border-blue-700/30" :
                 "bg-yellow-600/20 text-yellow-400 border border-yellow-700/30"
               }`}>
                 {listing.condition.charAt(0).toUpperCase() + listing.condition.slice(1)}
@@ -136,7 +136,7 @@ export default function ListingPage({ params }: Props) {
                 <h4 className="text-xs text-gray-500 mb-2">Entrega / Retirada</h4>
                 <div className="space-y-1">
                   {listing.shipping && (
-                    <div className="flex items-center gap-1 text-xs text-blue-400">
+                    <div className="flex items-center gap-1 text-xs text-[#0072ce]">
                       <Truck className="w-3 h-3" /> Frete disponível
                     </div>
                   )}
@@ -169,7 +169,7 @@ export default function ListingPage({ params }: Props) {
 
           {/* Safety tips */}
           <div className="bg-blue-900/10 border border-blue-700/20 rounded-2xl p-5">
-            <h3 className="flex items-center gap-2 text-blue-400 font-semibold mb-3">
+            <h3 className="flex items-center gap-2 text-[#0072ce] font-semibold mb-3">
               <Shield className="w-4 h-4" /> Dicas de Segurança
             </h3>
             <ul className="space-y-2 text-sm text-gray-400">
@@ -185,7 +185,7 @@ export default function ListingPage({ params }: Props) {
         {/* Sidebar — Seller info + CTA */}
         <div className="space-y-5">
           {/* Price + CTA */}
-          <div className="bg-[#111118] border border-green-800/20 rounded-2xl p-5 sticky top-20">
+          <div className="bg-[#0f0f18] border border-green-800/20 rounded-2xl p-5 sticky top-20">
             <div className="text-3xl font-black text-green-400 mb-4">{formatPrice(listing.price)}</div>
 
             <button
@@ -215,7 +215,7 @@ export default function ListingPage({ params }: Props) {
           </div>
 
           {/* Seller info */}
-          <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+          <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5">
             <h3 className="text-sm text-gray-500 mb-4">Vendedor</h3>
             <div className="flex items-center gap-3 mb-4">
               <img src={listing.userAvatar} alt="" className="w-12 h-12 rounded-full border border-white/10" />
@@ -251,7 +251,7 @@ export default function ListingPage({ params }: Props) {
 
           {/* Game info */}
           {game && (
-            <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+            <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5">
               <h3 className="text-sm text-gray-500 mb-3">Sobre o Jogo</h3>
               <Link href={`/jogos/${game.slug}`} className="flex gap-3 group">
                 <img src={game.cover} alt={game.title} className="w-14 h-20 object-cover rounded-lg" />

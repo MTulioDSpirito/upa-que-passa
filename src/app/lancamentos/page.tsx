@@ -66,7 +66,7 @@ export default async function LancamentosPage() {
         </h2>
         <div className="grid md:grid-cols-3 gap-5">
           {upcoming.map((game) => (
-            <div key={game.id} className="bg-[#111118] border border-white/5 rounded-2xl overflow-hidden">
+            <div key={game.id} className="bg-[#0f0f18] border border-white/5 rounded-2xl overflow-hidden">
               <div className="relative h-64 overflow-hidden">
                 <img src={game.cover} alt={game.title} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
@@ -82,7 +82,7 @@ export default async function LancamentosPage() {
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   {game.platforms.map((p) => (
-                    <span key={p} className="text-xs bg-blue-900/20 text-blue-400 border border-blue-800/20 px-2 py-0.5 rounded-full">{p}</span>
+                    <span key={p} className="text-xs bg-blue-900/20 text-[#0072ce] border border-blue-800/20 px-2 py-0.5 rounded-full">{p}</span>
                   ))}
                   {game.genres.map((g) => (
                     <span key={g} className="text-xs bg-purple-900/20 text-purple-400 border border-purple-800/20 px-2 py-0.5 rounded-full">{g}</span>
@@ -111,7 +111,7 @@ export default async function LancamentosPage() {
             <Link
               key={game.id}
               href={`/jogos/${game.slug}`}
-              className="flex items-center gap-4 bg-[#111118] border border-white/5 rounded-xl p-4 hover:border-purple-500/20 transition-all group"
+              className="flex items-center gap-4 bg-[#0f0f18] border border-white/5 rounded-xl p-4 hover:border-purple-500/20 transition-all group"
             >
               <img src={game.cover} alt={game.title} className="w-12 h-16 object-cover rounded-lg" />
               <div className="flex-1">
@@ -121,7 +121,7 @@ export default async function LancamentosPage() {
               <div className="text-sm text-gray-500 hidden md:block">{formatDate(game.releaseDate)}</div>
               <div className="flex gap-1">
                 {game.platforms.slice(0, 2).map((p) => (
-                  <span key={p} className="text-xs bg-blue-900/20 text-blue-400 px-2 py-0.5 rounded-full">{p}</span>
+                  <span key={p} className="text-xs bg-blue-900/20 text-[#0072ce] px-2 py-0.5 rounded-full">{p}</span>
                 ))}
               </div>
             </Link>

@@ -99,13 +99,13 @@ export default function GamePage({ params }: Props) {
   ];
 
   return (
-    <div className="bg-[#0a0a0f]">
+    <div className="bg-[#07070a]">
       {/* Hero */}
       <div className="relative">
         {/* Background cover blur */}
         <div className="absolute inset-0 h-72 overflow-hidden">
           <img src={game.cover} alt="" className="w-full h-full object-cover blur-xl opacity-20 scale-110" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a0a0f]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#07070a]" />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 pt-8 pb-0">
@@ -137,7 +137,7 @@ export default function GamePage({ params }: Props) {
                   </span>
                 ))}
                 {game.platforms.map((p) => (
-                  <span key={p} className="text-xs text-blue-400 bg-blue-900/20 border border-blue-800/30 px-3 py-1 rounded-full">
+                  <span key={p} className="text-xs text-[#0072ce] bg-blue-900/20 border border-blue-800/30 px-3 py-1 rounded-full">
                     {p}
                   </span>
                 ))}
@@ -252,7 +252,7 @@ export default function GamePage({ params }: Props) {
 
                 {/* Review */}
                 {review ? (
-                  <div className="bg-[#111118] border border-white/5 rounded-2xl p-6">
+                  <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-6">
                     <div className="flex items-center justify-between mb-4">
                       <div>
                         <span className="text-xs text-purple-400 bg-purple-900/30 px-2 py-0.5 rounded-full mb-2 inline-block">
@@ -321,7 +321,7 @@ export default function GamePage({ params }: Props) {
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-[#111118] border border-white/5 rounded-2xl p-8 text-center">
+                  <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-8 text-center">
                     <div className="text-5xl mb-3">✍️</div>
                     <h3 className="text-lg font-bold text-white mb-2">Review em breve</h3>
                     <p className="text-sm text-gray-500">Nossa equipe está preparando a review completa deste jogo.</p>
@@ -331,12 +331,12 @@ export default function GamePage({ params }: Props) {
                 {/* User Comments */}
                 <div>
                   <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5 text-blue-400" />
+                    <MessageSquare className="w-5 h-5 text-[#0072ce]" />
                     Comentários dos Usuários
                   </h2>
 
                   {/* User score input */}
-                  <div className="bg-[#111118] border border-white/5 rounded-2xl p-5 mb-4">
+                  <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5 mb-4">
                     <p className="text-sm text-gray-400 mb-3">Sua nota para este jogo:</p>
                     <div className="flex gap-1 mb-4">
                       {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
@@ -369,7 +369,7 @@ export default function GamePage({ params }: Props) {
                   {/* Comment list */}
                   <div className="space-y-4">
                     {MOCK_COMMENTS.map((comment) => (
-                      <div key={comment.id} className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+                      <div key={comment.id} className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5">
                         <div className="flex items-start gap-3">
                           <img src={comment.avatar} alt="" className="w-10 h-10 rounded-full" />
                           <div className="flex-1">
@@ -406,7 +406,7 @@ export default function GamePage({ params }: Props) {
             {activeTab === "scores" && (
               <div className="space-y-6">
                 {/* External scores */}
-                <div className="bg-[#111118] border border-white/5 rounded-2xl p-6">
+                <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-6">
                   <h2 className="text-xl font-bold text-white mb-5 flex items-center gap-2">
                     <BarChart3 className="w-5 h-5 text-purple-400" />
                     Notas dos Grandes Portais
@@ -444,7 +444,7 @@ export default function GamePage({ params }: Props) {
 
                 {/* UQP detailed scores */}
                 {review && (
-                  <div className="bg-[#111118] border border-white/5 rounded-2xl p-6">
+                  <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-6">
                     <h2 className="text-xl font-bold text-white mb-5">Notas Detalhadas — Upa que Passa</h2>
                     <div className="space-y-3">
                       {Object.entries(review.scores).map(([key, val]) => {
@@ -477,7 +477,7 @@ export default function GamePage({ params }: Props) {
                 {game.gallery.length > 0 ? (
                   <div className="grid grid-cols-2 gap-3">
                     {game.gallery.map((img, i) => (
-                      <div key={i} className="rounded-xl overflow-hidden bg-[#111118] border border-white/5">
+                      <div key={i} className="rounded-xl overflow-hidden bg-[#0f0f18] border border-white/5">
                         <img src={img} alt={`Screenshot ${i + 1}`} className="w-full h-40 object-cover hover:scale-105 transition-transform" />
                       </div>
                     ))}
@@ -515,7 +515,7 @@ export default function GamePage({ params }: Props) {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Game details */}
-            <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+            <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5">
               <h3 className="font-bold text-white mb-4">Informações</h3>
               <dl className="space-y-3 text-sm">
                 {[
@@ -543,7 +543,7 @@ export default function GamePage({ params }: Props) {
             </div>
 
             {/* Related games */}
-            <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+            <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5">
               <h3 className="font-bold text-white mb-4">Você pode gostar</h3>
               <div className="space-y-1">
                 {games.filter((g) => g.id !== game.id && g.genres.some((genre) => game.genres.includes(genre))).slice(0, 4).map((g) => (

@@ -39,6 +39,20 @@ function saveNote(folder: string, fileName: string, content: string) {
   fs.writeFileSync(targetPath, content.trim() + '\n', 'utf-8');
 }
 
+// Detecta o provider de banco de dados dinamicamente dentro do bloco "datasource"
+let providerName = 'postgresql';
+const schemaPath = path.join(PROJECT_ROOT, 'prisma', 'schema.prisma');
+if (fs.existsSync(schemaPath)) {
+  const schemaContent = fs.readFileSync(schemaPath, 'utf-8');
+  const datasourceBlock = schemaContent.match(/datasource\s+\w+\s+\{[\s\S]*?\}/);
+  if (datasourceBlock) {
+    const providerMatch = datasourceBlock[0].match(/provider\s*=\s*"([^"]+)"/);
+    if (providerMatch) {
+      providerName = providerMatch[1];
+    }
+  }
+}
+
 // ==========================================
 // 1. GERAÇÃO DO DASHBOARD (00 - Dashboard)
 // ==========================================
@@ -60,8 +74,10 @@ Bem-vindo ao repositório de conhecimento do projeto **Upa que passa**. Este Vau
 
 ## 🧭 Gavetas Semânticas
 
+## 🧭 Gavetas Semânticas
+
 ### 🗄️ [[10 - Banco de Dados|10 - Banco de Dados e Modelagem]]
-Mapeamento das entidades do banco de dados SQLite gerenciadas pelo Prisma ORM.
+Mapeamento das entidades do banco de dados ${providerName.toUpperCase()} gerenciadas pelo Prisma ORM.
 * Entidades principais: **[[SiteUser]]** (usuários finais), **[[AdminUser]]** (membros da equipe) e **[[Favorite]]** (favoritos de jogos).
 
 ### ⚙️ [[20 - Rotas de API|20 - APIs e Servidor (Backend)]]
@@ -105,16 +121,6 @@ function generateDatabaseDocs() {
 
   const schemaContent = fs.readFileSync(schemaPath, 'utf-8');
   const lines = schemaContent.split('\n');
-
-  // Detecta o provider de banco de dados dinamicamente dentro do bloco "datasource"
-  let providerName = 'postgresql';
-  const datasourceBlock = schemaContent.match(/datasource\s+\w+\s+\{[\s\S]*?\}/);
-  if (datasourceBlock) {
-    const providerMatch = datasourceBlock[0].match(/provider\s*=\s*"([^"]+)"/);
-    if (providerMatch) {
-      providerName = providerMatch[1];
-    }
-  }
 
   const models: PrismaModel[] = [];
   const enums: PrismaEnum[] = [];

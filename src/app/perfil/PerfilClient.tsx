@@ -63,7 +63,7 @@ export default function PerfilClient({
           <img
             src={avatar}
             alt={user.nickname}
-            className="w-24 h-24 rounded-2xl border-4 border-[#0a0a0f] bg-[#111118]"
+            className="w-24 h-24 rounded-2xl border-4 border-[#07070a] bg-[#0f0f18]"
           />
         </div>
         <div className="flex-1 pb-2">
@@ -76,7 +76,7 @@ export default function PerfilClient({
 
       {/* Bio */}
       {user.bio && (
-        <div className="bg-[#111118] border border-white/5 rounded-2xl p-5 mb-6">
+        <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5 mb-6">
           <p className="text-gray-300 text-sm leading-relaxed">{user.bio}</p>
         </div>
       )}
@@ -85,11 +85,11 @@ export default function PerfilClient({
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {[
           { icon: Star, label: "Reviews", value: 0, color: "text-yellow-400" },
-          { icon: MessageSquare, label: "Comentários", value: 0, color: "text-blue-400" },
+          { icon: MessageSquare, label: "Comentários", value: 0, color: "text-[#0072ce]" },
           { icon: ShoppingBag, label: "Trocas", value: 0, color: "text-green-400" },
           { icon: Trophy, label: "Favoritos", value: favoriteGames.length, color: "text-purple-400" },
         ].map((stat) => (
-          <div key={stat.label} className="bg-[#111118] border border-white/5 rounded-2xl p-5 text-center">
+          <div key={stat.label} className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5 text-center">
             <stat.icon className={`w-6 h-6 ${stat.color} mx-auto mb-2`} />
             <div className="text-2xl font-black text-white">{stat.value}</div>
             <div className="text-xs text-gray-500 mt-0.5">{stat.label}</div>
@@ -98,7 +98,7 @@ export default function PerfilClient({
       </div>
 
       {/* Favorite games */}
-      <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+      <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5">
         <h3 className="font-bold text-white mb-4 flex items-center gap-2">
           <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
           Jogos Favoritos

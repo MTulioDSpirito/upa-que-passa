@@ -94,7 +94,7 @@ export default function SugestoesClient({ user }: { user: AdminUserSession }) {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)]">
-      <aside className="w-56 bg-[#0d0d18] border-r border-white/5 py-6 flex-shrink-0 flex flex-col sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
+      <aside className="w-56 bg-[#0f0f18] border-r border-white/5 py-6 flex-shrink-0 flex flex-col sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
         <div className="px-4 mb-6">
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-purple-400" />
@@ -144,7 +144,7 @@ export default function SugestoesClient({ user }: { user: AdminUserSession }) {
 
         <div className="space-y-4 mb-10">
           {data?.pendentes.map((entrega) => (
-            <div key={entrega.filename} className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+            <div key={entrega.filename} className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5">
               <div className="flex items-start justify-between gap-4 mb-3">
                 <div>
                   <span className="text-xs font-semibold text-purple-400 bg-purple-900/20 border border-purple-800/20 rounded-full px-2 py-0.5">
@@ -185,7 +185,7 @@ export default function SugestoesClient({ user }: { user: AdminUserSession }) {
                       href={url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 bg-blue-900/10 border border-blue-800/20 rounded-lg px-2 py-1"
+                      className="flex items-center gap-1 text-xs text-[#0072ce] hover:text-blue-300 bg-blue-900/10 border border-blue-800/20 rounded-lg px-2 py-1"
                     >
                       <ExternalLink className="w-3 h-3" />
                       {new URL(url).hostname}
@@ -217,7 +217,7 @@ export default function SugestoesClient({ user }: { user: AdminUserSession }) {
 
         {data && (data.aprovados.length > 0 || data.rejeitados.length > 0) && (
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+            <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5">
               <h3 className="font-bold text-white mb-3">Aprovados ({data.aprovados.length})</h3>
               <div className="space-y-2">
                 {data.aprovados.map((e) => (
@@ -227,7 +227,7 @@ export default function SugestoesClient({ user }: { user: AdminUserSession }) {
                 ))}
               </div>
             </div>
-            <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
+            <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5">
               <h3 className="font-bold text-white mb-3">Rejeitados ({data.rejeitados.length})</h3>
               <div className="space-y-2">
                 {data.rejeitados.map((e) => (

@@ -45,7 +45,7 @@ export default function JogosPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-[#111118] border border-white/5 rounded-2xl p-4 mb-8 space-y-4">
+      <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-4 mb-8 space-y-4">
         {/* Search + Sort */}
         <div className="flex gap-3 flex-wrap">
           <div className="flex-1 min-w-[200px] relative">
@@ -122,7 +122,7 @@ export default function JogosPage() {
             <Link
               key={game.id}
               href={`/jogos/${game.slug}`}
-              className="flex items-center gap-4 bg-[#111118] border border-white/5 rounded-xl p-4 hover:border-purple-500/20 transition-all group"
+              className="flex items-center gap-4 bg-[#0f0f18] border border-white/5 rounded-xl p-4 hover:border-purple-500/20 transition-all group"
             >
               <span className="text-lg font-black text-gray-500 w-8 text-center">#{i + 1}</span>
               <img src={game.cover} alt={game.title} className="w-12 h-16 object-cover rounded-lg flex-shrink-0" />

@@ -60,7 +60,7 @@ export default function MarketplacePage() {
           <Link
             key={cat.label}
             href={cat.href}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#111118] border border-white/10 hover:border-purple-500/40 text-gray-300 hover:text-white rounded-xl text-sm font-medium transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#0f0f18] border border-white/10 hover:border-purple-500/40 text-gray-300 hover:text-white rounded-xl text-sm font-medium transition-all"
           >
             <span>{cat.icon}</span>
             {cat.label}
@@ -69,7 +69,7 @@ export default function MarketplacePage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-[#111118] border border-white/5 rounded-2xl p-4 mb-6 flex flex-wrap gap-3">
+      <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-4 mb-6 flex flex-wrap gap-3">
         <div className="flex-1 min-w-[200px] relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
           <input
@@ -129,7 +129,7 @@ export default function MarketplacePage() {
         {filtered.map((listing) => {
           const game = GAMES.find((g) => g.id === listing.gameId);
           return (
-            <div key={listing.id} className="group bg-[#111118] border border-white/5 rounded-2xl overflow-hidden hover:border-green-500/20 transition-all">
+            <div key={listing.id} className="group bg-[#0f0f18] border border-white/5 rounded-2xl overflow-hidden hover:border-green-500/20 transition-all">
               {/* Photo */}
               <div className="relative h-48 overflow-hidden">
                 <img
@@ -143,7 +143,7 @@ export default function MarketplacePage() {
                 <div className="absolute top-3 left-3 flex gap-2 flex-wrap">
                   <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${
                     listing.condition === "lacrado" ? "bg-green-600 text-white" :
-                    listing.condition === "como novo" ? "bg-blue-600 text-white" :
+                    listing.condition === "como novo" ? "bg-[#0072ce] text-white" :
                     listing.condition === "bom estado" ? "bg-yellow-600 text-black" :
                     "bg-gray-600 text-white"
                   }`}>
@@ -177,7 +177,7 @@ export default function MarketplacePage() {
                     </span>
                   ))}
                   {listing.shipping && (
-                    <span className="text-xs bg-blue-900/30 text-blue-400 px-2 py-0.5 rounded-full">Frete</span>
+                    <span className="text-xs bg-blue-900/30 text-[#0072ce] px-2 py-0.5 rounded-full">Frete</span>
                   )}
                 </div>
 
