@@ -31,7 +31,11 @@ function isSafeImageUrl(raw: string): boolean {
 
 export async function GET() {
   const games = await readAdminGames();
-  return NextResponse.json({ games });
+  return NextResponse.json({ games }, {
+    headers: {
+      "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30"
+    }
+  });
 }
 
 export async function POST(request: Request) {
