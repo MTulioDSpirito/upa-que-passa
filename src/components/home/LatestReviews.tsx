@@ -50,7 +50,7 @@ export default function LatestReviews({ games }: LatestReviewsProps) {
           return (
             <Link
               key={review.id}
-              href={`/jogos/${game.slug}#review`}
+              href={`/reviews/${game.slug}#review`}
               className="group flex flex-col bg-[#0f0f18]/60 backdrop-blur border border-white/5 hover:border-purple-500/20 rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-purple-950/10"
             >
               {/* Cover & Score Overlay */}

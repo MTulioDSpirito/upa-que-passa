@@ -105,13 +105,13 @@ export default function PerfilClient({
         </h3>
         {favoriteGames.length === 0 ? (
           <p className="text-sm text-gray-500">
-            Você ainda não favoritou nenhum jogo. Explore o{" "}
-            <Link href="/jogos" className="text-purple-400 hover:text-purple-300">catálogo</Link>.
+            Você ainda não favoritou nenhum jogo. Explore as{" "}
+            <Link href="/reviews" className="text-purple-400 hover:text-purple-300">reviews</Link>.
           </p>
         ) : (
           <div className="space-y-3">
             {favoriteGames.map((game) => (
-              <Link key={game.id} href={`/jogos/${game.slug}`} className="flex items-center gap-3 group">
+              <Link key={game.id} href={`/reviews/${game.slug}`} className="flex items-center gap-3 group">
                 <img src={game.cover} alt={game.title} className="w-10 h-14 object-cover rounded-lg" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-white group-hover:text-purple-300 transition-colors">{game.title}</p>

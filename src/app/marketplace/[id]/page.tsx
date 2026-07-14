@@ -253,7 +253,7 @@ export default function ListingPage({ params }: Props) {
           {game && (
             <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5">
               <h3 className="text-sm text-gray-500 mb-3">Sobre o Jogo</h3>
-              <Link href={`/jogos/${game.slug}`} className="flex gap-3 group">
+              <Link href={`/reviews/${game.slug}`} className="flex gap-3 group">
                 <img src={game.cover} alt={game.title} className="w-14 h-20 object-cover rounded-lg" />
                 <div>
                   <p className="font-semibold text-white text-sm group-hover:text-purple-300 transition-colors mb-1">{game.title}</p>
@@ -265,7 +265,7 @@ export default function ListingPage({ params }: Props) {
                 </div>
               </Link>
               <Link
-                href={`/jogos/${game.slug}`}
+                href={`/reviews/${game.slug}`}
                 className="block mt-3 text-center text-xs text-purple-400 hover:text-purple-300 transition-colors"
               >
                 Ver Review Completa →

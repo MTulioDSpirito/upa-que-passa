@@ -110,7 +110,7 @@ export default async function LancamentosPage() {
           {recentGames.map((game) => (
             <Link
               key={game.id}
-              href={`/jogos/${game.slug}`}
+              href={`/reviews/${game.slug}`}
               className="flex items-center gap-4 bg-[#0f0f18] border border-white/5 rounded-xl p-4 hover:border-purple-500/20 transition-all group"
             >
               <img src={game.cover} alt={game.title} className="w-12 h-16 object-cover rounded-lg" />

@@ -111,7 +111,7 @@ export default function FeaturedMoment({ topGame }: FeaturedMomentProps) {
 
             <div className="flex gap-3">
               <Link
-                href={`/jogos/${topGame.slug}`}
+                href={`/reviews/${topGame.slug}`}
                 className="flex items-center gap-2 px-6 py-3 text-sm bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg shadow-purple-900/30 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0"
               >
                 Ver Review Completa
