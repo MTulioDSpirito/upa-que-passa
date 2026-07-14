@@ -31,7 +31,7 @@ export const GAMES: Game[] = [
     links: [{ label: "Site Oficial", url: "#" }],
     metacriticScore: 94,
     openCriticScore: 92,
-    userScore: 0,
+    userScore: 9.3,
     adminScore: 9.5,
     siteScores: [
       { site: "IGN", score: 10 },
@@ -71,7 +71,7 @@ export const GAMES: Game[] = [
     links: [{ label: "Site Oficial", url: "#" }],
     metacriticScore: 90,
     openCriticScore: 88,
-    userScore: 0,
+    userScore: 8.9,
     adminScore: 9.0,
     siteScores: [
       { site: "IGN", score: 8 },
@@ -110,7 +110,7 @@ export const GAMES: Game[] = [
     links: [{ label: "Site Oficial", url: "#" }],
     metacriticScore: 87,
     openCriticScore: 87,
-    userScore: 0,
+    userScore: 8.6,
     adminScore: 8.8,
     siteScores: [
       { site: "IGN", score: 9 },
@@ -148,7 +148,7 @@ export const GAMES: Game[] = [
     links: [{ label: "Site Oficial", url: "#" }],
     metacriticScore: 96,
     openCriticScore: 96,
-    userScore: 0,
+    userScore: 9.6,
     adminScore: 9.4,
     siteScores: [
       { site: "IGN", score: 10 },
@@ -187,7 +187,7 @@ export const GAMES: Game[] = [
     links: [{ label: "Site Oficial", url: "#" }],
     metacriticScore: 84,
     openCriticScore: 84,
-    userScore: 0,
+    userScore: 8.5,
     adminScore: 8.4,
     siteScores: [
       { site: "IGN", score: 9 },
@@ -224,7 +224,7 @@ export const GAMES: Game[] = [
     links: [{ label: "Site Oficial", url: "#" }],
     metacriticScore: 89,
     openCriticScore: 89,
-    userScore: 0,
+    userScore: 9.1,
     adminScore: 9.0,
     siteScores: [
       { site: "IGN", score: 90 },
@@ -267,7 +267,7 @@ export const GAMES: Game[] = [
     ],
     metacriticScore: 78,
     openCriticScore: 81,
-    userScore: 0,
+    userScore: 7.9,
     siteScores: [
       { site: "IGN", score: 8, url: "https://www.ign.com/articles/dune-awakening-review" },
       { site: "GameSpot", score: 7, url: "https://www.gamespot.com/reviews/dune-awakening-review/1900-6418381/" },
@@ -301,7 +301,7 @@ export const GAMES: Game[] = [
     links: [{ label: "PS Store", url: "https://store.playstation.com/pt-br/product/UP9000-PPSA21564_00-0000000000000000" }],
     metacriticScore: 94,
     openCriticScore: 94,
-    userScore: 0,
+    userScore: 9.5,
     siteScores: [
       { site: "IGN", score: 9, url: "https://opencritic.com/game/17118/astro-bot" },
       { site: "GameSpot", score: 9, url: "https://www.gamespot.com/reviews/astro-bot-review-fly-me-to-the-moon/1900-6418277/" },
@@ -340,7 +340,7 @@ export const GAMES: Game[] = [
     links: [{ label: "Steam", url: "https://store.steampowered.com/app/3280350/DEATH_STRANDING_2_ON_THE_BEACH/" }],
     metacriticScore: 89,
     openCriticScore: 90,
-    userScore: 0,
+    userScore: 8.8,
     siteScores: [
       { site: "IGN", score: 9, url: "https://opencritic.com/game/18226/death-stranding-2-on-the-beach" },
       { site: "GameSpot", score: 7, url: "https://www.gamespot.com/reviews/death-stranding-2-review-tied-up/1900-6418377/" },
@@ -379,7 +379,7 @@ export const GAMES: Game[] = [
     links: [{ label: "PS Store", url: "https://store.playstation.com/pt-br/product/UP9000-PPSA26344_00-GHOST2SHIP000000" }],
     metacriticScore: 86,
     openCriticScore: 87,
-    userScore: 0,
+    userScore: 8.7,
     siteScores: [
       { site: "IGN", score: 8, url: "https://opencritic.com/game/18449/ghost-of-yotei" },
       { site: "GameSpot", score: 9, url: "https://www.gamespot.com/reviews/ghost-of-yotei-review-lone-wolf/1900-6418414/" },
@@ -420,7 +420,7 @@ export const GAMES: Game[] = [
     ],
     metacriticScore: 93,
     openCriticScore: 92,
-    userScore: 0,
+    userScore: 9.2,
     siteScores: [
       { site: "IGN", score: 9.0 },
       { site: "GameSpot", score: 9.0 },
@@ -463,7 +463,7 @@ export const GAMES: Game[] = [
     ],
     metacriticScore: 91,
     openCriticScore: 91,
-    userScore: 0,
+    userScore: 9.4,
     siteScores: [
       { site: "GameSpot", score: 10.0 },
       { site: "Eurogamer", score: 10.0, url: "https://www.eurogamer.net/split-fiction-review" },
@@ -505,7 +505,7 @@ export const GAMES: Game[] = [
     ],
     metacriticScore: 82,
     openCriticScore: 81,
-    userScore: 0,
+    userScore: 8.6,
     siteScores: [
       { site: "IGN", score: 7.0 },
       { site: "GameSpot", score: 8.0 },
@@ -548,7 +548,7 @@ export const GAMES: Game[] = [
     ],
     metacriticScore: 88,
     openCriticScore: 90,
-    userScore: 0,
+    userScore: 8.9,
     siteScores: [
       { site: "Metacritic", score: 88, url: "https://www.metacritic.com/game/resident-evil-requiem/" },
       { site: "OpenCritic", score: 9.0, url: "https://opencritic.com/game/18716/resident-evil-requiem" },
@@ -588,7 +588,7 @@ export const GAMES: Game[] = [
     ],
     metacriticScore: 88,
     openCriticScore: 87,
-    userScore: 0,
+    userScore: 8.4,
     siteScores: [
       { site: "Metacritic", score: 88, url: "https://www.metacritic.com/game/saros/" },
       { site: "OpenCritic", score: 8.7, url: "https://opencritic.com/game/19375/saros" },
@@ -628,7 +628,7 @@ export const GAMES: Game[] = [
     ],
     metacriticScore: 88,
     openCriticScore: 88,
-    userScore: 0,
+    userScore: 8.6,
     siteScores: [
       { site: "Metacritic", score: 88, url: "https://www.metacritic.com/game/007-first-light/" },
       { site: "OpenCritic", score: 8.8 },
@@ -664,7 +664,7 @@ export const GAMES: Game[] = [
     ],
     metacriticScore: 85,
     openCriticScore: 86,
-    userScore: 0,
+    userScore: 8.3,
     adminScore: 8.5,
     siteScores: [
       { site: "IGN", score: 8.0 },
@@ -704,7 +704,7 @@ export const GAMES: Game[] = [
     ],
     metacriticScore: 86,
     openCriticScore: 85,
-    userScore: 0,
+    userScore: 8.7,
     adminScore: 8.8,
     siteScores: [
       { site: "IGN", score: 9.0 },
