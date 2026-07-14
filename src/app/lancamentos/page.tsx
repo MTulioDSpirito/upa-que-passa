@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Calendar, Clock, Gamepad2 } from "lucide-react";
+import { Calendar, Clock } from "lucide-react";
 import { GAMES, formatDate } from "@/lib/data";
 import { readAdminGames } from "@/lib/adminGames";
 import { Game } from "@/lib/types";
+import RecentGamesList from "./RecentGamesList";
 
 export const dynamic = "force-dynamic";
 
@@ -44,6 +45,15 @@ function selectUpcomingAdminGames(adminGames: Game[]) {
     }));
 }
 
+function parseReleaseDate(dateStr: string) {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const dateObj = new Date(year, month - 1, day);
+  const monthName = dateObj.toLocaleDateString("pt-BR", { month: "short" }).replace(".", "").toUpperCase();
+  const dayStr = String(day).padStart(2, "0");
+  const yearStr = String(year);
+  return { day: dayStr, month: monthName, year: yearStr };
+}
+
 export default async function LancamentosPage() {
   const adminGames = await readAdminGames();
   const recentGames = selectRecentGames([...GAMES, ...adminGames]);
@@ -62,72 +72,72 @@ export default async function LancamentosPage() {
       <section className="mb-12" id="em-breve">
         <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
           <Clock className="w-6 h-6 text-orange-400" />
-          Em Breve
+          Calendário de Lançamentos
         </h2>
-        <div className="grid md:grid-cols-3 gap-5">
-          {upcoming.map((game) => (
-            <div key={game.id} className="bg-[#0f0f18] border border-white/5 rounded-2xl overflow-hidden">
-              <div className="relative h-64 overflow-hidden">
-                <img src={game.cover} alt={game.title} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <h3 className="font-black text-white text-xl mb-1">{game.title}</h3>
-                  <p className="text-sm text-gray-300">{game.developer}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {upcoming.map((game) => {
+            const { day, month, year } = parseReleaseDate(game.releaseDate);
+            
+            // Calculate days remaining
+            const diffTime = new Date(game.releaseDate).getTime() - Date.now();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const countdownText = diffDays > 0 ? `Faltam ${diffDays} dias` : "Hoje!";
+
+            return (
+              <div key={game.id} className="group relative bg-[#0f0f18]/60 border border-white/5 rounded-2xl overflow-hidden hover:border-orange-500/30 hover:shadow-[0_0_20px_rgba(249,115,22,0.08)] hover:bg-[#141422] transition-all duration-300 flex flex-col">
+                {/* Cover Preview & Overlays */}
+                <div className="relative h-44 overflow-hidden shrink-0">
+                  <img src={game.cover} alt={game.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f18] via-transparent to-black/40" />
+
+                  {/* Floating Calendar Leaf Badge */}
+                  <div className="absolute top-3 left-3 flex flex-col items-center justify-center w-12 h-14 bg-[#0f0f18]/90 border border-white/10 rounded-xl overflow-hidden shadow-lg backdrop-blur-md">
+                    <div className="w-full bg-orange-500 text-[8px] font-black text-center text-white py-0.5 font-mono uppercase tracking-widest leading-none">
+                      {month}
+                    </div>
+                    <div className="flex-1 flex flex-col justify-center items-center px-1">
+                      <span className="text-lg font-black text-white leading-none">{day}</span>
+                      <span className="text-[6px] text-gray-500 font-mono font-bold mt-0.5">{year}</span>
+                    </div>
+                  </div>
+
+                  {/* Countdown Badge */}
+                  <div className="absolute bottom-3 right-3 bg-[#0f0f18]/80 border border-white/10 backdrop-blur-md rounded-lg px-2 py-0.5 text-[9px] font-mono font-bold text-orange-400">
+                    {countdownText}
+                  </div>
+                </div>
+
+                {/* Details */}
+                <div className="p-4 flex-1 flex flex-col justify-between gap-3">
+                  <div>
+                    <h3 className="font-extrabold text-white text-base group-hover:text-orange-400 transition-colors line-clamp-1 mb-1" title={game.title}>
+                      {game.title}
+                    </h3>
+                    <p className="text-xs text-gray-500 truncate">{game.developer}</p>
+                  </div>
+
+                  {/* Platforms */}
+                  <div className="flex flex-wrap gap-1 pt-2 border-t border-white/5">
+                    {game.platforms.slice(0, 2).map((p) => (
+                      <span key={p} className="text-[9px] font-mono bg-blue-900/10 text-blue-400 border border-blue-800/10 px-1.5 py-0.2 rounded">
+                        {p}
+                      </span>
+                    ))}
+                    {game.genres.slice(0, 1).map((g) => (
+                      <span key={g} className="text-[9px] font-mono bg-purple-900/10 text-purple-400 border border-purple-800/10 px-1.5 py-0.2 rounded">
+                        {g}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-              <div className="p-4">
-                <div className="flex items-center gap-2 text-sm text-orange-400 mb-3">
-                  <Calendar className="w-4 h-4" />
-                  Previsão: {formatDate(game.releaseDate)}
-                </div>
-                <div className="flex gap-2 flex-wrap">
-                  {game.platforms.map((p) => (
-                    <span key={p} className="text-xs bg-blue-900/20 text-[#0072ce] border border-blue-800/20 px-2 py-0.5 rounded-full">{p}</span>
-                  ))}
-                  {game.genres.map((g) => (
-                    <span key={g} className="text-xs bg-purple-900/20 text-purple-400 border border-purple-800/20 px-2 py-0.5 rounded-full">{g}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
       {/* Recentes */}
-      <section>
-        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-          <Gamepad2 className="w-6 h-6 text-purple-400" />
-          Lançamentos Recentes
-        </h2>
-        {recentGames.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
-            <Gamepad2 className="w-8 h-8 mx-auto mb-3 text-gray-500" />
-            <p>Nenhum lançamento nos últimos {RECENT_WINDOW_DAYS} dias.</p>
-          </div>
-        )}
-        <div className="space-y-3">
-          {recentGames.map((game) => (
-            <Link
-              key={game.id}
-              href={`/reviews/${game.slug}`}
-              className="flex items-center gap-4 bg-[#0f0f18] border border-white/5 rounded-xl p-4 hover:border-purple-500/20 transition-all group"
-            >
-              <img src={game.cover} alt={game.title} className="w-12 h-16 object-cover rounded-lg" />
-              <div className="flex-1">
-                <h3 className="font-bold text-white group-hover:text-purple-300 transition-colors">{game.title}</h3>
-                <p className="text-sm text-gray-500">{game.developer}</p>
-              </div>
-              <div className="text-sm text-gray-500 hidden md:block">{formatDate(game.releaseDate)}</div>
-              <div className="flex gap-1">
-                {game.platforms.slice(0, 2).map((p) => (
-                  <span key={p} className="text-xs bg-blue-900/20 text-[#0072ce] px-2 py-0.5 rounded-full">{p}</span>
-                ))}
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      <RecentGamesList games={recentGames} />
     </div>
   );
 }
