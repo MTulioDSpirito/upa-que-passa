@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import { moveEntrega } from "@/lib/entregas";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
   const session = await getSession();
@@ -8,15 +8,29 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
   }
 
-  const { filename } = await request.json();
-  if (typeof filename !== "string" || !filename.endsWith(".md")) {
-    return NextResponse.json({ error: "Nome de arquivo inválido." }, { status: 400 });
+  const { id } = await request.json();
+  if (typeof id !== "string") {
+    return NextResponse.json({ error: "ID inválido." }, { status: 400 });
   }
 
   try {
-    await moveEntrega(filename, "pendentes", "aprovados", `<!-- aprovado por ${session.name} em ${new Date().toISOString()} -->`);
+    const admin = await prisma.adminUser.findUnique({
+      where: { email: session.email },
+    });
+
+    if (!admin) {
+      return NextResponse.json({ error: "Usuário não encontrado." }, { status: 404 });
+    }
+
+    await prisma.sugestaoAgente.update({
+      where: { id },
+      data: {
+        status: "APPROVED",
+        revisadoPorId: admin.id,
+      },
+    });
   } catch {
-    return NextResponse.json({ error: "Não foi possível aprovar. O arquivo já foi movido?" }, { status: 409 });
+    return NextResponse.json({ error: "Não foi possível aprovar a sugestão." }, { status: 409 });
   }
 
   return NextResponse.json({ ok: true });

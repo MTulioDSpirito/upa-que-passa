@@ -6,12 +6,15 @@ const prisma = new PrismaClient();
 const DEFAULT_PASSWORD = "UpaQuePassa@2026";
 
 const ADMINS = [
-  { name: "Vic", email: "vic@upaquepassa.com.br", role: "EDITOR_CHEFE" as const },
-  { name: "Kai", email: "kai@upaquepassa.com.br", role: "REPORTER" as const },
-  { name: "Vera", email: "vera@upaquepassa.com.br", role: "CURADOR_NOTAS" as const },
-  { name: "Theo", email: "theo@upaquepassa.com.br", role: "REDATOR_REVIEWS" as const },
-  { name: "Dara", email: "dara@upaquepassa.com.br", role: "QA_DADOS" as const },
+  { name: "André", email: "andre@upaquepassa.com.br", role: "COLABORADOR" as const, avatar: "/team/andre-abertura.png" },
+  { name: "Capelli", email: "capelli@upaquepassa.com.br", role: "DEVELOPER" as const, avatar: "/team/cappeli-abertura.png" },
+  { name: "Fael", email: "fael@upaquepassa.com.br", role: "COLABORADOR" as const, avatar: "/team/fae-abertura.png" },
+  { name: "Ique", email: "ique@upaquepassa.com.br", role: "COLABORADOR" as const, avatar: "/team/ique-abertura.png" },
+  { name: "Mateus", email: "mateus@upaquepassa.com.br", role: "COLABORADOR" as const, avatar: "/team/mateus-abertura.png" },
+  { name: "Patrão", email: "patrao@upaquepassa.com.br", role: "COLABORADOR" as const, avatar: "/team/patrao-abertura.png" },
+  { name: "inTúlio", email: "tulio@upaquepassa.com.br", role: "DEVELOPER" as const, avatar: "/team/tulio-abertura.png" },
 ];
+
 
 async function main() {
   const passwordHash = await bcrypt.hash(DEFAULT_PASSWORD, 10);

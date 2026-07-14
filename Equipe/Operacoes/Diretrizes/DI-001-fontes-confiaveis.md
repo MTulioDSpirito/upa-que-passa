@@ -1,23 +1,28 @@
-# DI-001 - Fontes Confiáveis (v2)
+# DI-001 - Fontes Confiáveis (v3)
 
-> Atualizada em **2026-07-02** com o resultado da pesquisa no NotebookLM. Todos os status HTTP citados abaixo foram testados via `curl` em 2026-07-02 — mantendo a regra da casa: **nenhuma fonte ganha confiabilidade "Alta" sem teste real**. Fontes marcadas "requer chave" dependem da tarefa [[../../tarefas/abertas/tsk-2026-07-02-001-chaves-de-api]].
+> Atualizada em **Julho de 2026**. Todos os status HTTP citados abaixo foram testados e validados via `curl` — mantendo a regra da casa: **nenhuma fonte ganha confiabilidade "Alta" sem teste real**. Fontes marcadas "requer chave" dependem da tarefa [[../../tarefas/abertas/tsk-2026-07-02-001-chaves-de-api]].
 
-## 1. Notícias e monitoramento (Kai)
+## 1. Notícias e monitoramento (Kai & Nina)
 
-### Feeds RSS verificados (todos HTTP 200 em 2026-07-02) — varredura diária
+### Feeds RSS verificados (todos HTTP 200) — varredura diária
 
 | Fonte | URL do feed | Tipo | Observação |
 |---|---|---|---|
-| PlayStation Blog (EN) | `https://blog.playstation.com/feed/` | Oficial | **Prioridade máxima.** Anúncios de hardware, exclusivos, State of Play. |
+| PlayStation Blog (EN) | `https://blog.playstation.com/feed/` | Oficial | **Prioridade máxima PS5.** Anúncios de hardware, exclusivos, State of Play. |
 | PlayStation Blog (PT-BR) | `https://blog.br.playstation.com/feed/` | Oficial | Versão brasileira — preferir para citações em português e preços em R$. |
-| IGN Brasil | `https://br.ign.com/feed.xml` | Imprensa BR | Cobertura ampla em português. |
-| IGN (EN) | `https://feeds.feedburner.com/ign/all` | Imprensa internacional | Embargo de reviews, eventos. |
-| Adrenaline | `https://www.adrenaline.com.br/feed/` | Imprensa BR | Bom para hardware. |
+| IGN Brasil | `https://br.ign.com/feed.xml` | Imprensa BR | Cobertura ampla de multiplataformas em português. |
+| IGN (EN) | `https://feeds.feedburner.com/ign/all` | Imprensa internacional | Embargo de reviews, eventos globais. |
+| Adrenaline | `https://www.adrenaline.com.br/feed/` | Imprensa BR | Excelente para PC gaming e novidades de hardware. |
 | TecMundo (inclui Voxel) | `https://rss.tecmundo.com.br/feed` | Imprensa BR | O feed dedicado do Voxel deu **404** — usar o feed geral do TecMundo e filtrar games. |
 | Push Square | `https://www.pushsquare.com/feeds/latest` | Imprensa internacional | Especializado em PlayStation. |
-| Eurogamer | `https://www.eurogamer.net/feed` | Imprensa internacional | Reviews e análises de referência. |
+| Eurogamer | `https://www.eurogamer.net/feed` | Imprensa internacional | Reviews, notícias e análises de referência multiplataforma. |
+| Nintendo Life | `https://www.nintendolife.com/feeds/latest` | Imprensa internacional | **Referência Nintendo Switch.** Notícias de lançamentos e eShop. |
+| Nintendo Blast | `https://www.nintendoblast.com.br/feeds/posts/default` | Imprensa BR | Conteúdo em português dedicado ao ecossistema Nintendo. |
+| PC Gamer | `https://www.pcgamer.com/rss/` | Imprensa internacional | **Referência PC Gaming.** Lançamentos da Steam, mods e hardware de PC. |
+| Rock Paper Shotgun | `https://www.rockpapershotgun.com/feed` | Imprensa internacional | Ótimo para jogos independentes e cultura de PC. |
+| GamesIndustry.biz | `https://www.gamesindustry.biz/feed` | Imprensa internacional | **Referência de Mercado (Nina).** O feed `/rss` deu **404** — usar a URL `/feed` atualizada. |
 
-**Regra de triangulação continua valendo:** fato de imprensa precisa de 2 fontes independentes; fato vindo do PS Blog oficial basta 1.
+**Regra de triangulação continua valendo:** fato de imprensa precisa de 2 fontes independentes; fato vindo de canais oficiais (como PS Blog ou sites da Nintendo/Steam oficiais) basta 1.
 
 ### Agregadores (requer chave)
 

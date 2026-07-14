@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import { listEntregas } from "@/lib/entregas";
+import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   const session = await getSession();
@@ -8,11 +8,13 @@ export async function GET() {
     return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
   }
 
-  const [pendentes, aprovados, rejeitados] = await Promise.all([
-    listEntregas("pendentes"),
-    listEntregas("aprovados"),
-    listEntregas("rejeitados"),
-  ]);
+  const sugestoes = await prisma.sugestaoAgente.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+
+  const pendentes = sugestoes.filter((s) => s.status === "PENDING");
+  const aprovados = sugestoes.filter((s) => s.status === "APPROVED");
+  const rejeitados = sugestoes.filter((s) => s.status === "REJECTED");
 
   return NextResponse.json({ pendentes, aprovados, rejeitados });
 }
