@@ -100,7 +100,7 @@ export default function BestReviewed({ games }: BestReviewedProps) {
             return (
               <Link
                 key={game.id}
-                href={`/jogos/${game.slug}`}
+                href={`/reviews/${game.slug}`}
                 className={`group relative bg-[#0f0f18]/60 backdrop-blur border rounded-2xl p-4 overflow-hidden transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between ${style.borderColor} ${style.glow}`}
               >
                 {/* Medal and Rank Header */}

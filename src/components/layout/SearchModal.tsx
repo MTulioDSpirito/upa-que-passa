@@ -89,7 +89,7 @@ export default function SearchModal() {
               {gameResults.map((g) => (
                 <button
                   key={g.id}
-                  onClick={() => goTo(`/jogos/${g.slug}`)}
+                  onClick={() => goTo(`/reviews/${g.slug}`)}
                   className="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 transition-colors text-left"
                 >
                   <img src={g.cover} alt="" className="w-8 h-11 object-cover rounded-md flex-shrink-0" />

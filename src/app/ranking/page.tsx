@@ -33,7 +33,7 @@ export default function RankingPage() {
           return (
             <Link
               key={actualGame.id}
-              href={`/jogos/${actualGame.slug}`}
+              href={`/reviews/${actualGame.slug}`}
               className={`group flex flex-col items-center ${pos === 0 ? "order-2" : pos === 1 ? "order-1" : "order-3"}`}
             >
               <div className="text-3xl mb-2">{medals[pos]}</div>
@@ -71,7 +71,7 @@ export default function RankingPage() {
           .map((game, i) => (
             <Link
               key={game.id}
-              href={`/jogos/${game.slug}`}
+              href={`/reviews/${game.slug}`}
               className="flex items-center gap-4 bg-[#0f0f18] border border-white/5 rounded-xl p-4 hover:border-purple-500/20 transition-all group"
             >
               <div className={`text-xl font-black w-10 text-center ${

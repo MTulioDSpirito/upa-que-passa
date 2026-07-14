@@ -41,7 +41,7 @@ export default function GameCard({ game, compact = false }: GameCardProps) {
 
   if (compact) {
     return (
-      <Link href={`/jogos/${game.slug}`} className="flex gap-3 items-center group hover:bg-white/5 p-2 rounded-xl transition-all">
+      <Link href={`/reviews/${game.slug}`} className="flex gap-3 items-center group hover:bg-white/5 p-2 rounded-xl transition-all">
         <img
           src={game.cover}
           alt={game.title}
@@ -59,7 +59,7 @@ export default function GameCard({ game, compact = false }: GameCardProps) {
   }
 
   return (
-    <Link href={`/jogos/${game.slug}`} className="game-card group block">
+    <Link href={`/reviews/${game.slug}`} className="game-card group block">
       <div className="relative bg-[#0f0f18] rounded-xl overflow-hidden border border-white/5 hover:border-purple-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-purple-900/20">
         {/* Cover */}
         <div className="relative aspect-[3/4] overflow-hidden">
