@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${geist.variable} ${russoOne.variable}`}>
+    <html lang="pt-BR" className={`${geist.variable} ${russoOne.variable}`} suppressHydrationWarning>
       <body className="bg-[#07070a] text-white antialiased">
         <SiteShell>{children}</SiteShell>
       </body>

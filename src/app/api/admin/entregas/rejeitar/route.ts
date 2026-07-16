@@ -2,16 +2,27 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+import { z } from "zod";
+
+const rejeitarSchema = z.object({
+  id: z.string({ message: "ID inválido." }),
+  motivo: z.string().optional().nullable(),
+});
+
 export async function POST(request: NextRequest) {
   const session = await getSession();
   if (!session) {
     return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
   }
 
-  const { id, motivo } = await request.json();
-  if (typeof id !== "string") {
+  const body = await request.json();
+  const parsed = rejeitarSchema.safeParse(body);
+
+  if (!parsed.success) {
     return NextResponse.json({ error: "ID inválido." }, { status: 400 });
   }
+
+  const { id, motivo } = parsed.data;
 
   try {
     const admin = await prisma.adminUser.findUnique({

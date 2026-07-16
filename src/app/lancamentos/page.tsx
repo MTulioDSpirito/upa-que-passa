@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { Calendar, Clock } from "lucide-react";
-import { GAMES, formatDate } from "@/lib/data";
+import { formatDate } from "@/lib/data";
 import { readAdminGames } from "@/lib/adminGames";
+import { readAdminReviews } from "@/lib/adminReviews";
 import { Game } from "@/lib/types";
 import RecentGamesList from "./RecentGamesList";
+import GameImage from "@/components/GameImage";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +19,7 @@ const UPCOMING = [
   { id: "u7", title: "Silent Hill: Townfall", developer: "Screen Burn Interactive", releaseDate: "2026-09-24", cover: "https://media.rawg.io/media/games/d1c/d1c4e52d3084231530fcab5d90033d42.jpg", platforms: ["PS5", "PC"], genres: ["Terror", "Aventura"] },
 ];
 
-const RECENT_WINDOW_DAYS = 180;
+const RECENT_WINDOW_DAYS = 60;
 
 function selectRecentGames(games: Game[]): Game[] {
   const now = Date.now();
@@ -56,7 +58,8 @@ function parseReleaseDate(dateStr: string) {
 
 export default async function LancamentosPage() {
   const adminGames = await readAdminGames();
-  const recentGames = selectRecentGames([...GAMES, ...adminGames]);
+  const adminReviews = await readAdminReviews();
+  const recentGames = selectRecentGames(adminGames);
   const upcoming = [...UPCOMING, ...selectUpcomingAdminGames(adminGames)].sort(
     (a, b) => new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime()
   );
@@ -87,7 +90,11 @@ export default async function LancamentosPage() {
               <div key={game.id} className="group relative bg-[#0f0f18]/60 border border-white/5 rounded-2xl overflow-hidden hover:border-orange-500/30 hover:shadow-[0_0_20px_rgba(249,115,22,0.08)] hover:bg-[#141422] transition-all duration-300 flex flex-col">
                 {/* Cover Preview & Overlays */}
                 <div className="relative h-44 overflow-hidden shrink-0">
-                  <img src={game.cover} alt={game.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <GameImage
+                    src={game.cover}
+                    alt={game.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f18] via-transparent to-black/40" />
 
                   {/* Floating Calendar Leaf Badge */}
@@ -137,7 +144,7 @@ export default async function LancamentosPage() {
       </section>
 
       {/* Recentes */}
-      <RecentGamesList games={recentGames} />
+      <RecentGamesList games={recentGames} reviews={adminReviews} />
     </div>
   );
 }

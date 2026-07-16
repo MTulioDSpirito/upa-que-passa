@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { Eye, Heart, Calendar, Search, Clock, User, X } from "lucide-react";
-import { NEWS, formatDate } from "@/lib/data";
+import { formatDate } from "@/lib/data";
+import { useAllNews } from "@/hooks/useAllNews";
 import { useState, useEffect } from "react";
 import Pagination from "@/components/ui/Pagination";
 import team from "@/mocks/team";
@@ -10,6 +11,7 @@ import team from "@/mocks/team";
 const CATEGORIES = ["Todas", "Notícias", "Hardware", "Eventos", "Lançamentos", "Reviews", "Análises"];
 
 export default function NoticiasPage() {
+  const NEWS = useAllNews();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("Todas");
   

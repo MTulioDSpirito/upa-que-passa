@@ -3,22 +3,28 @@
 import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronRight, Eye, Heart, Calendar, User, Share2, Tag, Check, Clock } from "lucide-react";
-import { NEWS, formatDate } from "@/lib/data";
+import { formatDate } from "@/lib/data";
+import { useAllNews } from "@/hooks/useAllNews";
 import team from "@/mocks/team";
 
 interface Props { params: Promise<{ slug: string }> }
 
 const getAuthorInfo = (authorName: string) => {
-  const cleanName = authorName.split("·")[0].trim().toLowerCase();
+  const parts = authorName.split("·");
+  const name = parts[0].trim();
+  const avatarUrl = parts[1]?.trim();
+  const cleanName = name.toLowerCase();
+
   return team.find((t) => t.name.toLowerCase() === cleanName) || {
-    name: authorName,
+    name: name,
     role: "Redator",
-    avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${authorName}`,
+    avatar: avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`,
   };
 };
 
 export default function NewsArticlePage({ params }: Props) {
   const { slug } = use(params);
+  const NEWS = useAllNews();
   const article = NEWS.find((n) => n.slug === slug);
 
   // States
@@ -121,8 +127,15 @@ export default function NewsArticlePage({ params }: Props) {
       </div>
 
       {/* Cover */}
-      <div className="rounded-3xl overflow-hidden mb-8 shadow-2xl relative max-h-[450px]">
-        <img src={article.cover} alt={article.title} className="w-full h-full object-cover" />
+      <div className="mb-8">
+        <div className="rounded-3xl overflow-hidden shadow-2xl relative max-h-[450px]">
+          <img src={article.cover} alt={article.title} className="w-full h-full object-cover" />
+        </div>
+        {article.imageCredits && (
+          <p className="text-xs text-gray-500 mt-2 text-right italic">
+            Créditos da imagem: {article.imageCredits}
+          </p>
+        )}
       </div>
 
       {/* Content */}
@@ -133,7 +146,7 @@ export default function NewsArticlePage({ params }: Props) {
         </p>
 
         {/* Dynamic Paragraphs */}
-        <div className="text-gray-300 text-base md:text-lg leading-relaxed space-y-6">
+        <div className="text-gray-300 text-base md:text-lg leading-relaxed space-y-6 animate-fade-in">
           {articleParagraphs.map((paragraph, index) => (
             <p key={index}>{paragraph}</p>
           ))}
@@ -141,6 +154,14 @@ export default function NewsArticlePage({ params }: Props) {
             Fique ligado no Upa que Passa para mais atualizações em primeira mão. Nossa equipe especializada cobrirá todos os detalhes técnicos, análises e reviews de novos lançamentos de PlayStation 5!
           </p>
         </div>
+
+        {/* Fontes */}
+        {article.fontes && (
+          <div className="mt-8 pt-4 border-t border-white/5 text-sm text-gray-400 flex items-center gap-2">
+            <span className="font-semibold text-white">Fontes:</span>
+            <span className="bg-white/5 px-2.5 py-1 rounded-lg text-xs font-mono">{article.fontes}</span>
+          </div>
+        )}
 
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mt-8 pt-6 border-t border-white/5">

@@ -46,3 +46,4 @@ next-env.d.ts
 
 # jogos adicionados via /admin (runtime, local)
 /data/admin-games.json
+/public/uploads

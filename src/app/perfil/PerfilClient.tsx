@@ -3,8 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Star, MessageSquare, ShoppingBag, Trophy, Settings } from "lucide-react";
-import { GAMES, getScoreColor } from "@/lib/data";
+import { getScoreColor } from "@/lib/data";
 import EditProfileModal, { type EditableProfile } from "./EditProfileModal";
+import { useAllGames } from "@/hooks/useAllGames";
 
 interface PerfilUser {
   nickname: string;
@@ -23,6 +24,7 @@ export default function PerfilClient({
   user: PerfilUser;
   favoriteGameIds: string[];
 }) {
+  const [GAMES] = useAllGames();
   const [user, setUser] = useState(initialUser);
   const [editing, setEditing] = useState(false);
   const favoriteGames = GAMES.filter((g) => favoriteGameIds.includes(g.id));

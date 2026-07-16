@@ -4,15 +4,16 @@ import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import {
-  Star, Heart, Share2, ChevronRight, Play, ThumbsUp, ThumbsDown, AlertTriangle,
+  Heart, Share2, ChevronRight, Play, ThumbsUp, ThumbsDown, AlertTriangle,
   MessageSquare, ShoppingBag, BarChart3, Calendar, Clock, Layers, Globe,
   Shield, Users, Gamepad2, Info, Check, Eye, Sparkles, Award, Tv
 } from "lucide-react";
-import { REVIEWS, getScoreColor, getScoreBg, formatScore, formatDate, formatPrice } from "@/lib/data";
+import { getScoreColor, getScoreBg, formatScore, formatDate, formatPrice } from "@/lib/data";
 import GameCard from "@/components/GameCard";
 import team from "@/mocks/team";
 import { useUserSession } from "@/hooks/useUserSession";
 import { useAllGames } from "@/hooks/useAllGames";
+import { useAllReviews } from "@/hooks/useAllReviews";
 
 interface Props { params: Promise<{ slug: string }> }
 
@@ -82,9 +83,11 @@ export default function GamePage({ params }: Props) {
   const { slug } = use(params);
   const [games] = useAllGames();
   const game = games.find((g) => g.slug === slug);
+  const REVIEWS = useAllReviews();
   const review = REVIEWS.find((r) => r.gameId === game?.id);
-  const authorInfo = review ? team.find((t: any) => t.name.toLowerCase() === review.author.toLowerCase()) : null;
-  const authorAvatar = authorInfo?.avatar || (review ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${review.author}` : "");
+  const [authorName, authorAvatarUrl] = (review?.author || "").split("·").map((s: string) => s.trim());
+  const authorInfo = review ? team.find((t: any) => t.name.toLowerCase() === authorName.toLowerCase()) : null;
+  const authorAvatar = authorInfo?.avatar || authorAvatarUrl || (review ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${authorName}` : "");
   const [activeTab, setActiveTab] = useState<"review" | "scores" | "gallery" | "marketplace">("review");
   const [userScore, setUserScore] = useState(0);
   const [hoveredScore, setHoveredScore] = useState(0);
@@ -92,6 +95,11 @@ export default function GamePage({ params }: Props) {
   const currentUser = useUserSession();
   const router = useRouter();
   const pathname = usePathname();
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!currentUser || !game) return;
@@ -118,6 +126,10 @@ export default function GamePage({ params }: Props) {
       const data = await res.json();
       setFavorited(data.favorited);
     }
+  }
+
+  if (!mounted) {
+    return <div className="min-h-screen bg-[#050508]" />;
   }
 
   if (!game) {
@@ -188,6 +200,11 @@ export default function GamePage({ params }: Props) {
                   </span>
                 </div>
               </div>
+              {review?.imageCredits && (
+                <p className="text-[10px] text-gray-500 mt-2 text-center italic font-mono max-w-[224px] truncate" title={review.imageCredits}>
+                  {review.imageCredits}
+                </p>
+              )}
             </div>
 
             {/* Game Main Info */}
@@ -388,7 +405,7 @@ export default function GamePage({ params }: Props) {
                             </div>
                           )}
                           <div className="flex items-center gap-2">
-                            <span>Por <strong className="text-purple-400">{review.author}</strong></span>
+                            <span>Por <strong className="text-purple-400">{authorName}</strong></span>
                             <span>·</span>
                             <span>{formatDate(review.publishedAt)}</span>
                           </div>

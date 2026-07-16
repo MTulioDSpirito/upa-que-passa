@@ -12,8 +12,8 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <BrandHeader />
-      <Navbar />
+      {!isAdmin && <BrandHeader />}
+      {!isAdmin && <Navbar />}
       <div className="w-full">
         {/* We remove the padding lg:pl-56 as there's no sidebar anymore */}
         <main className="min-h-screen">{children}</main>

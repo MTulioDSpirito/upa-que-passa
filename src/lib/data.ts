@@ -1,10 +1,6 @@
-import { GAMES } from "@/mocks/games";
-import { REVIEWS } from "@/mocks/reviews";
-import { USERS } from "@/mocks/users";
 import { LISTINGS } from "@/mocks/listings";
-import { NEWS } from "@/mocks/news";
 
-export { GAMES, REVIEWS, USERS, LISTINGS, NEWS };
+export { LISTINGS };
 
 export function getScoreColor(score: number): string {
   if (score >= 9) return "text-green-400";

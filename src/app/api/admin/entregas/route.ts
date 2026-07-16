@@ -10,6 +10,13 @@ export async function GET() {
 
   const sugestoes = await prisma.sugestaoAgente.findMany({
     orderBy: { createdAt: "desc" },
+    include: {
+      revisadoPor: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
 
   const pendentes = sugestoes.filter((s) => s.status === "PENDING");

@@ -1,7 +1,9 @@
 "use client";
 
 import { useAllGames } from "@/hooks/useAllGames";
-import { NEWS, LISTINGS } from "@/lib/data";
+import { useAllNews } from "@/hooks/useAllNews";
+import { useAllReviews } from "@/hooks/useAllReviews";
+import { LISTINGS } from "@/lib/data";
 
 // Home components
 import TrendingStrip from "@/components/home/TrendingStrip";
@@ -14,13 +16,22 @@ import AboutUs from "@/components/home/AboutUs";
 
 export default function Home() {
   const [GAMES] = useAllGames();
+  const NEWS = useAllNews();
+  const REVIEWS = useAllReviews();
+
+  // Find the review that has been set as featured, and find its corresponding game
+  const featuredReview = REVIEWS.find((r) => r.featured);
+  const featuredReviewGame = featuredReview
+    ? GAMES.find((g) => g.id === featuredReview.gameId)
+    : null;
+
   const featuredGames = GAMES.filter((g) => g.featured);
   
-  // Prefer a featured game that already has an editorial "Nota UQP" (adminScore) for the hero,
-  // since the scores row below is built around that field — falls back to the first featured
-  // game if none has one yet (e.g. freshly added titles awaiting a full review).
-  const topGame = featuredGames.find((g) => g.adminScore) ?? featuredGames[0];
-  
+  // Prefer the manually featured review's game; fallback to standard featured game logic
+  const topGame =
+    featuredReviewGame ??
+    (featuredGames.find((g) => g.adminScore) ?? featuredGames[0]);
+
   const sortedNews = [...NEWS].sort(
     (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   );
@@ -44,7 +55,7 @@ export default function Home() {
       <BestReviewed games={GAMES} />
 
       {/* ─── REVIEWS DA EQUIPE ───────────────────────────────── */}
-      <LatestReviews games={GAMES} />
+      <LatestReviews games={GAMES} reviews={REVIEWS} />
 
       {/* ─── QUEM SOMOS (HISTÓRIA E EQUIPE) ───────────────────── */}
       <AboutUs />

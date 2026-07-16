@@ -3,12 +3,14 @@
 import { use, useState } from "react";
 import Link from "next/link";
 import { ChevronRight, MapPin, Heart, Share2, Eye, Star, Package, Truck, MessageSquare, Shield, ChevronLeft } from "lucide-react";
-import { LISTINGS, GAMES, formatPrice, formatDate } from "@/lib/data";
+import { LISTINGS, formatPrice, formatDate } from "@/lib/data";
+import { useAllGames } from "@/hooks/useAllGames";
 
 interface Props { params: Promise<{ id: string }> }
 
 export default function ListingPage({ params }: Props) {
   const { id } = use(params);
+  const [GAMES] = useAllGames();
   const listing = LISTINGS.find((l) => l.id === id);
   const game = listing ? GAMES.find((g) => g.id === listing.gameId) : null;
   const [photoIdx, setPhotoIdx] = useState(0);

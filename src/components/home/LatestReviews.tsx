@@ -1,16 +1,16 @@
 import Link from "next/link";
 import { Star, ThumbsUp, Calendar, User, ChevronRight, BookOpen } from "lucide-react";
-import { Game } from "@/lib/types";
-import { REVIEWS } from "@/lib/data";
+import { Game, Review } from "@/lib/types";
 import { getScoreColor, formatScore, formatDate } from "@/lib/data";
 
 interface LatestReviewsProps {
   games: Game[];
+  reviews: Review[];
 }
 
-export default function LatestReviews({ games }: LatestReviewsProps) {
+export default function LatestReviews({ games, reviews }: LatestReviewsProps) {
   // Map reviews to their corresponding games and filter out any reviews without a matching game
-  const reviewsWithGames = REVIEWS.map((r) => ({
+  const reviewsWithGames = reviews.map((r) => ({
     review: r,
     game: games.find((g) => g.id === r.gameId),
   }))

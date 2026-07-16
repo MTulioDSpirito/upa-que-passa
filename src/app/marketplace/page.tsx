@@ -3,12 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Search, Filter, Plus, MapPin, Eye, Heart, ArrowUpDown, Package } from "lucide-react";
-import { LISTINGS, formatPrice, formatDate, GAMES } from "@/lib/data";
+import { LISTINGS, formatPrice, formatDate } from "@/lib/data";
+import { useAllGames } from "@/hooks/useAllGames";
 
 const CONDITIONS = ["Todas", "lacrado", "como novo", "bom estado", "regular"];
 const STATES_BR = ["Todos", "SP", "RJ", "MG", "RS", "PR", "SC", "BA", "GO", "CE", "PE"];
 
 export default function MarketplacePage() {
+  const [GAMES] = useAllGames();
   const [search, setSearch] = useState("");
   const [condition, setCondition] = useState("Todas");
   const [state, setState] = useState("Todos");

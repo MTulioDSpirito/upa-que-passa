@@ -7,58 +7,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum AdminRole {
-  DEVELOPER
-  COLABORADOR
-}
-
-enum AgenteCriador {
-  KAI_REPORTER
-  NINA_CORRESPONDENTE
-  MILO_LANCAMENTOS
-  THEO_REVIEWS
-  VERA_NOTAS
-}
-
-enum TipoSugestao {
-  NOTICIA
-  REVIEW
-  LANCAMENTO
-}
-
-enum StatusSugestao {
-  PENDING
-  APPROVED
-  REJECTED
-}
-
 model AdminUser {
-  id                String           @id @default(cuid())
-  name              String
-  email             String           @unique
-  passwordHash      String
-  role              AdminRole
-  avatar            String?
-  active            Boolean          @default(true)
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
+  id                 String           @id @default(cuid())
+  name               String
+  email              String           @unique
+  passwordHash       String
+  role               AdminRole
+  avatar             String?
+  active             Boolean          @default(true)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
   sugestoesRevisadas SugestaoAgente[] @relation("RevisorSugestao")
 }
 
 model SugestaoAgente {
-  id             String          @id @default(cuid())
+  id             String         @id @default(cuid())
   tipo           TipoSugestao
   criador        AgenteCriador
   titulo         String
   slug           String
-  payload        Json            // JSON contendo corpo do texto, imagens, notas, prós/contras, etc.
-  fontes         String[]        // URLs de referência cruzadas pelos agentes
-  status         StatusSugestao  @default(PENDING)
-  motivoRejeicao String?         // Feedback de rejeição
+  payload        Json
+  fontes         String[]
+  status         StatusSugestao @default(PENDING)
+  motivoRejeicao String?
   revisadoPorId  String?
-  revisadoPor    AdminUser?      @relation("RevisorSugestao", fields: [revisadoPorId], references: [id])
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  revisadoPor    AdminUser?     @relation("RevisorSugestao", fields: [revisadoPorId], references: [id])
 }
 
 model SiteUser {
@@ -86,3 +61,117 @@ model Favorite {
 
   @@unique([userId, gameId])
 }
+
+model Game {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  title           String
+  cover           String
+  trailer         String?
+  gallery         String[]
+  description     String
+  synopsis        String
+  developer       String
+  publisher       String
+  engine          String?
+  releaseDate     String
+  suggestedPrice  Float
+  platforms       String[]
+  genres          String[]
+  avgPlayTime     String?
+  online          Boolean
+  offline         Boolean
+  maxPlayers      Int
+  languages       String[]
+  subtitles       String[]
+  dubbing         String[]
+  ageRating       String
+  links           Json
+  metacriticScore Int?
+  openCriticScore Int?
+  userScore       Float
+  adminScore      Float?
+  siteScores      Json
+  worldAvg        Float?
+  featured        Boolean  @default(false)
+  tags            String[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  reviews         Review[]
+}
+
+model NewsArticle {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  excerpt      String
+  content      String
+  cover        String
+  author       String
+  publishedAt  String
+  category     String
+  tags         String[]
+  views        Int      @default(0)
+  likes        Int      @default(0)
+  imageCredits String?
+  fontes       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Review {
+  id           String   @id @default(cuid())
+  gameId       String
+  title        String
+  text         String
+  pros         String[]
+  cons         String[]
+  conclusion   String
+  scores       Json
+  overallScore Float
+  author       String
+  publishedAt  String
+  likes        Int      @default(0)
+  imageCredits String?
+  featured     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+}
+
+enum AdminRole {
+  DEVELOPER
+  COLABORADOR
+}
+
+enum AgenteCriador {
+  KAI_REPORTER
+  NINA_CORRESPONDENTE
+  MILO_LANCAMENTOS
+  THEO_REVIEWS
+  VERA_NOTAS
+}
+
+enum TipoSugestao {
+  NOTICIA
+  REVIEW
+  LANCAMENTO
+}
+
+enum StatusSugestao {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model YoutubeVideo {
+  id          String   @id @default(cuid())
+  title       String
+  videoUrl    String
+  thumbnail   String
+  duration    String
+  resolution  String   @default("4K UHD")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+

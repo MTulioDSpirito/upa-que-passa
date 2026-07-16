@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ThumbsUp, Calendar, ChevronRight, Gamepad2, Search, SlidersHorizontal, ArrowUpDown, Award, CheckCircle2, XCircle } from "lucide-react";
-import { GAMES, REVIEWS, formatScore, formatDate } from "@/lib/data";
+import { formatScore, formatDate } from "@/lib/data";
+import { useAllReviews } from "@/hooks/useAllReviews";
+import { useAllGames } from "@/hooks/useAllGames";
 import team from "@/mocks/team";
 import Pagination from "@/components/ui/Pagination";
 
@@ -21,7 +23,11 @@ const getAuthorInfo = (authorName: string) => {
            normalizedMemberName.includes(normalizedAuthor);
   });
 
-  return found!;
+  return found || {
+    name: authorName,
+    role: "Redator",
+    avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${authorName}`,
+  };
 };
 
 // Helper to render score badge using custom award images (Bronze, Silver, Gold)
@@ -63,6 +69,8 @@ const renderUPQBadge = (score: number, isLarge: boolean = false) => {
 
 
 export default function ReviewsPage() {
+  const REVIEWS = useAllReviews();
+  const [GAMES] = useAllGames();
   const [search, setSearch] = useState("");
   const [minScore, setMinScore] = useState<number>(0);
   const [sortBy, setSortBy] = useState<string>("recent");
@@ -70,6 +78,11 @@ export default function ReviewsPage() {
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const reviewsPerPage = 4;
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Map reviews to games
   const reviewsWithGames = REVIEWS.map((r) => ({
@@ -99,6 +112,10 @@ export default function ReviewsPage() {
   useEffect(() => {
     setCurrentPage(1);
   }, [search, minScore, sortBy]);
+
+  if (!mounted) {
+    return <div className="min-h-screen bg-[#050508]" />;
+  }
 
   const sortedReviews = [...filteredReviews].sort((a, b) => {
     if (sortBy === "score") {
