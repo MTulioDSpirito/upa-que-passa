@@ -55,6 +55,7 @@ Five research personas — Kai (PS news), Nina (industry news), Milo (release ca
 - `suggestion-agents-work.md` and `worked-agents.md` (root) document the persistence architecture and proposed next steps.
 
 ### Data layer — mock content in `src/mocks/`
+
 Public content (games, news, reviews, marketplace) is still mock data, now split by domain:
 
 - `src/mocks/games.ts`, `reviews.ts`, `news.ts`, `listings.ts`, `users.ts`, `team.ts` — the arrays.

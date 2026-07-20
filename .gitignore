@@ -51,3 +51,6 @@ next-env.d.ts
 
 # ajuste local de porta do Postgres (maquina-especifico)
 docker-compose.override.yml
+
+# ajuste local de porta do Postgres (maquina-especifico)
+docker-compose.override.yml
