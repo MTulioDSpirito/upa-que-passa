@@ -3,7 +3,8 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Trophy, Star, TrendingUp, Calendar, SlidersHorizontal } from "lucide-react";
-import { GAMES, getScoreColor, formatScore } from "@/lib/data";
+import { getScoreColor, formatScore } from "@/lib/data";
+import { useAllGames } from "@/hooks/useAllGames";
 
 const CATEGORIES = [
   { id: "geral", label: "🏆 Geral", genre: null },
@@ -36,6 +37,7 @@ const MONTHS = [
 ];
 
 export default function RankingPage() {
+  const [GAMES] = useAllGames();
   const [sortBy, setSortBy] = useState<"uqp" | "users" | "metacritic">("uqp");
   const [platform, setPlatform] = useState<string>("all");
   const [period, setPeriod] = useState<"all" | "year" | "month">("all");
@@ -47,7 +49,7 @@ export default function RankingPage() {
   const availableYears = useMemo(() => {
     const years = GAMES.map((g) => new Date(g.releaseDate).getFullYear());
     return Array.from(new Set(years)).sort((a, b) => b - a);
-  }, []);
+  }, [GAMES]);
 
   // Filter and Sort logic
   const filteredAndSortedGames = useMemo(() => {
@@ -55,9 +57,14 @@ export default function RankingPage() {
       .filter((game) => {
         // Platform Filter
         if (platform !== "all") {
-          const match = game.platforms?.some((p) =>
-            p.toLowerCase().includes(platform.toLowerCase())
-          );
+          const match = game.platforms?.some((p) => {
+            const platLower = p.toLowerCase();
+            const filterLower = platform.toLowerCase();
+            if (filterLower === "ps5") {
+              return platLower.includes("ps5") || platLower.includes("playstation");
+            }
+            return platLower.includes(filterLower);
+          });
           if (!match) return false;
         }
 
@@ -97,7 +104,7 @@ export default function RankingPage() {
 
         return scoreB - scoreA;
       });
-  }, [platform, activeGenre, period, selectedYear, selectedMonth, sortBy]);
+  }, [GAMES, platform, activeGenre, period, selectedYear, selectedMonth, sortBy]);
 
   // Podium games layout helper (displays 2nd, 1st, 3rd)
   const podiumGames = useMemo(() => {
@@ -306,6 +313,9 @@ export default function RankingPage() {
                     className={`${
                       pos === 0 ? "w-28 h-40" : "w-24 h-32"
                     } object-cover rounded-2xl border-2 ${color} shadow-2xl`}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "/cover_conteudo_nao_disponivel.png";
+                    }}
                   />
                   <div
                     className={`absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center text-sm font-black shadow-lg ${bg}`}
@@ -366,6 +376,9 @@ export default function RankingPage() {
                   src={game.cover}
                   alt={game.title}
                   className="w-12 h-16 object-cover rounded-xl flex-shrink-0 shadow-md border border-white/5"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "/cover_conteudo_nao_disponivel.png";
+                  }}
                 />
 
                 <div className="flex-1 min-w-0">

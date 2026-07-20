@@ -9,9 +9,10 @@ export default async function PerfilPage() {
     redirect("/login");
   }
 
-  const [user, favorites] = await Promise.all([
+  const [user, favorites, commentsCount] = await Promise.all([
     prisma.siteUser.findUnique({ where: { id: session.sub } }),
     prisma.favorite.findMany({ where: { userId: session.sub } }),
+    prisma.comment.count({ where: { userId: session.sub } }),
   ]);
 
   if (!user) {
@@ -30,6 +31,7 @@ export default async function PerfilPage() {
         createdAt: user.createdAt.toISOString(),
       }}
       favoriteGameIds={favorites.map((f) => f.gameId)}
+      commentsCount={commentsCount}
     />
   );
 }

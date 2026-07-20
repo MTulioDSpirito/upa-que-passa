@@ -52,6 +52,8 @@ export interface Review {
   author: string;
   publishedAt: string;
   likes: number;
+  imageCredits?: string;
+  featured?: boolean;
 }
 
 export interface ReviewScores {
@@ -153,4 +155,18 @@ export interface NewsArticle {
   tags: string[];
   views: number;
   likes: number;
+  imageCredits?: string;
+  fontes?: string;
 }
+
+export interface YoutubeVideo {
+  id?: string;
+  title: string;
+  videoUrl: string;
+  thumbnail: string;
+  duration: string;
+  resolution: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+

@@ -12,6 +12,29 @@ function isValidAvatarUrl(url: string): boolean {
   }
 }
 
+import { z } from "zod";
+
+const perfilSchema = z.object({
+  nickname: z
+    .preprocess((val) => (typeof val === "string" ? val.trim() : ""), z.string())
+    .refine((val) => val.length >= 3 && val.length <= 24, {
+      message: "Nickname deve ter entre 3 e 24 caracteres.",
+    }),
+  avatar: z
+    .preprocess((val) => (typeof val === "string" ? val.trim() : ""), z.string())
+    .refine((val) => !val || isValidAvatarUrl(val), {
+      message: "URL do avatar inválida — use um link http(s).",
+    }),
+  city: z.preprocess((val) => (typeof val === "string" ? val.trim() : ""), z.string()),
+  state: z.preprocess((val) => (typeof val === "string" ? val.trim() : ""), z.string()),
+  bio: z
+    .preprocess((val) => (typeof val === "string" ? val.trim() : ""), z.string())
+    .refine((val) => val.length <= 300, {
+      message: "Bio deve ter no máximo 300 caracteres.",
+    }),
+  console: z.preprocess((val) => (typeof val === "string" ? val.trim() : ""), z.string()),
+});
+
 export async function PATCH(request: NextRequest) {
   const session = await getUserSession();
   if (!session) {
@@ -19,22 +42,13 @@ export async function PATCH(request: NextRequest) {
   }
 
   const body = await request.json();
-  const nickname = typeof body.nickname === "string" ? body.nickname.trim() : "";
-  const avatarRaw = typeof body.avatar === "string" ? body.avatar.trim() : "";
-  const city = typeof body.city === "string" ? body.city.trim() : "";
-  const state = typeof body.state === "string" ? body.state.trim() : "";
-  const bio = typeof body.bio === "string" ? body.bio.trim() : "";
-  const platform = typeof body.console === "string" ? body.console.trim() : "";
+  const parsed = perfilSchema.safeParse(body);
 
-  if (nickname.length < 3 || nickname.length > 24) {
-    return NextResponse.json({ error: "Nickname deve ter entre 3 e 24 caracteres." }, { status: 400 });
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
   }
-  if (bio.length > 300) {
-    return NextResponse.json({ error: "Bio deve ter no máximo 300 caracteres." }, { status: 400 });
-  }
-  if (avatarRaw && !isValidAvatarUrl(avatarRaw)) {
-    return NextResponse.json({ error: "URL do avatar inválida — use um link http(s)." }, { status: 400 });
-  }
+
+  const { nickname, avatar: avatarRaw, city, state, bio, console: platform } = parsed.data;
 
   const nicknameTaken = await prisma.siteUser.findUnique({ where: { nickname } });
   if (nicknameTaken && nicknameTaken.id !== session.sub) {

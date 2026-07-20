@@ -2,6 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 
+import { z } from "zod";
+
+const updateUserSchema = z.object({
+  nickname: z
+    .string()
+    .trim()
+    .min(3, "Nickname deve ter entre 3 e 24 caracteres.")
+    .max(24, "Nickname deve ter entre 3 e 24 caracteres.")
+    .optional(),
+  email: z
+    .string()
+    .toLowerCase()
+    .trim()
+    .email("E-mail inválido.")
+    .optional(),
+  active: z.boolean({ message: "active deve ser booleano." }).optional(),
+});
+
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
   if (!session) {
@@ -14,27 +32,14 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     return NextResponse.json({ error: "Usuário não encontrado." }, { status: 404 });
   }
 
-  const { nickname, email, active } = await request.json();
-  const data: { nickname?: string; email?: string; active?: boolean } = {};
+  const body = await request.json();
+  const parsed = updateUserSchema.safeParse(body);
 
-  if (nickname !== undefined) {
-    if (typeof nickname !== "string" || nickname.trim().length < 3 || nickname.trim().length > 24) {
-      return NextResponse.json({ error: "Nickname deve ter entre 3 e 24 caracteres." }, { status: 400 });
-    }
-    data.nickname = nickname.trim();
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
   }
-  if (email !== undefined) {
-    if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return NextResponse.json({ error: "E-mail inválido." }, { status: 400 });
-    }
-    data.email = email.toLowerCase().trim();
-  }
-  if (active !== undefined) {
-    if (typeof active !== "boolean") {
-      return NextResponse.json({ error: "active deve ser booleano." }, { status: 400 });
-    }
-    data.active = active;
-  }
+
+  const data = parsed.data;
 
   if (data.nickname || data.email) {
     const conflict = await prisma.siteUser.findFirst({

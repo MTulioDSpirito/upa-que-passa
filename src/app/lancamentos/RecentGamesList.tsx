@@ -3,19 +3,20 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Award, Clock, Gamepad2, Sparkles } from "lucide-react";
-import { Game } from "@/lib/types";
-import { REVIEWS, getScoreColor, formatDate, formatScore } from "@/lib/data";
+import { Game, Review } from "@/lib/types";
+import { getScoreColor, formatDate, formatScore } from "@/lib/data";
 
 interface RecentGamesListProps {
   games: Game[];
+  reviews: Review[];
 }
 
-export default function RecentGamesList({ games }: RecentGamesListProps) {
+export default function RecentGamesList({ games, reviews }: RecentGamesListProps) {
   const [filter, setFilter] = useState<"all" | "reviewed" | "unreviewed">("all");
 
   // Map games to add review information
   const gamesWithReviewInfo = games.map((game) => {
-    const review = REVIEWS.find((r) => r.gameId === game.id);
+    const review = reviews.find((r) => r.gameId === game.id);
     const score = game.adminScore || (review ? review.overallScore : null);
     const hasReview = !!score;
     return {
@@ -99,7 +100,14 @@ export default function RecentGamesList({ games }: RecentGamesListProps) {
                 : "border-white/5 hover:border-purple-500/20 hover:shadow-[0_0_15px_rgba(168,85,247,0.05)]"
             }`}
           >
-            <img src={game.cover} alt={game.title} className="w-12 h-16 object-cover rounded-lg flex-shrink-0" />
+            <img
+               src={game.cover}
+               alt={game.title}
+               className="w-12 h-16 object-cover rounded-lg flex-shrink-0"
+               onError={(e) => {
+                 (e.target as HTMLImageElement).src = "/cover_conteudo_nao_disponivel.png";
+               }}
+             />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="font-bold text-white group-hover:text-purple-300 transition-colors truncate">

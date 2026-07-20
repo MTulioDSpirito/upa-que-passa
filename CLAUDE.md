@@ -15,6 +15,8 @@ npm run db:seed  # Re-seed the 7 admin accounts (idempotent, upserts by email)
 docker compose up -d          # Start local Postgres 16 (db: upa_db, port 5432)
 npx prisma migrate deploy     # Apply migrations
 npx prisma generate           # Regenerate the client after schema changes
+
+
 ```
 
 There are no tests configured. TypeScript errors surface during `npm run build`.

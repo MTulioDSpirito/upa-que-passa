@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { Eye, Heart, Calendar, Search, Clock, User, X } from "lucide-react";
-import { NEWS, formatDate } from "@/lib/data";
+import { formatDate } from "@/lib/data";
+import { useAllNews } from "@/hooks/useAllNews";
 import { useState, useEffect } from "react";
 import Pagination from "@/components/ui/Pagination";
 import team from "@/mocks/team";
@@ -10,6 +11,8 @@ import team from "@/mocks/team";
 const CATEGORIES = ["Todas", "Notícias", "Hardware", "Eventos", "Lançamentos", "Reviews", "Análises"];
 
 export default function NoticiasPage() {
+  const NEWS = useAllNews();
+  const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("Todas");
   
@@ -36,7 +39,18 @@ export default function NoticiasPage() {
     return Math.ceil(words / 200) || 1;
   };
 
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSearch(searchInput);
+  };
+
+  const handleClearSearch = () => {
+    setSearchInput("");
+    setSearch("");
+  };
+
   const handleResetFilters = () => {
+    setSearchInput("");
     setSearch("");
     setCategory("Todas");
   };
@@ -71,24 +85,33 @@ export default function NoticiasPage() {
       {/* Filters */}
       <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between mb-10">
         {/* Search */}
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar notícias por título ou resumo..."
-            className="w-full bg-[#0f0f18] border border-white/10 text-white placeholder-gray-500 rounded-xl pl-10 pr-10 py-3 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
-          />
-          {search && (
-            <button
-              onClick={() => setSearch("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white p-1 rounded-full hover:bg-white/5 transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
-        </div>
+        <form onSubmit={handleSearchSubmit} className="relative flex-1 max-w-md flex gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+            <input
+              type="text"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="Buscar notícias por título ou resumo..."
+              className="w-full bg-[#0f0f18] border border-white/10 text-white placeholder-gray-500 rounded-xl pl-10 pr-10 py-3 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
+            />
+            {searchInput && (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white p-1 rounded-full hover:bg-white/5 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+          <button
+            type="submit"
+            className="px-5 py-3 bg-gradient-to-r from-[#0072ce] to-[#7c3aed] text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-opacity whitespace-nowrap btn-press"
+          >
+            Buscar
+          </button>
+        </form>
 
         {/* Categories Horizontal Scroll/List */}
         <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none -mx-4 px-4 md:mx-0 md:px-0">

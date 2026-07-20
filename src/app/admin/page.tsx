@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
-import AdminDashboardClient from "./AdminDashboardClient";
+import AdminPanelLayout from "./AdminPanelLayout";
 
 export default async function AdminPage() {
   const session = await getSession();
@@ -10,7 +10,7 @@ export default async function AdminPage() {
   }
 
   return (
-    <AdminDashboardClient
+    <AdminPanelLayout
       user={{ name: session.name, email: session.email, role: session.role }}
     />
   );

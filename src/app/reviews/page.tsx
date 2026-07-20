@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ThumbsUp, Calendar, ChevronRight, Gamepad2, Search, SlidersHorizontal, ArrowUpDown, Award, CheckCircle2, XCircle } from "lucide-react";
-import { GAMES, REVIEWS, formatScore, formatDate } from "@/lib/data";
+import { formatScore, formatDate } from "@/lib/data";
+import { useAllReviews } from "@/hooks/useAllReviews";
+import { useAllGames } from "@/hooks/useAllGames";
 import team from "@/mocks/team";
 import Pagination from "@/components/ui/Pagination";
 
@@ -21,7 +23,11 @@ const getAuthorInfo = (authorName: string) => {
            normalizedMemberName.includes(normalizedAuthor);
   });
 
-  return found!;
+  return found || {
+    name: authorName,
+    role: "Redator",
+    avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${authorName}`,
+  };
 };
 
 // Helper to render score badge using custom award images (Bronze, Silver, Gold)
@@ -63,13 +69,21 @@ const renderUPQBadge = (score: number, isLarge: boolean = false) => {
 
 
 export default function ReviewsPage() {
+  const REVIEWS = useAllReviews();
+  const [GAMES] = useAllGames();
   const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [minScore, setMinScore] = useState<number>(0);
   const [sortBy, setSortBy] = useState<string>("recent");
   
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const reviewsPerPage = 4;
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Map reviews to games
   const reviewsWithGames = REVIEWS.map((r) => ({
@@ -81,10 +95,22 @@ export default function ReviewsPage() {
   const otherGames = GAMES.filter((g) => !REVIEWS.find((r) => r.gameId === g.id));
 
   // Determine Highlight of the Month (Destaque do Mês)
-  // Let's pick the review with the highest score as the highlight, or the first one if scores are equal
-  const highlight = reviewsWithGames.reduce((max, r) => 
+  // 1. Filtrar reviews do mês atual (Ano e Mês)
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth(); // 0-indexed
+
+  const currentMonthReviews = reviewsWithGames.filter(({ review }) => {
+    const pubDate = new Date(review.publishedAt);
+    return pubDate.getFullYear() === currentYear && pubDate.getMonth() === currentMonth;
+  });
+
+  // 2. Definir o destaque: se houver reviews no mês atual, pega o de maior nota deste mês.
+  // Caso contrário, faz fallback para o de maior nota geral.
+  const targetReviews = currentMonthReviews.length > 0 ? currentMonthReviews : reviewsWithGames;
+
+  const highlight = targetReviews.reduce((max, r) => 
     r.review.overallScore > max.review.overallScore ? r : max
-  , reviewsWithGames[0]);
+  , targetReviews[0]);
 
   // Filter & Sort reviews
   const filteredReviews = reviewsWithGames.filter(({ review, game }) => {
@@ -99,6 +125,10 @@ export default function ReviewsPage() {
   useEffect(() => {
     setCurrentPage(1);
   }, [search, minScore, sortBy]);
+
+  if (!mounted) {
+    return <div className="min-h-screen bg-[#050508]" />;
+  }
 
   const sortedReviews = [...filteredReviews].sort((a, b) => {
     if (sortBy === "score") {
@@ -235,16 +265,30 @@ export default function ReviewsPage() {
       <section className="bg-[#0b0b14] border border-white/5 rounded-3xl p-6 shadow-xl space-y-4">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           {/* Search Input */}
-          <div className="relative w-full md:flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-            <input
-              type="text"
-              placeholder="Buscar por jogo ou título do review..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-[#121220] border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all"
-            />
-          </div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setSearch(searchInput);
+            }}
+            className="flex gap-2 w-full md:flex-1"
+          >
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <input
+                type="text"
+                placeholder="Buscar por jogo ou título do review..."
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="w-full bg-[#121220] border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all"
+              />
+            </div>
+            <button
+              type="submit"
+              className="px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-purple-500/20 text-sm whitespace-nowrap"
+            >
+              Buscar
+            </button>
+          </form>
 
           <div className="flex flex-wrap gap-3 w-full md:w-auto">
             {/* Score Filters */}

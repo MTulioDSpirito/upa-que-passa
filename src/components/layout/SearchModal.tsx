@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Search, X, Gamepad2, Newspaper } from "lucide-react";
-import { NEWS } from "@/lib/data";
 import { useAllGames } from "@/hooks/useAllGames";
+import { useAllNews } from "@/hooks/useAllNews";
 
 export const OPEN_SEARCH_EVENT = "upa:open-search";
 
@@ -14,6 +14,7 @@ export function openSearch() {
 }
 
 export default function SearchModal() {
+  const news = useAllNews();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const router = useRouter();
@@ -49,7 +50,7 @@ export default function SearchModal() {
     ? games.filter((g) => g.title.toLowerCase().includes(term) || g.developer.toLowerCase().includes(term)).slice(0, 5)
     : [];
   const newsResults = term
-    ? NEWS.filter((n) => n.title.toLowerCase().includes(term)).slice(0, 5)
+    ? news.filter((n) => n.title.toLowerCase().includes(term)).slice(0, 5)
     : [];
   const hasResults = gameResults.length > 0 || newsResults.length > 0;
 

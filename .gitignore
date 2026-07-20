@@ -46,6 +46,11 @@ next-env.d.ts
 
 # jogos adicionados via /admin (runtime, local)
 /data/admin-games.json
+/public/uploads
+
+
+# ajuste local de porta do Postgres (maquina-especifico)
+docker-compose.override.yml
 
 # ajuste local de porta do Postgres (maquina-especifico)
 docker-compose.override.yml

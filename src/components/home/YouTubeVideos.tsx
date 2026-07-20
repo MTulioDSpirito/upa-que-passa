@@ -1,4 +1,5 @@
 import { Play, ChevronRight } from "lucide-react";
+import { useAllYoutubeVideos } from "@/hooks/useAllYoutubeVideos";
 
 const YoutubeIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -6,36 +7,42 @@ const YoutubeIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+const FALLBACK_VIDEOS = [
+  {
+    id: "yt1",
+    title: "God of War Ragnarök Vale a Pena em 2026? Análise Completa PS5",
+    duration: "18:42",
+    thumbnail: "https://cdn.cloudflare.steamstatic.com/steam/apps/2322010/library_hero.jpg",
+    views: "14k visualizações",
+    date: "Há 3 dias",
+    resolution: "4K UHD",
+    videoUrl: "https://www.youtube.com/watch?v=kY31w0e80bY",
+  },
+  {
+    id: "yt2",
+    title: "Marvel's Spider-Man 2: Detalhes do Venom e Campanha Sem Spoilers",
+    duration: "22:15",
+    thumbnail: "https://upload.wikimedia.org/wikipedia/en/0/0f/SpiderMan2PS5BoxArt.jpeg",
+    views: "28k visualizações",
+    date: "Há 1 semana",
+    resolution: "1080P",
+    videoUrl: "https://www.youtube.com/watch?v=q6d_gsk5f4M",
+  },
+  {
+    id: "yt3",
+    title: "Será que Hogwarts Legacy ainda impressiona no PS5? Review Técnico",
+    duration: "15:30",
+    thumbnail: "https://cdn.cloudflare.steamstatic.com/steam/apps/990080/library_600x900.jpg",
+    views: "9.5k visualizações",
+    date: "Há 2 semanas",
+    resolution: "4K HDR",
+    videoUrl: "https://www.youtube.com/watch?v=BtyBj1NDZbA",
+  },
+];
+
 export default function YouTubeVideos() {
-  const videos = [
-    {
-      id: "yt1",
-      title: "God of War Ragnarök Vale a Pena em 2026? Análise Completa PS5",
-      duration: "18:42",
-      thumbnail: "https://cdn.cloudflare.steamstatic.com/steam/apps/2322010/library_hero.jpg",
-      views: "14k visualizações",
-      date: "Há 3 dias",
-      resolution: "4K UHD",
-    },
-    {
-      id: "yt2",
-      title: "Marvel's Spider-Man 2: Detalhes do Venom e Campanha Sem Spoilers",
-      duration: "22:15",
-      thumbnail: "https://upload.wikimedia.org/wikipedia/en/0/0f/SpiderMan2PS5BoxArt.jpeg",
-      views: "28k visualizações",
-      date: "Há 1 semana",
-      resolution: "1080P",
-    },
-    {
-      id: "yt3",
-      title: "Será que Hogwarts Legacy ainda impressiona no PS5? Review Técnico",
-      duration: "15:30",
-      thumbnail: "https://cdn.cloudflare.steamstatic.com/steam/apps/990080/library_600x900.jpg",
-      views: "9.5k visualizações",
-      date: "Há 2 semanas",
-      resolution: "4K HDR",
-    },
-  ];
+  const dynamicVideos = useAllYoutubeVideos();
+  const videos = dynamicVideos.length > 0 ? dynamicVideos : FALLBACK_VIDEOS;
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-16 border-t border-white/5 relative">
@@ -95,9 +102,12 @@ export default function YouTubeVideos() {
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
-        {videos.map((video) => (
-          <div
+        {videos.map((video: any) => (
+          <a
             key={video.id}
+            href={video.videoUrl || "https://www.youtube.com/@upaquepassa"}
+            target="_blank"
+            rel="noopener noreferrer"
             className="group relative p-[1px] bg-white/5 hover:bg-gradient-to-br hover:from-red-600 hover:to-orange-500 rounded-2xl transition-all duration-500 hover:shadow-[0_0_35px_rgba(239,68,68,0.18)] flex flex-col h-full cursor-pointer"
           >
             {/* Outer floating brackets on card corners */}
@@ -136,6 +146,7 @@ export default function YouTubeVideos() {
                   <div className="w-2.5 h-2.5 border-b border-r border-white/30 group-hover:border-red-500/50 absolute bottom-0 right-0 transition-colors duration-300" />
                 </div>
 
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={video.thumbnail}
                   alt={video.title}
@@ -169,14 +180,20 @@ export default function YouTubeVideos() {
                 <div className="flex items-center justify-between text-[11px] text-gray-500 font-mono pt-3 border-t border-white/5">
                   <span className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 bg-red-500 rounded-full" />
-                    {video.views}
+                    {"views" in video ? video.views : "Canal Oficial"}
                   </span>
-                  <span>{video.date}</span>
+                  <span>
+                    {"date" in video 
+                      ? video.date 
+                      : (video.createdAt 
+                          ? `Postado em ${new Date(video.createdAt).toLocaleDateString('pt-BR')}` 
+                          : "Recente")}
+                  </span>
                 </div>
               </div>
 
             </div>
-          </div>
+          </a>
         ))}
       </div>
     </section>

@@ -25,14 +25,20 @@ export default function AuthModal({ isOpen, onClose, initialMode = "login" }: Au
   const [registerError, setRegisterError] = useState<string | null>(null);
   const [registerLoading, setRegisterLoading] = useState(false);
 
-  // Sync mode with prop change
+  // Sync mode with prop change and lock body scrolling
   useEffect(() => {
     if (isOpen) {
       setMode(initialMode);
       setStep(1);
       setLoginError(null);
       setRegisterError(null);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
     }
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen, initialMode]);
 
   if (!isOpen) return null;
@@ -93,11 +99,11 @@ export default function AuthModal({ isOpen, onClose, initialMode = "login" }: Au
   const inputClass = "w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500/50 transition-colors";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in overflow-y-auto">
       {/* Backdrop click to close */}
       <div className="absolute inset-0" onClick={onClose} />
 
-      <div className="relative w-full max-w-md bg-[#0f0f18] border border-white/10 rounded-3xl overflow-hidden shadow-2xl z-10 animate-scale-up">
+      <div className="relative my-auto w-full max-w-md bg-[#0f0f18] border border-white/10 rounded-3xl overflow-hidden shadow-2xl z-10 animate-scale-up">
         {/* Header decoration */}
         <div className="absolute top-0 left-0 right-0 h-[4px] bg-gradient-to-r from-purple-600 via-blue-500 to-purple-600" />
         

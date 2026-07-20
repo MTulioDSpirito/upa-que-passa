@@ -1,31 +1,121 @@
-import fs from "fs/promises";
-import path from "path";
+import { prisma } from "./prisma";
 import { Game } from "./types";
 
-const STORE_PATH = path.join(process.cwd(), "data", "admin-games.json");
-
 export async function readAdminGames(): Promise<Game[]> {
-  let raw: string;
-  try {
-    raw = await fs.readFile(STORE_PATH, "utf-8");
-  } catch {
-    return [];
-  }
-  try {
-    return JSON.parse(raw) as Game[];
-  } catch (err) {
-    console.error(`[adminGames] ${STORE_PATH} has invalid JSON, ignoring file:`, err);
-    return [];
+  const dbGames = await prisma.game.findMany({
+    orderBy: { createdAt: "desc" }
+  });
+  return dbGames.map((g) => ({
+    id: g.id,
+    slug: g.slug,
+    title: g.title,
+    cover: g.cover,
+    trailer: g.trailer ?? undefined,
+    gallery: g.gallery,
+    description: g.description,
+    synopsis: g.synopsis,
+    developer: g.developer,
+    publisher: g.publisher,
+    engine: g.engine ?? undefined,
+    releaseDate: g.releaseDate,
+    suggestedPrice: g.suggestedPrice,
+    platforms: g.platforms,
+    genres: g.genres,
+    avgPlayTime: g.avgPlayTime ?? undefined,
+    online: g.online,
+    offline: g.offline,
+    maxPlayers: g.maxPlayers,
+    languages: g.languages,
+    subtitles: g.subtitles,
+    dubbing: g.dubbing,
+    ageRating: g.ageRating,
+    links: (g.links as any) || [],
+    metacriticScore: g.metacriticScore ?? undefined,
+    openCriticScore: g.openCriticScore ?? undefined,
+    userScore: g.userScore,
+    adminScore: g.adminScore ?? undefined,
+    siteScores: (g.siteScores as any) || [],
+    worldAvg: g.worldAvg ?? undefined,
+    featured: g.featured,
+    tags: g.tags,
+  }));
+}
+
+export async function writeAdminGames(games: Game[]): Promise<void> {
+  for (const g of games) {
+    await prisma.game.upsert({
+      where: { id: g.id },
+      update: {
+        slug: g.slug,
+        title: g.title,
+        cover: g.cover,
+        trailer: g.trailer ?? null,
+        gallery: g.gallery,
+        description: g.description,
+        synopsis: g.synopsis,
+        developer: g.developer,
+        publisher: g.publisher,
+        engine: g.engine ?? null,
+        releaseDate: g.releaseDate,
+        suggestedPrice: g.suggestedPrice,
+        platforms: g.platforms,
+        genres: g.genres,
+        avgPlayTime: g.avgPlayTime ?? null,
+        online: g.online,
+        offline: g.offline,
+        maxPlayers: g.maxPlayers,
+        languages: g.languages,
+        subtitles: g.subtitles,
+        dubbing: g.dubbing,
+        ageRating: g.ageRating,
+        links: (g.links as any) || [],
+        metacriticScore: g.metacriticScore ?? null,
+        openCriticScore: g.openCriticScore ?? null,
+        userScore: g.userScore,
+        adminScore: g.adminScore ?? null,
+        siteScores: (g.siteScores as any) || [],
+        worldAvg: g.worldAvg ?? null,
+        featured: g.featured ?? false,
+        tags: g.tags || [],
+      },
+      create: {
+        id: g.id,
+        slug: g.slug,
+        title: g.title,
+        cover: g.cover,
+        trailer: g.trailer ?? null,
+        gallery: g.gallery,
+        description: g.description,
+        synopsis: g.synopsis,
+        developer: g.developer,
+        publisher: g.publisher,
+        engine: g.engine ?? null,
+        releaseDate: g.releaseDate,
+        suggestedPrice: g.suggestedPrice,
+        platforms: g.platforms,
+        genres: g.genres,
+        avgPlayTime: g.avgPlayTime ?? null,
+        online: g.online,
+        offline: g.offline,
+        maxPlayers: g.maxPlayers,
+        languages: g.languages,
+        subtitles: g.subtitles,
+        dubbing: g.dubbing,
+        ageRating: g.ageRating,
+        links: (g.links as any) || [],
+        metacriticScore: g.metacriticScore ?? null,
+        openCriticScore: g.openCriticScore ?? null,
+        userScore: g.userScore,
+        adminScore: g.adminScore ?? null,
+        siteScores: (g.siteScores as any) || [],
+        worldAvg: g.worldAvg ?? null,
+        featured: g.featured ?? false,
+        tags: g.tags || [],
+      }
+    });
   }
 }
 
 export async function appendAdminGame(game: Game): Promise<void> {
-  const games = await readAdminGames();
-  games.push(game);
-  await fs.mkdir(path.dirname(STORE_PATH), { recursive: true });
-  // Write to a temp file then rename (atomic on the same filesystem) so a crash
-  // mid-write can never leave admin-games.json truncated/corrupted.
-  const tmpPath = `${STORE_PATH}.${process.pid}.tmp`;
-  await fs.writeFile(tmpPath, JSON.stringify(games, null, 2), "utf-8");
-  await fs.rename(tmpPath, STORE_PATH);
+  await writeAdminGames([game]);
 }

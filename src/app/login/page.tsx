@@ -45,34 +45,39 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-md">
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-10 relative overflow-hidden">
+      {/* Ambient background glows */}
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-blue-600/10 rounded-full blur-[140px] pointer-events-none" />
+
+      <div className="w-full max-w-md relative z-10">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center mx-auto mb-4">
-            <Gamepad2 className="w-8 h-8 text-white" />
+        <div className="text-center mb-8 group">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-500/20 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+            <Gamepad2 className="w-8 h-8 text-white animate-pulse" />
           </div>
-          <h1 className="text-3xl font-black text-white">
+          <h1 className="text-3xl font-black text-white tracking-wide">
             <span className="text-white">UPA</span>
             <span className="text-purple-400"> QUE</span>
             <span className="text-[#0072ce]"> PASSA</span>
           </h1>
-          <p className="text-gray-500 mt-1">Bem-vindo de volta!</p>
+          <p className="text-gray-400 mt-2 text-sm">Bem-vindo de volta!</p>
         </div>
 
-        <div className="bg-[#0f0f18] border border-white/5 rounded-3xl p-8">
+        <div className="bg-[#0f0f18]/65 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl shadow-black/40">
           <h2 className="text-xl font-bold text-white mb-6">Entrar na sua conta</h2>
 
           {/* OAuth */}
           <div className="grid grid-cols-3 gap-3 mb-6">
             {[
-              { label: "Google", icon: "G", bg: "bg-white/10 hover:bg-white/20" },
-              { label: "PSN", icon: "🎮", bg: "bg-blue-900/30 hover:bg-blue-900/50 border border-blue-700/30" },
-              { label: "Discord", icon: "💬", bg: "bg-indigo-900/30 hover:bg-indigo-900/50 border border-indigo-700/30" },
+              { label: "Google", icon: "G", bg: "bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20" },
+              { label: "PSN", icon: "🎮", bg: "bg-blue-900/10 hover:bg-blue-900/20 border border-blue-500/20 hover:border-blue-500/40 text-blue-200" },
+              { label: "Discord", icon: "💬", bg: "bg-indigo-900/10 hover:bg-indigo-900/20 border border-indigo-500/20 hover:border-indigo-500/40 text-indigo-200" },
             ].map((provider) => (
               <button
                 key={provider.label}
-                className={`${provider.bg} text-white text-sm font-medium rounded-xl py-2.5 flex items-center justify-center gap-1.5 transition-all`}
+                type="button"
+                className={`${provider.bg} text-white text-sm font-medium rounded-xl py-2.5 flex items-center justify-center gap-1.5 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-95`}
               >
                 <span>{provider.icon}</span>
                 {provider.label}
@@ -82,7 +87,7 @@ function LoginForm() {
 
           <div className="flex items-center gap-3 mb-6">
             <div className="flex-1 h-px bg-white/10" />
-            <span className="text-xs text-gray-500">ou com email</span>
+            <span className="text-xs text-gray-500 uppercase tracking-wider font-semibold">ou com email</span>
             <div className="flex-1 h-px bg-white/10" />
           </div>
 
@@ -102,7 +107,7 @@ function LoginForm() {
                   value={form.email}
                   onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                   placeholder="seu@email.com"
-                  className="w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-purple-500/50 transition-colors"
+                  className="w-full bg-white/5 border border-white/10 text-white placeholder-gray-500 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200"
                 />
               </div>
             </div>
@@ -116,7 +121,7 @@ function LoginForm() {
                   value={form.password}
                   onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
                   placeholder="••••••••"
-                  className="w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl pl-10 pr-12 py-3 text-sm focus:outline-none focus:border-purple-500/50 transition-colors"
+                  className="w-full bg-white/5 border border-white/10 text-white placeholder-gray-500 rounded-xl pl-10 pr-12 py-3 text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200"
                 />
                 <button
                   type="button"
@@ -129,9 +134,9 @@ function LoginForm() {
             </div>
 
             <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2 cursor-pointer text-gray-400">
-                <input type="checkbox" className="w-4 h-4 accent-purple-500" />
-                Lembrar de mim
+              <label className="flex items-center gap-2 cursor-pointer text-gray-400 group">
+                <input type="checkbox" className="w-4 h-4 rounded border-white/10 bg-white/5 text-purple-600 focus:ring-0 focus:ring-offset-0 accent-purple-500" />
+                <span className="group-hover:text-gray-300 transition-colors">Lembrar de mim</span>
               </label>
               <Link href="#" className="text-purple-400 hover:text-purple-300 transition-colors">
                 Esqueceu a senha?
@@ -141,13 +146,13 @@ function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-purple-900/30 disabled:opacity-60"
+              className="w-full py-3.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-purple-900/30 hover:shadow-purple-500/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 disabled:opacity-60 disabled:pointer-events-none"
             >
               {loading ? "Entrando..." : "Entrar"}
             </button>
           </form>
 
-          <p className="text-center text-sm text-gray-500 mt-6">
+          <p className="text-center text-sm text-gray-400 mt-6">
             Não tem conta?{" "}
             <Link href="/cadastrar" className="text-purple-400 hover:text-purple-300 font-semibold transition-colors">
               Cadastrar grátis

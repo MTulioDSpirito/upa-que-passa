@@ -18,29 +18,29 @@ Agregar notas de crítica externa (Metacritic, OpenCritic, IGN, Push Square, Eur
 5. Construa o JSON da sugestão com a seguinte estrutura:
    ```json
    {
-     "tipo": "LANCAMENTO",
-     "criador": "VERA_NOTAS",
-     "titulo": "Notas: [Nome do Jogo]",
-     "slug": "nome-do-jogo-notas",
-     "fontes": ["https://fonte-critica.com"],
-     "payload": {
-       "metacriticScore": 85,
-       "openCriticScore": 86,
-       "worldAvg": 8.5,
-       "siteScores": [
-         {
-           "site": "Metacritic",
-           "score": 8.5,
-           "url": "https://www.metacritic.com/game/..."
-         },
-         {
-           "site": "IGN",
-           "score": 9.0,
-           "url": "https://www.ign.com/games/..."
-         }
-       ]
-     }
-   }
+      "tipo": "LANCAMENTO", // serve tanto para novos lançamentos quanto para atualização de notas de jogos já existentes
+      "criador": "VERA_NOTAS",
+      "titulo": "Nome exato do jogo (ex: 'Ghost of Yotei')",
+      "slug": "slug-exato-do-jogo (ex: 'ghost-of-yotei')",
+      "fontes": ["https://fonte-critica.com"],
+      "payload": {
+        "metacriticScore": 85,
+        "openCriticScore": 86,
+        "worldAvg": 8.5,
+        "siteScores": [
+          {
+            "site": "Metacritic",
+            "score": 8.5,
+            "url": "https://www.metacritic.com/game/..."
+          },
+          {
+            "site": "IGN",
+            "score": 9.0,
+            "url": "https://www.ign.com/games/..."
+          }
+        ]
+      }
+    }
    ```
 6. Insira no banco de dados executando o seguinte comando no terminal:
    `npx tsx scripts/registrar-sugestao.ts --json '<JSON_STRING>'`

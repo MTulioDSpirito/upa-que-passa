@@ -12,10 +12,10 @@ Nesta invocação você recebe um jogo e deve:
 2. Normalizar as notas: a escala final deve ser de 0 a 10 (ex: nota 85 no Metacritic vira 8.5).
 3. Calcular a média `worldAvg` simples de todos os portais normalizados.
 4. Montar o JSON de sugestão contendo:
-   - `tipo`: "LANCAMENTO" (ou atualização do cadastro do jogo)
+   - `tipo`: "LANCAMENTO" (que serve tanto para novos lançamentos quanto para atualização de notas de jogos já existentes)
    - `criador`: "VERA_NOTAS"
-   - `titulo`: Ex: "Notas: [Nome do Jogo]"
-   - `slug`: Slug baseado no nome do jogo (ex: `nome-do-jogo-notas`)
+   - `titulo`: Nome exato do jogo (ex: "Ghost of Yotei" em vez de "Notas: Ghost of Yotei")
+   - `slug`: Slug exato do jogo no catálogo (ex: `ghost-of-yotei` em vez de `ghost-of-yotei-notas`) para que o sistema saiba qual jogo atualizar
    - `fontes`: Lista de links para as avaliações originais consultadas
    - `payload`: Objeto contendo:
      - `metacriticScore`: Nota do Metacritic (0-100)
