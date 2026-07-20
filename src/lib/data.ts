@@ -27,6 +27,8 @@ export function formatPrice(price: number): string {
 }
 
 export function formatDate(dateStr: string): string {
-  const [year, month, day] = dateStr.split("-").map(Number);
+  if (!dateStr) return "";
+  const cleanDateStr = dateStr.includes("T") ? dateStr.split("T")[0] : dateStr;
+  const [year, month, day] = cleanDateStr.split("-").map(Number);
   return new Date(year, month - 1, day).toLocaleDateString("pt-BR");
 }

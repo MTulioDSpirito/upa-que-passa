@@ -4,6 +4,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { X, Search, Sparkles, Loader2 } from "lucide-react";
 import { Game, Review, ReviewScores } from "@/lib/types";
 import { type AdminUserSession } from "../layout/AdminUserFooter";
+import { useToast } from "@/components/ui/Toast";
 
 interface ReviewFormModalProps {
   isOpen: boolean;
@@ -40,6 +41,7 @@ export default function ReviewFormModal({
   adminUser,
   actionLoading,
 }: ReviewFormModalProps) {
+  const { toast } = useToast();
   const [selectedGameId, setSelectedGameId] = useState("");
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
@@ -241,11 +243,11 @@ export default function ReviewFormModal({
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isNewGame && !selectedGameId) {
-      alert("Selecione o jogo correspondente.");
+      toast.warning("Aviso", "Selecione o jogo correspondente.");
       return;
     }
     if (isNewGame && !gameSearch.trim()) {
-      alert("Digite o título do novo jogo.");
+      toast.warning("Aviso", "Digite o título do novo jogo.");
       return;
     }
 

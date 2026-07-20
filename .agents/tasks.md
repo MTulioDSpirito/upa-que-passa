@@ -12,5 +12,5 @@
   - [x] `MarketplaceTab.tsx`
   - [x] `NewsTab.tsx`
   - [x] `NotBuiltTab.tsx`
-- [x] Simplify `AdminDashboardClient.tsx` using the new components and hooks
+- [x] Simplify `AdminPanelLayout.tsx` using the new components and hooks
 - [ ] Verify the refactoring (run `npm run build` or dev server check)

@@ -17,6 +17,7 @@ import RankingTab from "./_components/ranking/RankingTab";
 import YoutubeTab from "./_components/youtube/YoutubeTab";
 import LancamentosTab from "./_components/lancamentos/LancamentosTab";
 import NotBuiltTab from "./_components/layout/NotBuiltTab";
+import ModerationTab from "./_components/moderation/ModerationTab";
 
 import { usePendingSugestoes } from "./_hooks/usePendingSugestoes";
 import { useAdminUsers } from "./_hooks/useAdminUsers";
@@ -32,15 +33,25 @@ const SIDEBAR_ITEMS = [
   { icon: Calendar, label: "Lançamentos", id: "releases" },
   { icon: Users, label: "Usuários", id: "users" },
   { icon: MessageSquare, label: "Comentários", id: "comments" },
-  { icon: ShoppingBag, label: "Marketplace", id: "marketplace" },
-  { icon: BarChart3, label: "Analytics", id: "analytics" },
-  { icon: Shield, label: "Moderação", id: "moderation" },
-  { icon: Settings, label: "Configurações", id: "settings" },
 ];
 
-const NOT_YET_BUILT = ["comments", "analytics", "moderation", "settings"];
+const SECTION_LABELS: Record<string, string> = {
+  dashboard: "Dashboard",
+  reviews: "Reviews",
+  news: "Notícias",
+  ranking: "Ranking",
+  youtube: "Youtube",
+  releases: "Lançamentos",
+  users: "Usuários",
+  comments: "Comentários",
+  marketplace: "Marketing Place",
+  analytics: "Analytics",
+  settings: "Configurações",
+};
 
-export default function AdminDashboardClient({ user }: { user: AdminUserSession }) {
+const NOT_YET_BUILT = ["marketplace", "analytics", "settings"];
+
+export default function AdminPanelLayout({ user }: { user: AdminUserSession }) {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [editingUser, setEditingUser] = useState<AdminSiteUser | null>(null);
   const [allGames] = useAllGames();
@@ -58,9 +69,18 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
     localStorage.setItem("admin_active_section", section);
   };
 
+  const [usersPage, setUsersPage] = useState(1);
+  const [usersSearch, setUsersSearch] = useState("");
+
   // Custom Hooks to separate data fetching logic
   const pendentesCount = usePendingSugestoes();
-  const { siteUsers, setSiteUsers } = useAdminUsers(activeSection === "users");
+  const {
+    siteUsers,
+    setSiteUsers,
+    totalPages: usersTotalPages,
+    totalItems: usersTotalItems,
+    loading: usersLoading,
+  } = useAdminUsers(activeSection === "users", usersPage, usersSearch);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -90,11 +110,14 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
             setSiteUsers={setSiteUsers}
             editingUser={editingUser}
             setEditingUser={setEditingUser}
+            page={usersPage}
+            setPage={setUsersPage}
+            search={usersSearch}
+            setSearch={setUsersSearch}
+            totalPages={usersTotalPages}
+            totalItems={usersTotalItems}
+            loading={usersLoading}
           />
-        )}
-
-        {activeSection === "marketplace" && (
-          <MarketplaceTab />
         )}
 
         {activeSection === "news" && (
@@ -113,11 +136,14 @@ export default function AdminDashboardClient({ user }: { user: AdminUserSession 
           <LancamentosTab />
         )}
 
+        {(activeSection === "comments" || activeSection === "moderation") && (
+          <ModerationTab />
+        )}
+
         {NOT_YET_BUILT.includes(activeSection) && (
-          <NotBuiltTab label={SIDEBAR_ITEMS.find((i) => i.id === activeSection)?.label || ""} />
+          <NotBuiltTab label={SECTION_LABELS[activeSection] || ""} />
         )}
       </main>
     </div>
   );
 }
-

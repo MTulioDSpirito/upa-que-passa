@@ -6,6 +6,8 @@ import { NewsArticle } from "@/lib/types";
 import { formatDate } from "@/lib/data";
 import { type AdminUserSession } from "../layout/AdminUserFooter";
 import NewsFormModal from "./NewsFormModal";
+import { useToast } from "@/components/ui/Toast";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 interface NewsTabProps {
   adminUser: AdminUserSession;
@@ -14,6 +16,7 @@ interface NewsTabProps {
 const CATEGORIES = ["Todas", "Notícias", "Lançamentos", "Hardware", "Artigos", "Eventos", "Outros"];
 
 export default function NewsTab({ adminUser }: NewsTabProps) {
+  const { toast } = useToast();
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -101,8 +104,9 @@ export default function NewsTab({ adminUser }: NewsTabProps) {
         throw new Error(errData.error || "Erro ao excluir notícia.");
       }
       setNews((prev) => prev.filter((item) => item.id !== id));
+      toast.success("Sucesso", "Notícia excluída com sucesso!");
     } catch (err: any) {
-      alert(err.message || "Erro de conexão ao excluir.");
+      toast.error("Erro", err.message || "Erro de conexão ao excluir.");
     } finally {
       setActionLoading(false);
     }
@@ -133,10 +137,13 @@ export default function NewsTab({ adminUser }: NewsTabProps) {
         setNews((prev) =>
           prev.map((item) => (item.id === editingArticle.id ? data.news : item))
         );
+        toast.success("Sucesso", "Notícia atualizada com sucesso!");
       } else {
         setNews((prev) => [data.news, ...prev]);
+        toast.success("Sucesso", "Notícia criada com sucesso!");
       }
     } catch (err: any) {
+      toast.error("Erro", err.message || "Erro ao salvar notícia.");
       throw err;
     } finally {
       setActionLoading(false);
@@ -218,9 +225,8 @@ export default function NewsTab({ adminUser }: NewsTabProps) {
 
       {/* Listing Content */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-4">
-          <div className="w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-sm text-gray-400">Carregando notícias...</p>
+        <div className="flex flex-col items-center justify-center py-20">
+          <LoadingSpinner size="md" label="Carregando notícias..." />
         </div>
       ) : error ? (
         <div className="flex items-center gap-3 p-4 bg-red-950/20 border border-red-500/20 text-red-400 rounded-xl">

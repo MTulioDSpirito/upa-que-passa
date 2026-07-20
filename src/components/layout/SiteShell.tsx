@@ -5,13 +5,14 @@ import Navbar from "./Navbar";
 import BrandHeader from "./BrandHeader";
 import Footer from "./Footer";
 import SearchModal from "./SearchModal";
+import { ToastProvider } from "@/components/ui/Toast";
 
 export default function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin") ?? false;
 
   return (
-    <>
+    <ToastProvider>
       {!isAdmin && <BrandHeader />}
       {!isAdmin && <Navbar />}
       <div className="w-full">
@@ -20,6 +21,6 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
         {!isAdmin && <Footer />}
       </div>
       <SearchModal />
-    </>
+    </ToastProvider>
   );
 }

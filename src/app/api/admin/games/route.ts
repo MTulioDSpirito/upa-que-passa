@@ -30,12 +30,142 @@ function isSafeImageUrl(raw: string): boolean {
   return true;
 }
 
-export async function GET() {
-  const games = await readAdminGames();
-  return NextResponse.json({ games }, {
-    headers: {
-      "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30"
-    }
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const search = searchParams.get("search") || "";
+  const pageParam = searchParams.get("page");
+  const limitParam = searchParams.get("limit");
+  const tab = searchParams.get("tab") || "all";
+
+  if (!pageParam) {
+    const dbGames = await prisma.game.findMany({
+      orderBy: [
+        { releaseDate: "desc" },
+        { createdAt: "desc" }
+      ]
+    });
+    const games = dbGames.map((g) => ({
+      id: g.id,
+      slug: g.slug,
+      title: g.title,
+      cover: g.cover,
+      trailer: g.trailer ?? undefined,
+      gallery: g.gallery,
+      description: g.description,
+      synopsis: g.synopsis,
+      developer: g.developer,
+      publisher: g.publisher,
+      engine: g.engine ?? undefined,
+      releaseDate: g.releaseDate,
+      suggestedPrice: g.suggestedPrice,
+      platforms: g.platforms,
+      genres: g.genres,
+      avgPlayTime: g.avgPlayTime ?? undefined,
+      online: g.online,
+      offline: g.offline,
+      maxPlayers: g.maxPlayers,
+      languages: g.languages,
+      subtitles: g.subtitles,
+      dubbing: g.dubbing,
+      ageRating: g.ageRating,
+      links: (g.links as any) || [],
+      metacriticScore: g.metacriticScore ?? undefined,
+      openCriticScore: g.openCriticScore ?? undefined,
+      userScore: g.userScore,
+      adminScore: g.adminScore ?? undefined,
+      siteScores: (g.siteScores as any) || [],
+      worldAvg: g.worldAvg ?? undefined,
+      featured: g.featured,
+      tags: g.tags,
+    }));
+    return NextResponse.json({ games }, {
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30"
+      }
+    });
+  }
+
+  const page = parseInt(pageParam, 10) || 1;
+  const limit = parseInt(limitParam || "12", 10) || 12;
+  const skip = (page - 1) * limit;
+
+  const where: any = {};
+
+  if (search.trim()) {
+    where.title = {
+      contains: search,
+      mode: "insensitive",
+    };
+  }
+
+  const now = new Date().toISOString();
+  if (tab === "upcoming") {
+    const todayStr = now.split("T")[0];
+    where.releaseDate = {
+      gt: todayStr,
+    };
+  } else if (tab === "recent") {
+    const todayStr = now.split("T")[0];
+    const recentCutoffStr = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+    where.releaseDate = {
+      lte: todayStr,
+      gte: recentCutoffStr,
+    };
+  }
+
+  const [total, dbGames] = await Promise.all([
+    prisma.game.count({ where }),
+    prisma.game.findMany({
+      where,
+      orderBy: [
+        { releaseDate: "desc" },
+        { createdAt: "desc" }
+      ],
+      skip,
+      take: limit,
+    })
+  ]);
+
+  const games = dbGames.map((g) => ({
+    id: g.id,
+    slug: g.slug,
+    title: g.title,
+    cover: g.cover,
+    trailer: g.trailer ?? undefined,
+    gallery: g.gallery,
+    description: g.description,
+    synopsis: g.synopsis,
+    developer: g.developer,
+    publisher: g.publisher,
+    engine: g.engine ?? undefined,
+    releaseDate: g.releaseDate,
+    suggestedPrice: g.suggestedPrice,
+    platforms: g.platforms,
+    genres: g.genres,
+    avgPlayTime: g.avgPlayTime ?? undefined,
+    online: g.online,
+    offline: g.offline,
+    maxPlayers: g.maxPlayers,
+    languages: g.languages,
+    subtitles: g.subtitles,
+    dubbing: g.dubbing,
+    ageRating: g.ageRating,
+    links: (g.links as any) || [],
+    metacriticScore: g.metacriticScore ?? undefined,
+    openCriticScore: g.openCriticScore ?? undefined,
+    userScore: g.userScore,
+    adminScore: g.adminScore ?? undefined,
+    siteScores: (g.siteScores as any) || [],
+    worldAvg: g.worldAvg ?? undefined,
+    featured: g.featured,
+    tags: g.tags,
+  }));
+
+  return NextResponse.json({
+    games,
+    total,
+    pages: Math.ceil(total / limit),
+    currentPage: page,
   });
 }
 

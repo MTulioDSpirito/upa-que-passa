@@ -24,23 +24,6 @@ const SCORE_LABELS: Record<string, string> = {
   visual: "Visual", ai: "IA", optimization: "Otimização", content: "Conteúdo",
 };
 
-const MOCK_COMMENTS = [
-  {
-    id: "1", user: "KratosFan_BR", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=KratosFan",
-    text: "Jogo incrível! A história me deixou de queixo caído. Definitivamente um dos melhores exclusivos do PS5.",
-    likes: 42, dislikes: 2, date: "2024-01-10", score: 10,
-  },
-  {
-    id: "2", user: "SpiderMilena", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=SpiderMilena",
-    text: "Concordo com tudo da review. A relação Kratos e Atreus é simplesmente perfeita. Chorei no final.",
-    likes: 28, dislikes: 1, date: "2024-01-12", score: 9.5,
-  },
-  {
-    id: "3", user: "GamerBR_2022", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=GamerBR",
-    text: "Achei que o meio do jogo ficou um pouco lento, mas o começo e o final são absurdos. 9/10 pra mim.",
-    likes: 15, dislikes: 4, date: "2024-01-15", score: 9,
-  },
-];
 
 // Helper to render score badge using custom award images (Bronze, Silver, Gold)
 const renderUPQBadge = (score: number, isLarge: boolean = false) => {
@@ -96,10 +79,54 @@ export default function GamePage({ params }: Props) {
   const router = useRouter();
   const pathname = usePathname();
 
+  // New States
+  const [comments, setComments] = useState<any[]>([]);
+  const [commentText, setCommentText] = useState("");
+  const [gameUserScore, setGameUserScore] = useState(game?.userScore || 0);
+  const [loadingComments, setLoadingComments] = useState(true);
+  const [submitError, setSubmitError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [reviewLiked, setReviewLiked] = useState(false);
+  const [reviewLikesCount, setReviewLikesCount] = useState(review ? review.likes : 0);
+
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Fetch comments and dynamic score
+  useEffect(() => {
+    if (game) {
+      setLoadingComments(true);
+      fetch(`/api/comments?gameId=${game.id}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data) {
+            setComments(data.comments);
+            setGameUserScore(data.averageScore);
+          }
+          setLoadingComments(false);
+        })
+        .catch(() => setLoadingComments(false));
+    }
+  }, [game]);
+
+  // Fetch review likes
+  useEffect(() => {
+    if (review) {
+      setReviewLikesCount(review.likes);
+      setReviewLiked(false);
+      fetch(`/api/reviews/like?reviewId=${review.id}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data) {
+            setReviewLiked(data.liked);
+            setReviewLikesCount(data.likesCount);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [review, currentUser]);
 
   useEffect(() => {
     if (!currentUser || !game) return;
@@ -110,6 +137,96 @@ export default function GamePage({ params }: Props) {
       })
       .catch(() => {});
   }, [currentUser, game]);
+
+  async function handleToggleReviewLike() {
+    if (!review) return;
+    if (!currentUser) {
+      router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+      return;
+    }
+    try {
+      const res = await fetch("/api/reviews/like", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviewId: review.id }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setReviewLiked(data.liked);
+        setReviewLikesCount(data.likesCount);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function handleCommentSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!game || !currentUser) return;
+    if (userScore === 0) {
+      setSubmitError("Por favor, selecione uma nota de 1 a 10.");
+      return;
+    }
+    if (commentText.trim().length === 0) {
+      setSubmitError("Por favor, escreva um comentário.");
+      return;
+    }
+    if (commentText.length > 500) {
+      setSubmitError("O comentário não pode exceder 500 caracteres.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError("");
+
+    try {
+      const res = await fetch("/api/comments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gameId: game.id, text: commentText, score: userScore }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        setSubmitError(data.error || "Ocorreu um erro ao enviar.");
+      } else {
+        setComments((prev) => [data.comment, ...prev]);
+        setGameUserScore(data.averageScore);
+        setCommentText("");
+        setUserScore(0);
+      }
+    } catch (err) {
+      setSubmitError("Erro de rede. Tente novamente.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  async function handleCommentReaction(commentId: string, type: "LIKE" | "DISLIKE") {
+    if (!currentUser) {
+      router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+      return;
+    }
+    try {
+      const res = await fetch("/api/comments/react", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ commentId, type }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setComments((prev) =>
+          prev.map((c) =>
+            c.id === commentId
+              ? { ...c, likes: data.likes, dislikes: data.dislikes, userReactionType: data.userReactionType }
+              : c
+          )
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   async function handleToggleFavorite() {
     if (!game) return;
@@ -261,51 +378,72 @@ export default function GamePage({ params }: Props) {
               </div>
 
               {/* Score HUD Gauges */}
-              {(game.metacriticScore || game.worldAvg) && (
-                <div className="grid grid-cols-2 gap-4 max-w-sm bg-white/[0.02] border border-white/5 backdrop-blur-md rounded-2xl p-5 mb-6 shadow-xl">
-                  {/* METACRITIC */}
-                  {game.metacriticScore && (
-                    <div className="flex flex-col items-center border-r border-white/5 last:border-r-0">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-gray-500 mb-2">Metacritic</span>
-                      <div className="relative flex items-center justify-center">
-                        <svg className="w-18 h-18 transform -rotate-90">
-                          <circle cx="36" cy="36" r="30" className="stroke-white/[0.05]" strokeWidth="4.5" fill="transparent" />
-                          <circle cx="36" cy="36" r="30" className={`stroke-current ${getScoreColor(game.metacriticScore / 10)}`} strokeWidth="4.5" fill="transparent"
-                            strokeDasharray={2 * Math.PI * 30}
-                            strokeDashoffset={2 * Math.PI * 30 * (1 - game.metacriticScore / 100)}
-                          />
-                        </svg>
-                        <div className="absolute text-center">
-                          <span className={`text-xl font-black font-display ${getScoreColor(game.metacriticScore / 10)}`}>
-                            {game.metacriticScore}
-                          </span>
-                        </div>
+              <div className="grid grid-cols-3 gap-4 max-w-md bg-white/[0.02] border border-white/5 backdrop-blur-md rounded-2xl p-5 mb-6 shadow-xl">
+                {/* METACRITIC */}
+                <div className="flex flex-col items-center border-r border-white/5">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-gray-500 mb-2">Metacritic</span>
+                  {game.metacriticScore ? (
+                    <div className="relative flex items-center justify-center">
+                      <svg className="w-18 h-18 transform -rotate-90">
+                        <circle cx="36" cy="36" r="30" className="stroke-white/[0.05]" strokeWidth="4.5" fill="transparent" />
+                        <circle cx="36" cy="36" r="30" className={`stroke-current ${getScoreColor(game.metacriticScore / 10)}`} strokeWidth="4.5" fill="transparent"
+                          strokeDasharray={2 * Math.PI * 30}
+                          strokeDashoffset={2 * Math.PI * 30 * (1 - game.metacriticScore / 100)}
+                        />
+                      </svg>
+                      <div className="absolute text-center">
+                        <span className={`text-xl font-black font-display ${getScoreColor(game.metacriticScore / 10)}`}>
+                          {game.metacriticScore}
+                        </span>
                       </div>
                     </div>
-                  )}
-
-                  {/* WORLD AVG */}
-                  {game.worldAvg && (
-                    <div className="flex flex-col items-center">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-gray-500 mb-2">Média Mundial</span>
-                      <div className="relative flex items-center justify-center">
-                        <svg className="w-18 h-18 transform -rotate-90">
-                          <circle cx="36" cy="36" r="30" className="stroke-white/[0.05]" strokeWidth="4.5" fill="transparent" />
-                          <circle cx="36" cy="36" r="30" className={`stroke-current ${getScoreColor(game.worldAvg)}`} strokeWidth="4.5" fill="transparent"
-                            strokeDasharray={2 * Math.PI * 30}
-                            strokeDashoffset={2 * Math.PI * 30 * (1 - game.worldAvg / 10)}
-                          />
-                        </svg>
-                        <div className="absolute text-center">
-                          <span className={`text-xl font-black font-display ${getScoreColor(game.worldAvg)}`}>
-                            {formatScore(game.worldAvg)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                  ) : (
+                    <span className="text-xs text-gray-600 font-mono mt-5">—</span>
                   )}
                 </div>
-              )}
+
+                {/* WORLD AVG */}
+                <div className="flex flex-col items-center border-r border-white/5">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-gray-500 mb-2">Média Geral</span>
+                  {game.worldAvg ? (
+                    <div className="relative flex items-center justify-center">
+                      <svg className="w-18 h-18 transform -rotate-90">
+                        <circle cx="36" cy="36" r="30" className="stroke-white/[0.05]" strokeWidth="4.5" fill="transparent" />
+                        <circle cx="36" cy="36" r="30" className={`stroke-current ${getScoreColor(game.worldAvg)}`} strokeWidth="4.5" fill="transparent"
+                          strokeDasharray={2 * Math.PI * 30}
+                          strokeDashoffset={2 * Math.PI * 30 * (1 - game.worldAvg / 10)}
+                        />
+                      </svg>
+                      <div className="absolute text-center">
+                        <span className={`text-xl font-black font-display ${getScoreColor(game.worldAvg)}`}>
+                          {formatScore(game.worldAvg)}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <span className="text-xs text-gray-600 font-mono mt-5">—</span>
+                  )}
+                </div>
+
+                {/* COMMUNITY SCORE */}
+                <div className="flex flex-col items-center">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-gray-500 mb-2">Comunidade</span>
+                  <div className="relative flex items-center justify-center">
+                    <svg className="w-18 h-18 transform -rotate-90">
+                      <circle cx="36" cy="36" r="30" className="stroke-white/[0.05]" strokeWidth="4.5" fill="transparent" />
+                      <circle cx="36" cy="36" r="30" className={`stroke-current ${getScoreColor(gameUserScore)}`} strokeWidth="4.5" fill="transparent"
+                        strokeDasharray={2 * Math.PI * 30}
+                        strokeDashoffset={2 * Math.PI * 30 * (1 - (gameUserScore || 0.1) / 10)}
+                      />
+                    </svg>
+                    <div className="absolute text-center">
+                      <span className={`text-xl font-black font-display ${getScoreColor(gameUserScore)}`}>
+                        {gameUserScore > 0 ? formatScore(gameUserScore) : "—"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               {/* Action Buttons */}
               <div className="flex gap-3 flex-wrap justify-center md:justify-start pb-6">
@@ -489,10 +627,17 @@ export default function GamePage({ params }: Props) {
                     {/* Like & Interaction bar */}
                     <div className="flex items-center gap-4 mt-6 pt-6 border-t border-white/5">
                       <span className="text-xs font-mono text-gray-500">Esta review foi útil?</span>
-                      <button className="flex items-center gap-2 text-xs font-mono text-green-400 bg-green-400/5 border border-green-500/20 hover:bg-green-400/10 px-3.5 py-2 rounded-xl transition-all duration-300 btn-press">
+                      <button 
+                        onClick={handleToggleReviewLike}
+                        className={`flex items-center gap-2 text-xs font-mono px-3.5 py-2 rounded-xl transition-all duration-300 btn-press border ${
+                          reviewLiked 
+                            ? "bg-green-500/15 border-green-500 text-green-400 font-bold shadow-[0_0_10px_rgba(34,197,94,0.2)]" 
+                            : "text-green-400 bg-green-400/5 border border-green-500/20 hover:bg-green-400/10"
+                        }`}
+                      >
                         <ThumbsUp className="w-3.5 h-3.5" /> 
                         <span>Útil</span>
-                        <span className="text-green-500 font-bold bg-green-500/10 px-1.5 py-0.5 rounded text-[10px]">{review.likes}</span>
+                        <span className="text-green-500 font-bold bg-green-500/10 px-1.5 py-0.5 rounded text-[10px]">{reviewLikesCount}</span>
                       </button>
                     </div>
                   </div>
@@ -514,13 +659,29 @@ export default function GamePage({ params }: Props) {
                   </h2>
 
                   {/* Add comment Form */}
-                  <div className="bg-white/[0.01] border border-white/5 rounded-3xl p-6 backdrop-blur-md relative overflow-hidden">
-                    <p className="text-xs font-mono text-gray-400 mb-4 uppercase tracking-wider">Atribua sua nota gamer:</p>
+                  <form onSubmit={handleCommentSubmit} className="bg-white/[0.01] border border-white/5 rounded-3xl p-6 backdrop-blur-md relative overflow-hidden">
+                    {!currentUser && (
+                      <div className="absolute inset-0 bg-[#050508]/90 backdrop-blur-md flex flex-col items-center justify-center text-center p-6 z-10">
+                        <Shield className="w-8 h-8 text-purple-500 mb-3" />
+                        <p className="text-sm font-mono text-white uppercase tracking-wider mb-2">Avaliação Privada</p>
+                        <p className="text-xs text-gray-400 max-w-xs mb-4">Você precisa estar logado para avaliar este jogo e deixar seu comentário.</p>
+                        <button
+                          type="button"
+                          onClick={() => router.push(`/login?redirect=${encodeURIComponent(pathname)}`)}
+                          className="px-5 py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs uppercase font-mono tracking-wider rounded-xl transition-all btn-press"
+                        >
+                          Entrar / Registrar
+                        </button>
+                      </div>
+                    )}
+
+                    <p className="text-xs font-mono text-gray-400 mb-4 uppercase tracking-wider">Atribua sua nota gamer (1 a 10):</p>
                     
                     {/* User Rating buttons */}
-                    <div className="flex gap-1.5 mb-6 overflow-x-auto no-scrollbar pb-2">
+                    <div className="flex gap-1.5 mb-4 overflow-x-auto no-scrollbar pb-2">
                       {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
                         <button
+                          type="button"
                           key={n}
                           onClick={() => setUserScore(n)}
                           onMouseEnter={() => setHoveredScore(n)}
@@ -538,51 +699,83 @@ export default function GamePage({ params }: Props) {
 
                     <textarea
                       placeholder="Deixe sua review curta sobre o jogo, jogabilidade ou enredo..."
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value.slice(0, 500))}
                       className="w-full bg-white/5 border border-white/5 text-white placeholder-gray-600 rounded-2xl px-4 py-3.5 text-sm resize-none h-28 focus:outline-none focus:border-purple-500/50 transition-colors"
                     />
 
-                    <div className="flex justify-end mt-4">
-                      <button className="px-6 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs uppercase font-mono tracking-wider rounded-xl transition-all duration-300 btn-press">
-                        Enviar Comentário
+                    {submitError && (
+                      <p className="text-xs text-red-400 font-mono mt-2">{submitError}</p>
+                    )}
+
+                    <div className="flex justify-between items-center mt-4">
+                      <span className={`text-xs font-mono ${commentText.length >= 500 ? "text-red-400 font-bold" : "text-gray-500"}`}>
+                        {commentText.length}/500 caracteres
+                      </span>
+                      <button
+                        type="submit"
+                        disabled={isSubmitting || userScore === 0 || commentText.trim().length === 0}
+                        className="px-6 py-2.5 bg-purple-600 hover:bg-purple-500 disabled:opacity-40 disabled:hover:bg-purple-600 text-white font-bold text-xs uppercase font-mono tracking-wider rounded-xl transition-all duration-300 btn-press"
+                      >
+                        {isSubmitting ? "Enviando..." : "Enviar Comentário"}
                       </button>
                     </div>
-                  </div>
+                  </form>
 
                   {/* Comment List */}
                   <div className="space-y-4">
-                    {MOCK_COMMENTS.map((comment) => (
-                      <div key={comment.id} className="bg-white/[0.01] border border-white/5 rounded-2xl p-5 md:p-6 backdrop-blur-md">
-                        <div className="flex items-start gap-4">
-                          <div className="relative">
-                            <div className="absolute -inset-0.5 bg-gradient-to-tr from-purple-500 to-blue-500 rounded-full blur opacity-30" />
-                            <img src={comment.avatar} alt="" className="relative w-10 h-10 rounded-full bg-black border border-white/10" />
-                          </div>
-                          
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-3 flex-wrap mb-2">
-                              <span className="font-bold text-white text-sm">{comment.user}</span>
-                              <span className="text-gray-700">|</span>
-                              <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded bg-white/5 border border-white/10 ${getScoreColor(comment.score)}`}>
-                                NOTA: {comment.score}
-                              </span>
-                              <span className="text-gray-700">|</span>
-                              <span className="text-xs text-gray-500 font-mono">{formatDate(comment.date)}</span>
+                    {loadingComments ? (
+                      <div className="text-center py-10 text-gray-500 font-mono text-xs uppercase tracking-wider">
+                        Carregando avaliações...
+                      </div>
+                    ) : comments.length === 0 ? (
+                      <div className="text-center py-10 text-gray-500 font-mono text-xs uppercase tracking-wider bg-[#0f0f18]/30 border border-white/5 rounded-2xl">
+                        Nenhuma avaliação enviada ainda. Seja o primeiro!
+                      </div>
+                    ) : (
+                      comments.map((comment) => (
+                        <div key={comment.id} className="bg-white/[0.01] border border-white/5 rounded-2xl p-5 md:p-6 backdrop-blur-md">
+                          <div className="flex items-start gap-4">
+                            <div className="relative">
+                              <div className="absolute -inset-0.5 bg-gradient-to-tr from-purple-500 to-blue-500 rounded-full blur opacity-30" />
+                              <img src={comment.userAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.userNickname}`} alt="" className="relative w-10 h-10 rounded-full bg-black border border-white/10" />
                             </div>
-                            <p className="text-sm text-gray-300 leading-relaxed font-sans">{comment.text}</p>
                             
-                            <div className="flex items-center gap-4 mt-4 pt-3 border-t border-white/[0.03]">
-                              <button className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-green-400 transition-colors font-mono">
-                                <ThumbsUp className="w-3.5 h-3.5" /> {comment.likes}
-                              </button>
-                              <button className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-red-400 transition-colors font-mono">
-                                <ThumbsDown className="w-3.5 h-3.5" /> {comment.dislikes}
-                              </button>
-                              <button className="text-xs text-gray-500 hover:text-white transition-colors font-mono ml-auto">Responder</button>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-3 flex-wrap mb-2">
+                                <span className="font-bold text-white text-sm">{comment.userNickname}</span>
+                                <span className="text-gray-700">|</span>
+                                <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded bg-white/5 border border-white/10 ${getScoreColor(comment.score)}`}>
+                                  NOTA: {comment.score}
+                                </span>
+                                <span className="text-gray-700">|</span>
+                                <span className="text-xs text-gray-500 font-mono">{formatDate(comment.createdAt)}</span>
+                              </div>
+                              <p className="text-sm text-gray-300 leading-relaxed font-sans">{comment.text}</p>
+                              
+                              <div className="flex items-center gap-4 mt-4 pt-3 border-t border-white/[0.03]">
+                                <button 
+                                  onClick={() => handleCommentReaction(comment.id, "LIKE")}
+                                  className={`flex items-center gap-1.5 text-xs font-mono transition-colors ${
+                                    comment.userReactionType === "LIKE" ? "text-green-400 font-bold" : "text-gray-500 hover:text-green-400"
+                                  }`}
+                                >
+                                  <ThumbsUp className="w-3.5 h-3.5" /> {comment.likes}
+                                </button>
+                                <button 
+                                  onClick={() => handleCommentReaction(comment.id, "DISLIKE")}
+                                  className={`flex items-center gap-1.5 text-xs font-mono transition-colors ${
+                                    comment.userReactionType === "DISLIKE" ? "text-red-400 font-bold" : "text-gray-500 hover:text-red-400"
+                                  }`}
+                                >
+                                  <ThumbsDown className="w-3.5 h-3.5" /> {comment.dislikes}
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))
+                    )}
                   </div>
                 </div>
               </div>
@@ -591,6 +784,23 @@ export default function GamePage({ params }: Props) {
             {/* TAB: SCORES AND STATS */}
             {activeTab === "scores" && (
               <div className="space-y-8">
+                {/* Community Score */}
+                <div className="bg-white/[0.01] border border-white/5 rounded-3xl p-6 md:p-8 backdrop-blur-md shadow-2xl">
+                  <h2 className="text-lg font-mono font-bold text-white mb-6 flex items-center gap-2 uppercase tracking-widest">
+                    <Users className="w-4 h-4 text-blue-400" />
+                    Nota da Comunidade — UQP
+                  </h2>
+                  <div className="flex flex-col items-center justify-center p-6 bg-white/[0.02] border border-white/5 rounded-2xl text-center">
+                    <div className="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-1">Média dos Jogadores</div>
+                    <div className={`text-5xl font-black font-display ${getScoreColor(gameUserScore)} text-glow-purple mb-4`}>
+                      {gameUserScore > 0 ? `${formatScore(gameUserScore)}/10` : "Sem Avaliações"}
+                    </div>
+                    <div className="text-xs text-gray-400 font-mono">
+                      Com base em {comments.length} {comments.length === 1 ? 'avaliação' : 'avaliações'} dos usuários do UQP.
+                    </div>
+                  </div>
+                </div>
+
                 {/* External Portal Scores */}
                 <div className="bg-white/[0.01] border border-white/5 rounded-3xl p-6 md:p-8 backdrop-blur-md shadow-2xl">
                   <h2 className="text-lg font-mono font-bold text-white mb-6 flex items-center gap-2 uppercase tracking-widest">

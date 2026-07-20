@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Sparkles, RefreshCw, Inbox, ChevronLeft, ChevronRight } from "lucide-react";
 import AdminUserFooter, { type AdminUserSession } from "../_components/layout/AdminUserFooter";
 import { useAllGames } from "@/hooks/useAllGames";
+import { useToast } from "@/components/ui/Toast";
 
 import FilaRevisao from "./components/FilaRevisao";
 import HistoricoSugestoes from "./components/HistoricoSugestoes";
@@ -48,6 +49,7 @@ export function slugify(title: string): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }export default function SugestoesClient({ user }: { user: AdminUserSession }) {
+  const { toast } = useToast();
   const [allGames] = useAllGames();
   const [data, setData] = useState<EntregasResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -218,86 +220,110 @@ export function slugify(title: string): string {
 
   async function handleAprovar(id: string) {
     setBusy(id);
-    const isEditing = id === editingId;
-    const body: any = { id };
+    try {
+      const isEditing = id === editingId;
+      const body: any = { id };
 
-    if (isEditing) {
-      body.titulo = editTitulo;
-      body.slug = editSlug;
-      body.fontes = editFontes.split("\n").map(f => f.trim()).filter(Boolean);
+      if (isEditing) {
+        body.titulo = editTitulo;
+        body.slug = editSlug;
+        body.fontes = editFontes.split("\n").map(f => f.trim()).filter(Boolean);
 
-      const payload: any = {
-        cover: editCover,
-        excerpt: editExcerpt,
-        imageCredits: editImageCredits,
-      };
+        const payload: any = {
+          cover: editCover,
+          excerpt: editExcerpt,
+          imageCredits: editImageCredits,
+        };
 
-      const original = data?.pendentes.find(s => s.id === id);
-      if (original) {
-        if (original.tipo === "NOTICIA") {
-          payload.body = editBody;
-          payload.category = editCategory || "Notícias";
-          payload.tags = editTags.split(",").map(t => t.trim()).filter(Boolean);
-        } else if (original.tipo === "REVIEW") {
-          payload.body = editBody;
-          payload.pros = editPros.split("\n").map(p => p.trim()).filter(Boolean);
-          payload.cons = editCons.split("\n").map(c => c.trim()).filter(Boolean);
-          payload.overallScore = Number(editOverallScore);
-          payload.conclusion = original.payload?.conclusion || "Análise concluída pelo portal UQP.";
-          payload.gameId = editGameId;
-          const selectedGame = allGames.find(g => g.id === editGameId);
-          if (selectedGame) {
-            payload.gameDetails = {
-              developer: selectedGame.developer,
-              publisher: selectedGame.publisher || selectedGame.developer || "Independente",
-              releaseDate: selectedGame.releaseDate,
-              price: selectedGame.suggestedPrice || 0,
-              platforms: selectedGame.platforms,
-              genres: selectedGame.genres,
-            };
-          } else {
-            payload.gameDetails = {
-              developer: editDeveloper,
-              publisher: original.payload?.gameDetails?.publisher || editDeveloper || "Independente",
-              releaseDate: editReleaseDate,
-              price: Number(editPrice),
-              platforms: editPlatforms.split(",").map(p => p.trim()).filter(Boolean),
-              genres: editGenres.split(",").map(g => g.trim()).filter(Boolean),
-            };
+        const original = data?.pendentes.find(s => s.id === id);
+        if (original) {
+          if (original.tipo === "NOTICIA") {
+            payload.body = editBody;
+            payload.category = editCategory || "Notícias";
+            payload.tags = editTags.split(",").map(t => t.trim()).filter(Boolean);
+          } else if (original.tipo === "REVIEW") {
+            payload.body = editBody;
+            payload.pros = editPros.split("\n").map(p => p.trim()).filter(Boolean);
+            payload.cons = editCons.split("\n").map(c => c.trim()).filter(Boolean);
+            payload.overallScore = Number(editOverallScore);
+            payload.conclusion = original.payload?.conclusion || "Análise concluída pelo portal UQP.";
+            payload.gameId = editGameId;
+            const selectedGame = allGames.find(g => g.id === editGameId);
+            if (selectedGame) {
+              payload.gameDetails = {
+                developer: selectedGame.developer,
+                publisher: selectedGame.publisher || selectedGame.developer || "Independente",
+                releaseDate: selectedGame.releaseDate,
+                price: selectedGame.suggestedPrice || 0,
+                platforms: selectedGame.platforms,
+                genres: selectedGame.genres,
+              };
+            } else {
+              payload.gameDetails = {
+                developer: editDeveloper,
+                publisher: original.payload?.gameDetails?.publisher || editDeveloper || "Independente",
+                releaseDate: editReleaseDate,
+                price: Number(editPrice),
+                platforms: editPlatforms.split(",").map(p => p.trim()).filter(Boolean),
+                genres: editGenres.split(",").map(g => g.trim()).filter(Boolean),
+              };
+            }
+          } else if (original.tipo === "LANCAMENTO") {
+            payload.developer = editDeveloper;
+            payload.releaseDate = editReleaseDate;
+            payload.price = Number(editPrice);
+            payload.platforms = editPlatforms.split(",").map(p => p.trim()).filter(Boolean);
+            payload.genres = editGenres.split(",").map(g => g.trim()).filter(Boolean);
+            payload.buyLink = editBuyLink;
           }
-        } else if (original.tipo === "LANCAMENTO") {
-          payload.developer = editDeveloper;
-          payload.releaseDate = editReleaseDate;
-          payload.price = Number(editPrice);
-          payload.platforms = editPlatforms.split(",").map(p => p.trim()).filter(Boolean);
-          payload.genres = editGenres.split(",").map(g => g.trim()).filter(Boolean);
-          payload.buyLink = editBuyLink;
         }
+        body.payload = payload;
       }
-      body.payload = payload;
-    }
 
-    await fetch("/api/admin/entregas/aprovar", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    setBusy(null);
-    setEditingId(null);
-    load();
+      const res = await fetch("/api/admin/entregas/aprovar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const errJson = await res.json();
+        throw new Error(errJson.error || "Erro ao aprovar sugestão.");
+      }
+
+      toast.success("Sucesso", "Sugestão aprovada e publicada com sucesso!");
+      setEditingId(null);
+      load();
+    } catch (err: any) {
+      toast.error("Erro", err.message || "Erro de conexão ao aprovar.");
+    } finally {
+      setBusy(null);
+    }
   }
 
   async function handleRejeitar(id: string) {
     setBusy(id);
-    await fetch("/api/admin/entregas/rejeitar", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, motivo }),
-    });
-    setBusy(null);
-    setRejectingId(null);
-    setMotivo("");
-    load();
+    try {
+      const res = await fetch("/api/admin/entregas/rejeitar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, motivo }),
+      });
+
+      if (!res.ok) {
+        const errJson = await res.json();
+        throw new Error(errJson.error || "Erro ao rejeitar sugestão.");
+      }
+
+      toast.success("Sucesso", "Sugestão rejeitada com sucesso!");
+      setRejectingId(null);
+      setMotivo("");
+      load();
+    } catch (err: any) {
+      toast.error("Erro", err.message || "Erro de conexão ao rejeitar.");
+    } finally {
+      setBusy(null);
+    }
   }
 
   return (

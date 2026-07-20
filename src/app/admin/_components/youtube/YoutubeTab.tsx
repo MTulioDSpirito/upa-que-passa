@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Edit, Trash2, AlertCircle, Loader2, ExternalLink } from "lucide-react";
+import { Plus, Edit, Trash2, AlertCircle, ExternalLink } from "lucide-react";
 import { YoutubeVideo } from "@/lib/types";
 import YoutubeFormModal from "./YoutubeFormModal";
+import { useToast } from "@/components/ui/Toast";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export default function YoutubeTab() {
+  const { toast } = useToast();
   const [videos, setVideos] = useState<YoutubeVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,8 +61,9 @@ export default function YoutubeTab() {
         throw new Error(errData.error || "Erro ao deletar vídeo.");
       }
       setVideos((prev) => prev.filter((v) => v.id !== id));
+      toast.success("Sucesso", "Vídeo excluído com sucesso!");
     } catch (err: any) {
-      alert(err.message || "Erro de conexão ao excluir.");
+      toast.error("Erro", err.message || "Erro de conexão ao excluir.");
     } finally {
       setActionLoading(false);
     }
@@ -88,11 +92,14 @@ export default function YoutubeTab() {
         setVideos((prev) =>
           prev.map((v) => (v.id === editingVideo.id ? data.video : v))
         );
+        toast.success("Sucesso", "Vídeo atualizado com sucesso!");
       } else {
         setVideos((prev) => [data.video, ...prev]);
+        toast.success("Sucesso", "Vídeo cadastrado com sucesso!");
       }
       setIsModalOpen(false);
     } catch (err: any) {
+      toast.error("Erro", err.message || "Erro ao salvar vídeo.");
       throw err;
     } finally {
       setActionLoading(false);
@@ -133,9 +140,8 @@ export default function YoutubeTab() {
 
       {/* Loading state */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-3">
-          <Loader2 className="w-8 h-8 text-red-500 animate-spin" />
-          <span className="text-sm text-gray-500 font-mono">Carregando vídeos...</span>
+        <div className="flex flex-col items-center justify-center py-20">
+          <LoadingSpinner size="md" label="Carregando vídeos..." />
         </div>
       ) : error ? (
         <div className="p-8 text-center bg-red-950/10 border border-red-500/10 rounded-2xl text-red-400 font-mono text-sm">

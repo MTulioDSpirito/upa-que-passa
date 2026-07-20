@@ -2,9 +2,11 @@
 
 import { use, useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import { ChevronRight, Eye, Heart, Calendar, User, Share2, Tag, Check, Clock } from "lucide-react";
 import { formatDate } from "@/lib/data";
 import { useAllNews } from "@/hooks/useAllNews";
+import { useUserSession } from "@/hooks/useUserSession";
 import team from "@/mocks/team";
 
 interface Props { params: Promise<{ slug: string }> }
@@ -27,6 +29,10 @@ export default function NewsArticlePage({ params }: Props) {
   const NEWS = useAllNews();
   const article = NEWS.find((n) => n.slug === slug);
 
+  const currentUser = useUserSession();
+  const router = useRouter();
+  const pathname = usePathname();
+
   // States
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(article ? article.likes : 0);
@@ -36,8 +42,18 @@ export default function NewsArticlePage({ params }: Props) {
     if (article) {
       setLikesCount(article.likes);
       setLiked(false);
+      // Fetch dynamic like count & user liked status from API
+      fetch(`/api/noticias/like?articleId=${article.id}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data) {
+            setLiked(data.liked);
+            setLikesCount(data.likesCount);
+          }
+        })
+        .catch(() => {});
     }
-  }, [article]);
+  }, [article, currentUser]);
 
   if (!article) {
     return (
@@ -63,13 +79,25 @@ export default function NewsArticlePage({ params }: Props) {
     return Math.ceil(words / 200) || 1;
   };
 
-  const handleLike = () => {
-    if (liked) {
-      setLikesCount((prev) => prev - 1);
-    } else {
-      setLikesCount((prev) => prev + 1);
+  const handleLike = async () => {
+    if (!currentUser) {
+      router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+      return;
     }
-    setLiked(!liked);
+    try {
+      const res = await fetch("/api/noticias/like", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ articleId: article.id }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setLiked(data.liked);
+        setLikesCount(data.likesCount);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleShare = () => {

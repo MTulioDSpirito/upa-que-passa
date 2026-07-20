@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { Menu, X, Search, Bell, Gamepad2, Home, Star, Newspaper, ShoppingBag, Trophy, Rocket, User, UserPlus, LogOut, Users } from "lucide-react";
 import { useUserSession } from "@/hooks/useUserSession";
 import { openSearch } from "./SearchModal";
-import AuthModal from "./AuthModal";
 
 export const NAV_ITEMS = [
   { label: "Home", href: "/", icon: Home },
@@ -20,10 +19,8 @@ export const NAV_ITEMS = [
 
 export function AccountAuthBlock({
   onNavigate,
-  onOpenAuth,
 }: {
   onNavigate?: () => void;
-  onOpenAuth: (mode: "login" | "register") => void;
 }) {
   const user = useUserSession();
   const [loggingOut, setLoggingOut] = useState(false);
@@ -35,26 +32,22 @@ export function AccountAuthBlock({
   if (user === null) {
     return (
       <div className="flex items-center gap-2">
-        <button
-          onClick={() => {
-            onNavigate?.();
-            onOpenAuth("login");
-          }}
+        <Link
+          href="/login"
+          onClick={onNavigate}
           className="btn-press flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 hover:shadow-[0_0_12px_rgba(168,85,247,0.25)] rounded-xl transition-all"
         >
           <User className="w-4 h-4" />
           Entrar
-        </button>
-        <button
-          onClick={() => {
-            onNavigate?.();
-            onOpenAuth("register");
-          }}
+        </Link>
+        <Link
+          href="/cadastrar"
+          onClick={onNavigate}
           className="btn-press flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-purple-400 hover:text-white border border-purple-500/20 hover:border-purple-500/40 bg-white/5 hover:bg-white/10 rounded-xl transition-all"
         >
           <UserPlus className="w-4 h-4" />
           Cadastrar
-        </button>
+        </Link>
       </div>
     );
   }
@@ -100,15 +93,8 @@ export function AccountAuthBlock({
 export default function Navbar() {
   const user = useUserSession();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const pathname = usePathname();
-
-  const openAuth = (mode: "login" | "register") => {
-    setAuthMode(mode);
-    setIsAuthOpen(true);
-  };
 
   if (pathname === "/admin/login") {
     return null;
@@ -130,7 +116,7 @@ export default function Navbar() {
               <span className="text-xs ml-2 text-purple-400 font-sans font-bold uppercase tracking-wider">ADMIN</span>
             </span>
           </Link>
-          <AccountAuthBlock onOpenAuth={openAuth} />
+          <AccountAuthBlock />
         </div>
       </nav>
     );
@@ -217,7 +203,7 @@ export default function Navbar() {
 
           {/* Account Status */}
           <div className="hidden sm:block border-l border-white/10 pl-3">
-            <AccountAuthBlock onOpenAuth={openAuth} />
+            <AccountAuthBlock />
           </div>
         </div>
       </div>
@@ -246,17 +232,10 @@ export default function Navbar() {
             })}
           </nav>
           <div className="px-3 pt-4 mt-4 border-t border-white/5 sm:hidden">
-            <AccountAuthBlock onNavigate={() => setMobileOpen(false)} onOpenAuth={openAuth} />
+            <AccountAuthBlock onNavigate={() => setMobileOpen(false)} />
           </div>
         </div>
       )}
-
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={isAuthOpen}
-        onClose={() => setIsAuthOpen(false)}
-        initialMode={authMode}
-      />
     </nav>
   );
 }

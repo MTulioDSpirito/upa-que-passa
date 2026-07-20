@@ -6,6 +6,8 @@ import { Game, Review } from "@/lib/types";
 import { type AdminUserSession } from "../layout/AdminUserFooter";
 import ReviewList from "./ReviewList";
 import ReviewFormModal from "./ReviewFormModal";
+import { useToast } from "@/components/ui/Toast";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 interface ReviewsTabProps {
   allGames: Game[];
@@ -13,6 +15,7 @@ interface ReviewsTabProps {
 }
 
 export default function ReviewsTab({ allGames, adminUser }: ReviewsTabProps) {
+  const { toast } = useToast();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +32,7 @@ export default function ReviewsTab({ allGames, adminUser }: ReviewsTabProps) {
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 10;
+  const ITEMS_PER_PAGE = 8;
 
   // Reset page when filters change
   useEffect(() => {
@@ -43,12 +46,12 @@ export default function ReviewsTab({ allGames, adminUser }: ReviewsTabProps) {
     try {
       const res = await fetch("/api/admin/reviews");
       if (!res.ok) {
-        throw new Error("Erro ao buscar reviews.");
+        throw new Error("Erro ao carregar as reviews.");
       }
       const data = await res.json();
       setReviews(data.reviews || []);
     } catch (err: any) {
-      setError(err.message || "Erro de conexão.");
+      setError(err.message || "Erro de conexão ao carregar reviews.");
     } finally {
       setLoading(false);
     }
@@ -80,8 +83,9 @@ export default function ReviewsTab({ allGames, adminUser }: ReviewsTabProps) {
         throw new Error(errData.error || "Erro ao excluir review.");
       }
       setReviews((prev) => prev.filter((r) => r.id !== id));
+      toast.success("Sucesso", "Review excluída com sucesso!");
     } catch (err: any) {
-      alert(err.message || "Erro de conexão ao excluir.");
+      toast.error("Erro", err.message || "Erro de conexão ao excluir.");
     } finally {
       setActionLoading(false);
     }
@@ -89,7 +93,7 @@ export default function ReviewsTab({ allGames, adminUser }: ReviewsTabProps) {
 
   const handleSetFeatured = async (reviewId: string) => {
     if (adminUser.role !== "DEVELOPER") {
-      alert("Apenas administradores com cargo DEVELOPER podem alterar a review em destaque.");
+      toast.warning("Não permitido", "Apenas administradores com cargo DEVELOPER podem alterar a review em destaque.");
       return;
     }
     setActionLoading(true);
@@ -109,8 +113,9 @@ export default function ReviewsTab({ allGames, adminUser }: ReviewsTabProps) {
           featured: r.id === reviewId,
         }))
       );
+      toast.success("Destaque Atualizado", "Review em destaque alterada com sucesso!");
     } catch (err: any) {
-      alert(err.message || "Erro de conexão ao definir destaque.");
+      toast.error("Erro", err.message || "Erro de conexão ao definir destaque.");
     } finally {
       setActionLoading(false);
     }
@@ -129,49 +134,48 @@ export default function ReviewsTab({ allGames, adminUser }: ReviewsTabProps) {
           cover: payload.newGameDetails.cover,
           developer: payload.newGameDetails.developer,
           releaseDate: payload.newGameDetails.releaseDate,
-          genres: payload.newGameDetails.genres,
+          price: payload.newGameDetails.price,
           platforms: payload.newGameDetails.platforms,
-          suggestedPrice: payload.newGameDetails.price,
-          trailer: payload.newGameDetails.trailer,
-          gallery: payload.newGameDetails.gallery,
-          description: payload.newGameDetails.description,
-          metacriticScore: payload.newGameDetails.metacriticScore,
+          genres: payload.newGameDetails.genres,
+          buyLink: payload.newGameDetails.buyLink,
         };
 
-        const gameRes = await fetch("/api/admin/games", {
+        const res = await fetch("/api/admin/games", {
           method,
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
         });
 
-        if (!gameRes.ok) {
-          const gameErr = await gameRes.json();
-          throw new Error(gameErr.error || `Erro ao ${payload.isEditingExistingGame ? 'atualizar' : 'cadastrar'} jogo no catálogo.`);
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.error || "Erro ao cadastrar jogo.");
         }
 
-        if (!payload.isEditingExistingGame) {
-          const gameData = await gameRes.json();
-          finalGameId = gameData.game.id;
-        }
+        const gameData = await res.json();
+        finalGameId = gameData.game.id;
       }
+
+      const cleanPayload = {
+        title: payload.title,
+        slug: payload.slug,
+        excerpt: payload.excerpt,
+        content: payload.content,
+        author: payload.author,
+        publishedAt: payload.publishedAt,
+        gameId: finalGameId,
+        pros: payload.pros,
+        cons: payload.cons,
+        scoreGraphics: payload.scoreGraphics,
+        scoreGameplay: payload.scoreGameplay,
+        scoreSound: payload.scoreSound,
+        scoreFun: payload.scoreFun,
+        videoUrl: payload.videoUrl,
+        mainScore: payload.mainScore,
+        userId: adminUser.email,
+      };
 
       const url = "/api/admin/reviews";
       const method = editingReview ? "PUT" : "POST";
-      
-      const cleanPayload = {
-        gameId: finalGameId,
-        title: payload.title,
-        text: payload.text,
-        pros: payload.pros,
-        cons: payload.cons,
-        conclusion: payload.conclusion,
-        scores: payload.scores,
-        overallScore: payload.overallScore,
-        author: payload.author,
-        publishedAt: payload.publishedAt,
-        imageCredits: payload.imageCredits,
-      };
-
       const body = editingReview ? { id: editingReview.id, ...cleanPayload } : cleanPayload;
 
       const res = await fetch(url, {
@@ -186,9 +190,12 @@ export default function ReviewsTab({ allGames, adminUser }: ReviewsTabProps) {
       }
 
       setIsFormOpen(false);
-      window.location.reload();
+      toast.success("Sucesso", "Review salva com sucesso!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (err: any) {
-      alert(err.message || "Erro de conexão ao salvar.");
+      toast.error("Erro", err.message || "Erro de conexão ao salvar.");
     } finally {
       setActionLoading(false);
     }
@@ -316,7 +323,11 @@ export default function ReviewsTab({ allGames, adminUser }: ReviewsTabProps) {
         </div>
       )}
 
-      {loading && <p className="text-gray-500 text-sm">Carregando análises...</p>}
+      {loading && (
+        <div className="flex justify-center items-center py-20">
+          <LoadingSpinner size="md" label="Carregando análises..." />
+        </div>
+      )}
 
       {!loading && error && (
         <div className="bg-red-900/20 border border-red-500/30 text-red-400 p-4 rounded-xl flex items-center gap-3 text-sm">

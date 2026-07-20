@@ -7,6 +7,8 @@ import { getScoreColor } from "@/lib/data";
 import EditProfileModal, { type EditableProfile } from "./EditProfileModal";
 import { useAllGames } from "@/hooks/useAllGames";
 
+import { LISTINGS } from "@/mocks/listings";
+
 interface PerfilUser {
   nickname: string;
   avatar: string | null;
@@ -20,9 +22,11 @@ interface PerfilUser {
 export default function PerfilClient({
   user: initialUser,
   favoriteGameIds,
+  commentsCount,
 }: {
   user: PerfilUser;
   favoriteGameIds: string[];
+  commentsCount: number;
 }) {
   const [GAMES] = useAllGames();
   const [user, setUser] = useState(initialUser);
@@ -30,6 +34,11 @@ export default function PerfilClient({
   const favoriteGames = GAMES.filter((g) => favoriteGameIds.includes(g.id));
   const avatar = user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.nickname)}`;
   const location = [user.city, user.state].filter(Boolean).join(", ");
+
+  const userListings = LISTINGS.filter(
+    (l) => l.userNickname.toLowerCase() === user.nickname.toLowerCase()
+  );
+  const tradesCount = userListings.length;
 
   function handleSaved(updated: EditableProfile) {
     setUser((prev) => ({ ...prev, ...updated }));
@@ -86,9 +95,9 @@ export default function PerfilClient({
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {[
-          { icon: Star, label: "Reviews", value: 0, color: "text-yellow-400" },
-          { icon: MessageSquare, label: "Comentários", value: 0, color: "text-[#0072ce]" },
-          { icon: ShoppingBag, label: "Trocas", value: 0, color: "text-green-400" },
+          { icon: Star, label: "Reviews", value: commentsCount, color: "text-yellow-400" },
+          { icon: MessageSquare, label: "Comentários", value: commentsCount, color: "text-[#0072ce]" },
+          { icon: ShoppingBag, label: "Trocas", value: tradesCount, color: "text-green-400" },
           { icon: Trophy, label: "Favoritos", value: favoriteGames.length, color: "text-purple-400" },
         ].map((stat) => (
           <div key={stat.label} className="bg-[#0f0f18] border border-white/5 rounded-2xl p-5 text-center">
