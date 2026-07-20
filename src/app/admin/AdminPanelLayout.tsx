@@ -18,6 +18,7 @@ import YoutubeTab from "./_components/youtube/YoutubeTab";
 import LancamentosTab from "./_components/lancamentos/LancamentosTab";
 import NotBuiltTab from "./_components/layout/NotBuiltTab";
 import ModerationTab from "./_components/moderation/ModerationTab";
+import AdminManagementTab from "./_components/admin-users/AdminManagementTab";
 
 import { usePendingSugestoes } from "./_hooks/usePendingSugestoes";
 import { useAdminUsers } from "./_hooks/useAdminUsers";
@@ -44,6 +45,7 @@ const SECTION_LABELS: Record<string, string> = {
   releases: "Lançamentos",
   users: "Usuários",
   comments: "Comentários",
+  admin_users: "Gerenciar Equipe",
   marketplace: "Marketing Place",
   analytics: "Analytics",
   settings: "Configurações",
@@ -82,10 +84,16 @@ export default function AdminPanelLayout({ user }: { user: AdminUserSession }) {
     loading: usersLoading,
   } = useAdminUsers(activeSection === "users", usersPage, usersSearch);
 
+  // Dynamic sidebar items: add "Gerenciar Equipe" only for DEVELOPER
+  const sidebarItems = [
+    ...SIDEBAR_ITEMS,
+    ...(user.role === "DEVELOPER" ? [{ icon: Shield, label: "Gerenciar Equipe", id: "admin_users" }] : []),
+  ];
+
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar
-        sidebarItems={SIDEBAR_ITEMS}
+        sidebarItems={sidebarItems}
         activeSection={activeSection}
         setActiveSection={handleSetActiveSection}
         pendentesCount={pendentesCount}
@@ -97,6 +105,7 @@ export default function AdminPanelLayout({ user }: { user: AdminUserSession }) {
           <DashboardTab
             allGames={allGames}
             setActiveSection={handleSetActiveSection}
+            user={user}
           />
         )}
 
@@ -136,6 +145,10 @@ export default function AdminPanelLayout({ user }: { user: AdminUserSession }) {
           <LancamentosTab />
         )}
 
+        {activeSection === "admin_users" && user.role === "DEVELOPER" && (
+          <AdminManagementTab adminUser={user} />
+        )}
+
         {(activeSection === "comments" || activeSection === "moderation") && (
           <ModerationTab />
         )}
@@ -147,3 +160,4 @@ export default function AdminPanelLayout({ user }: { user: AdminUserSession }) {
     </div>
   );
 }
+

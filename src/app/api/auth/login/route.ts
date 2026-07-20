@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { verifyPassword, createSessionToken, SESSION_COOKIE, SESSION_COOKIE_MAX_AGE } from "@/lib/auth";
+import { verifyPassword, createSessionToken, SESSION_COOKIE, ADMIN_SESSION_DURATION_SECONDS } from "@/lib/auth";
 
 import { z } from "zod";
 
@@ -41,9 +41,9 @@ export async function POST(request: NextRequest) {
   response.cookies.set(SESSION_COOKIE, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "strict",
     path: "/",
-    maxAge: SESSION_COOKIE_MAX_AGE,
+    maxAge: ADMIN_SESSION_DURATION_SECONDS,
   });
 
   return response;

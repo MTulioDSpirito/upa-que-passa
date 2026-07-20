@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
+import { LogOut, KeyRound } from "lucide-react";
+import ChangePasswordModal from "./ChangePasswordModal";
 
 const ROLE_LABELS: Record<string, string> = {
+  DEVELOPER: "Developer",
+  COLABORADOR: "Colaborador",
   EDITOR_CHEFE: "Editor-Chefe",
   REPORTER: "Repórter",
   CURADOR_NOTAS: "Curador(a) de Notas",
@@ -27,6 +30,7 @@ export default function AdminUserFooter({
 }) {
   const router = useRouter();
   const [loggingOut, setLoggingOut] = useState(false);
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
   async function handleLogout() {
     setLoggingOut(true);
@@ -43,17 +47,34 @@ export default function AdminUserFooter({
           <p className="text-xs text-purple-400">{ROLE_LABELS[user.role] ?? user.role}</p>
         </div>
       )}
+
+      <button
+        onClick={() => setIsChangePasswordOpen(true)}
+        title={isCollapsed ? "Alterar Senha" : undefined}
+        className={`btn-press flex items-center rounded-xl text-sm text-gray-500 hover:text-white hover:bg-white/5 transition-all mb-1 ${
+          isCollapsed ? "w-10 h-10 justify-center" : "w-full gap-3 px-3 py-2"
+        }`}
+      >
+        <KeyRound className="w-4 h-4 flex-shrink-0" />
+        {!isCollapsed && <span>Alterar Senha</span>}
+      </button>
+
       <button
         onClick={handleLogout}
         disabled={loggingOut}
         title={isCollapsed ? "Sair" : undefined}
         className={`btn-press flex items-center rounded-xl text-sm text-gray-500 hover:text-red-400 hover:bg-red-900/10 transition-all disabled:opacity-60 ${
-          isCollapsed ? "w-10 h-10 justify-center" : "w-full gap-3 px-3 py-2.5"
+          isCollapsed ? "w-10 h-10 justify-center" : "w-full gap-3 px-3 py-2"
         }`}
       >
         <LogOut className="w-4 h-4 flex-shrink-0" />
         {!isCollapsed && <span>{loggingOut ? "Saindo..." : "Sair"}</span>}
       </button>
+
+      {isChangePasswordOpen && (
+        <ChangePasswordModal onClose={() => setIsChangePasswordOpen(false)} />
+      )}
     </div>
   );
 }
+

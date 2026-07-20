@@ -4,6 +4,7 @@ export const SESSION_COOKIE = "upa_session";
 export const USER_SESSION_COOKIE = "upa_user_session";
 const SESSION_DURATION_SECONDS = 60 * 60 * 24 * 7; // 7 dias
 export const SESSION_COOKIE_MAX_AGE = SESSION_DURATION_SECONDS;
+export const ADMIN_SESSION_DURATION_SECONDS = 60 * 60 * 12; // 12 horas
 
 function getSecretKey() {
   const secret = process.env.AUTH_SECRET;
@@ -22,10 +23,11 @@ export interface SessionPayload {
 }
 
 export async function createSessionToken(payload: SessionPayload): Promise<string> {
+  const duration = payload.kind === "user" ? SESSION_DURATION_SECONDS : ADMIN_SESSION_DURATION_SECONDS;
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime(`${SESSION_DURATION_SECONDS}s`)
+    .setExpirationTime(`${duration}s`)
     .sign(getSecretKey());
 }
 

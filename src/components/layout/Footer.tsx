@@ -115,9 +115,9 @@ export default function Footer() {
             © {new Date().getFullYear()} Upa que Passa. Todos os direitos reservados. Site de fãs não afiliado à Sony Interactive Entertainment ou marcas parceiras.
           </p>
           <div className="flex gap-6">
-            <Link href="#" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Termos de Uso</Link>
-            <Link href="#" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Privacidade</Link>
-            <Link href="#" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Cookies</Link>
+            <Link href="/termos-de-uso" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Termos de Uso</Link>
+            <Link href="/politica-de-privacidade" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Privacidade</Link>
+            <Link href="/cookies" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Cookies</Link>
           </div>
         </div>
       </div>

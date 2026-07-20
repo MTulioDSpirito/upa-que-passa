@@ -36,11 +36,13 @@ export default function NewsArticlePage({ params }: Props) {
   // States
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(article ? article.likes : 0);
+  const [viewsCount, setViewsCount] = useState(article ? article.views : 0);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (article) {
       setLikesCount(article.likes);
+      setViewsCount(article.views);
       setLiked(false);
       // Fetch dynamic like count & user liked status from API
       fetch(`/api/noticias/like?articleId=${article.id}`)
@@ -54,6 +56,27 @@ export default function NewsArticlePage({ params }: Props) {
         .catch(() => {});
     }
   }, [article, currentUser]);
+
+  useEffect(() => {
+    if (article) {
+      const sessionKey = `viewed_news_${article.id}`;
+      if (!sessionStorage.getItem(sessionKey)) {
+        fetch("/api/noticias/view", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ articleId: article.id }),
+        })
+          .then((res) => (res.ok ? res.json() : null))
+          .then((data) => {
+            if (data && typeof data.views === "number") {
+              setViewsCount(data.views);
+              sessionStorage.setItem(sessionKey, "true");
+            }
+          })
+          .catch(() => {});
+      }
+    }
+  }, [article]);
 
   if (!article) {
     return (
@@ -149,7 +172,7 @@ export default function NewsArticlePage({ params }: Props) {
             <Clock className="w-4 h-4" /> {getReadTime(article.content)} min de leitura
           </span>
           <span className="flex items-center gap-1.5">
-            <Eye className="w-4 h-4" /> {article.views.toLocaleString("pt-BR")} views
+            <Eye className="w-4 h-4" /> {viewsCount.toLocaleString("pt-BR")} views
           </span>
         </div>
       </div>

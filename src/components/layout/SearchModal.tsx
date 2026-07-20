@@ -3,9 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Search, X, Gamepad2, Newspaper } from "lucide-react";
-import { useAllGames } from "@/hooks/useAllGames";
-import { useAllNews } from "@/hooks/useAllNews";
+import { Search, X } from "lucide-react";
 
 export const OPEN_SEARCH_EVENT = "upa:open-search";
 
@@ -14,7 +12,6 @@ export function openSearch() {
 }
 
 export default function SearchModal() {
-  const news = useAllNews();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const router = useRouter();
@@ -38,25 +35,20 @@ export default function SearchModal() {
     };
   }, []);
 
-  const [games] = useAllGames();
-
   function handleOpenChange(next: boolean) {
     setOpen(next);
-    if (!next) setQuery("");
+    if (!next) {
+      setQuery("");
+    }
   }
 
-  const term = query.trim().toLowerCase();
-  const gameResults = term
-    ? games.filter((g) => g.title.toLowerCase().includes(term) || g.developer.toLowerCase().includes(term)).slice(0, 5)
-    : [];
-  const newsResults = term
-    ? news.filter((n) => n.title.toLowerCase().includes(term)).slice(0, 5)
-    : [];
-  const hasResults = gameResults.length > 0 || newsResults.length > 0;
-
-  function goTo(href: string) {
-    handleOpenChange(false);
-    router.push(href);
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault();
+    const term = query.trim();
+    if (term) {
+      handleOpenChange(false);
+      router.push(`/buscar?q=${encodeURIComponent(term)}`);
+    }
   }
 
   return (
@@ -71,8 +63,10 @@ export default function SearchModal() {
           }}
         >
           <Dialog.Title className="sr-only">Buscar</Dialog.Title>
-          <div className="flex items-center gap-2 border border-white/10 bg-white/5 rounded-xl px-3 py-2.5 mb-3">
-            <Search className="w-4 h-4 text-gray-500 flex-shrink-0" />
+          <form onSubmit={handleSearch} className="flex items-center gap-2 border border-white/10 bg-white/5 rounded-xl px-3 py-2.5">
+            <button type="submit" className="text-gray-500 hover:text-white transition-colors flex-shrink-0" title="Buscar">
+              <Search className="w-4 h-4" />
+            </button>
             <input
               id="upa-search-input"
               value={query}
@@ -80,44 +74,10 @@ export default function SearchModal() {
               placeholder="Buscar jogos, notícias..."
               className="flex-1 bg-transparent text-white text-sm placeholder-gray-500 focus:outline-none"
             />
-            <Dialog.Close className="text-gray-500 hover:text-white transition-colors flex-shrink-0">
+            <Dialog.Close type="button" className="text-gray-500 hover:text-white transition-colors flex-shrink-0">
               <X className="w-4 h-4" />
             </Dialog.Close>
-          </div>
-
-          {term && (
-            <div className="max-h-96 overflow-y-auto space-y-1">
-              {gameResults.map((g) => (
-                <button
-                  key={g.id}
-                  onClick={() => goTo(`/reviews/${g.slug}`)}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 transition-colors text-left"
-                >
-                  <img src={g.cover} alt="" className="w-8 h-11 object-cover rounded-md flex-shrink-0" />
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-white truncate">{g.title}</p>
-                    <p className="text-xs text-gray-500 truncate">{g.developer}</p>
-                  </div>
-                </button>
-              ))}
-              {newsResults.map((n) => (
-                <button
-                  key={n.id}
-                  onClick={() => goTo(`/noticias/${n.slug}`)}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 transition-colors text-left"
-                >
-                  <Newspaper className="w-4 h-4 text-amber-400 flex-shrink-0" />
-                  <p className="text-sm text-white truncate">{n.title}</p>
-                </button>
-              ))}
-              {!hasResults && (
-                <div className="flex flex-col items-center justify-center py-8 text-center text-gray-500">
-                  <Gamepad2 className="w-8 h-8 mb-2" />
-                  <p className="text-sm">Nenhum resultado para &quot;{query}&quot;</p>
-                </div>
-              )}
-            </div>
-          )}
+          </form>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
