@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Flame, ArrowRight } from "lucide-react";
 import { getScoreColor, formatScore } from "@/lib/data";
 import { Game } from "@/lib/types";
+import CardCover from "@/components/ui/CardCover";
 
 interface FeaturedMomentProps {
   topGame: Game;
@@ -69,11 +70,9 @@ export default function FeaturedMoment({ topGame }: FeaturedMomentProps) {
         {/* Rest of the component (Cover + Info) */}
         <div className="flex-1 flex gap-6 flex-wrap sm:flex-nowrap items-center relative z-10">
           {/* Game Cover */}
-          <img
-            src={topGame.cover}
-            alt={topGame.title}
-            className="w-32 h-44 sm:w-40 sm:h-56 object-cover object-center rounded-xl shadow-lg shadow-black/40 flex-shrink-0 border border-white/5"
-          />
+          <div className="relative w-32 h-44 sm:w-40 sm:h-56 rounded-xl overflow-hidden shadow-lg shadow-black/40 flex-shrink-0 border border-white/5">
+            <CardCover src={topGame.cover} alt={topGame.title} priority />
+          </div>
 
           {/* Info */}
           <div className="flex-1 min-w-0 flex flex-col justify-center">

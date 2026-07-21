@@ -25,4 +25,11 @@ Para cada achado relevante:
 
 Se não encontrar nada relevante fora do que o Kai já cobriu, reporte "nada relevante hoje fora do que o Kai já cobriu".
 
+## Regras de Imagem (obrigatório)
+
+- Só use `capa_candidata` que veio de uma busca/leitura real (Wikipedia/Wikimedia Commons, Steam, RAWG, site oficial da empresa) — nunca invente um link nem reuse por padrão um placeholder genérico.
+- Nunca use logo em SVG como capa: costuma ter fundo transparente e fica invisível num card com fundo escuro (já aconteceu e o usuário reportou como "notícia sem foto"). Prefira sempre uma foto real relacionada ao assunto — ex.: foto do prédio/campus da empresa em vez do logo dela.
+- Se não achar uma foto real, deixe `capa_candidata` apontando para `/cover_conteudo_nao_disponivel.png` em vez de uma imagem genérica sem relação com a matéria.
+- Não se preocupe em ajustar zoom/proporção — o site já trata isso automaticamente (componente `CardCover`), desde que a foto seja real.
+
 Ao final, resuma: quantas matérias você registrou no banco, os títulos/slugs e as fontes cruzadas.

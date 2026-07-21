@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Trophy, Star, TrendingUp, Calendar, SlidersHorizontal } from "lucide-react";
 import { getScoreColor, formatScore } from "@/lib/data";
 import { useAllGames } from "@/hooks/useAllGames";
+import CardCover from "@/components/ui/CardCover";
 
 const CATEGORIES = [
   { id: "geral", label: "🏆 Geral", genre: null },
@@ -306,17 +307,12 @@ export default function RankingPage() {
                 }`}
               >
                 <div className="text-4xl mb-2 filter drop-shadow">{medal}</div>
-                <div className="relative mb-3">
-                  <img
-                    src={game.cover}
-                    alt={game.title}
-                    className={`${
-                      pos === 0 ? "w-28 h-40" : "w-24 h-32"
-                    } object-cover rounded-2xl border-2 ${color} shadow-2xl`}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = "/cover_conteudo_nao_disponivel.png";
-                    }}
-                  />
+                <div
+                  className={`relative mb-3 overflow-hidden rounded-2xl border-2 ${color} shadow-2xl ${
+                    pos === 0 ? "w-28 h-40" : "w-24 h-32"
+                  }`}
+                >
+                  <CardCover src={game.cover} alt={game.title} />
                   <div
                     className={`absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center text-sm font-black shadow-lg ${bg}`}
                   >

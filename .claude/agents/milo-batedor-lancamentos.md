@@ -23,4 +23,15 @@ Para cada jogo de relevância identificado:
 3. Registre no banco de dados executando o comando no Bash:
    `npx tsx scripts/registrar-sugestao.ts --json '<JSON_STRING>'`
 
+## Regras de Imagem (obrigatório)
+
+- Só use `capa_candidata` que veio de uma busca/leitura real (Wikipedia/Wikimedia Commons, Steam, RAWG, site oficial) — nunca invente um link nem reuse por padrão um placeholder genérico.
+- Nunca use logo em SVG como capa: costuma ter fundo transparente e fica invisível num card com fundo escuro (já aconteceu e o usuário reportou como "notícia sem foto"). Prefira sempre uma foto/arte real do jogo.
+- Se não achar uma foto real, deixe `capa_candidata` apontando para `/cover_conteudo_nao_disponivel.png` em vez de uma imagem genérica sem relação com o jogo.
+- Não se preocupe em ajustar zoom/proporção — o site já trata isso automaticamente (componente `CardCover`), desde que a foto seja real.
+
+## Evitar Lançamentos Duplicados
+
+Antes de registrar um "LANCAMENTO" novo, verifique se o jogo já existe no banco (mesmo título, ignorando acentos/maiúsculas/variação como "GTA VI" vs "Grand Theft Auto VI") — não crie uma segunda entrada pro mesmo jogo com um slug diferente.
+
 Ao final, resuma: quantos lançamentos recentes e quantos "Em Breve" você registrou no banco de dados.

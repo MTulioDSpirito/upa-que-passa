@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { ThumbsUp, Calendar, ChevronRight, Gamepad2, Search, SlidersHorizontal, ArrowUpDown, Award, CheckCircle2, XCircle } from "lucide-react";
 import { formatScore, formatDate } from "@/lib/data";
@@ -8,6 +8,7 @@ import { useAllReviews } from "@/hooks/useAllReviews";
 import { useAllGames } from "@/hooks/useAllGames";
 import team from "@/mocks/team";
 import Pagination from "@/components/ui/Pagination";
+import CardCover from "@/components/ui/CardCover";
 
 // Helper to map author name to avatar and role with accent-insensitivity
 const getAuthorInfo = (authorName: string) => {
@@ -86,65 +87,79 @@ export default function ReviewsPage() {
   }, []);
 
   // Map reviews to games
-  const reviewsWithGames = REVIEWS.map((r) => ({
-    review: r,
-    game: GAMES.find((g) => g.id === r.gameId),
-  })).filter((r) => r.game);
+  const reviewsWithGames = useMemo(
+    () =>
+      REVIEWS.map((r) => ({
+        review: r,
+        game: GAMES.find((g) => g.id === r.gameId),
+      })).filter((r) => r.game),
+    [REVIEWS, GAMES]
+  );
 
   // Community games without reviews
-  const otherGames = GAMES.filter((g) => !REVIEWS.find((r) => r.gameId === g.id));
+  const otherGames = useMemo(
+    () => GAMES.filter((g) => !REVIEWS.find((r) => r.gameId === g.id)),
+    [GAMES, REVIEWS]
+  );
 
   // Determine Highlight of the Month (Destaque do Mês)
-  // 1. Filtrar reviews do mês atual (Ano e Mês)
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth(); // 0-indexed
+  const highlight = useMemo(() => {
+    // 1. Filtrar reviews do mês atual (Ano e Mês)
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth(); // 0-indexed
 
-  const currentMonthReviews = reviewsWithGames.filter(({ review }) => {
-    const pubDate = new Date(review.publishedAt);
-    return pubDate.getFullYear() === currentYear && pubDate.getMonth() === currentMonth;
-  });
+    const currentMonthReviews = reviewsWithGames.filter(({ review }) => {
+      const pubDate = new Date(review.publishedAt);
+      return pubDate.getFullYear() === currentYear && pubDate.getMonth() === currentMonth;
+    });
 
-  // 2. Definir o destaque: se houver reviews no mês atual, pega o de maior nota deste mês.
-  // Caso contrário, faz fallback para o de maior nota geral.
-  const targetReviews = currentMonthReviews.length > 0 ? currentMonthReviews : reviewsWithGames;
+    // 2. Definir o destaque: se houver reviews no mês atual, pega o de maior nota deste mês.
+    // Caso contrário, faz fallback para o de maior nota geral.
+    const targetReviews = currentMonthReviews.length > 0 ? currentMonthReviews : reviewsWithGames;
 
-  const highlight = targetReviews.reduce((max, r) => 
-    r.review.overallScore > max.review.overallScore ? r : max
-  , targetReviews[0]);
+    return targetReviews.reduce((max, r) =>
+      r.review.overallScore > max.review.overallScore ? r : max
+    , targetReviews[0]);
+  }, [reviewsWithGames]);
 
   // Filter & Sort reviews
-  const filteredReviews = reviewsWithGames.filter(({ review, game }) => {
-    const matchesSearch = 
-      review.title.toLowerCase().includes(search.toLowerCase()) || 
-      game!.title.toLowerCase().includes(search.toLowerCase());
-    const matchesScore = review.overallScore >= minScore;
-    return matchesSearch && matchesScore;
-  });
+  const filteredReviews = useMemo(() => {
+    const searchLower = search.toLowerCase();
+    return reviewsWithGames.filter(({ review, game }) => {
+      const matchesSearch =
+        review.title.toLowerCase().includes(searchLower) ||
+        game!.title.toLowerCase().includes(searchLower);
+      const matchesScore = review.overallScore >= minScore;
+      return matchesSearch && matchesScore;
+    });
+  }, [reviewsWithGames, search, minScore]);
 
   // Reset pagination when search or filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [search, minScore, sortBy]);
 
+  const sortedReviews = useMemo(() => {
+    return [...filteredReviews].sort((a, b) => {
+      if (sortBy === "score") {
+        return b.review.overallScore - a.review.overallScore;
+      }
+      if (sortBy === "likes") {
+        return b.review.likes - a.review.likes;
+      }
+      return new Date(b.review.publishedAt).getTime() - new Date(a.review.publishedAt).getTime();
+    });
+  }, [filteredReviews, sortBy]);
+
+  const totalPages = Math.ceil(sortedReviews.length / reviewsPerPage);
+  const paginatedReviews = useMemo(
+    () => sortedReviews.slice((currentPage - 1) * reviewsPerPage, currentPage * reviewsPerPage),
+    [sortedReviews, currentPage]
+  );
+
   if (!mounted) {
     return <div className="min-h-screen bg-[#050508]" />;
   }
-
-  const sortedReviews = [...filteredReviews].sort((a, b) => {
-    if (sortBy === "score") {
-      return b.review.overallScore - a.review.overallScore;
-    }
-    if (sortBy === "likes") {
-      return b.review.likes - a.review.likes;
-    }
-    return new Date(b.review.publishedAt).getTime() - new Date(a.review.publishedAt).getTime();
-  });
-
-  const totalPages = Math.ceil(sortedReviews.length / reviewsPerPage);
-  const paginatedReviews = sortedReviews.slice(
-    (currentPage - 1) * reviewsPerPage,
-    currentPage * reviewsPerPage
-  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 space-y-16">
@@ -192,10 +207,11 @@ export default function ReviewsPage() {
             <div className="lg:col-span-4 relative group">
               <div className="absolute -inset-1.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur-lg opacity-40 group-hover:opacity-70 transition-opacity duration-300"></div>
               <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-2xl">
-                <img
+                <CardCover
                   src={highlight.game!.cover}
                   alt={highlight.game!.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  priority
+                  className="group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
             </div>
@@ -352,10 +368,10 @@ export default function ReviewsPage() {
                   >
                     {/* Cover Image */}
                     <div className="relative w-full md:w-44 h-48 md:h-auto aspect-[3/4] md:aspect-auto flex-shrink-0 overflow-hidden rounded-2xl shadow-lg">
-                      <img
+                      <CardCover
                         src={game!.cover}
                         alt={game!.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
 

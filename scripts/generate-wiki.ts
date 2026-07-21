@@ -159,7 +159,7 @@ function generateDatabaseDocs() {
   }
 
   // Nota principal do banco
-  let dbOverview = `---
+  const dbOverview = `---
 title: Banco de Dados e Modelagem
 tags:
   - database
@@ -290,7 +290,7 @@ ${routes.map(r => `* \`${r}\` ➔ **[[API ${r.replace(/\//g, ' ').trim()}]]**`).
     const safeName = `API ${route.replace(/\//g, ' ').trim()}`;
     const apiFile = path.join(apiDir, route.replace('/api/', '').replace('/api', ''), 'route.ts');
     
-    let verbsFound: string[] = [];
+    const verbsFound: string[] = [];
     if (fs.existsSync(apiFile)) {
       const fileContent = fs.readFileSync(apiFile, 'utf-8');
       if (fileContent.includes('export async function GET')) verbsFound.push('GET');
@@ -494,7 +494,7 @@ ${hookFiles.map(h => `* **\`${h}\`**: React hook para manipulação de estado do
   libFiles.forEach(lib => {
     const libName = lib.replace(/\.(ts|js)$/, '');
     const libPath = path.join(libDir, lib);
-    let exportsList: string[] = [];
+    const exportsList: string[] = [];
 
     if (fs.existsSync(libPath)) {
       const fileContent = fs.readFileSync(libPath, 'utf-8');

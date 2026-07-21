@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight, BookOpen, Heart, Eye } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NewsArticle } from "@/lib/types";
+import CardCover from "@/components/ui/CardCover";
 
 interface TrendingStripProps {
   newsList: NewsArticle[];
@@ -109,10 +110,11 @@ export default function TrendingStrip({ newsList }: TrendingStripProps) {
             <div className="md:col-span-2 relative group rounded-2xl overflow-hidden bg-[#0f0f18] border border-white/5 shadow-2xl h-[360px] md:h-[480px] flex flex-col justify-end">
               {/* Background Image with Hover Zoom */}
               <div className="absolute inset-0 z-0">
-                <img
+                <CardCover
                   src={largeArticle.cover}
                   alt={largeArticle.title}
-                  className="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-700 ease-out"
+                  priority
+                  className="group-hover:scale-[1.03] transition-transform duration-700 ease-out"
                 />
                 {/* Steam-style ambient dark gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0d0e15] via-[#0d0e15]/40 to-transparent z-10" />
@@ -172,10 +174,10 @@ export default function TrendingStrip({ newsList }: TrendingStripProps) {
                 >
                   {/* Background Image */}
                   <div className="absolute inset-0 z-0">
-                    <img
+                    <CardCover
                       src={article.cover}
                       alt={article.title}
-                      className="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-700 ease-out"
+                      className="group-hover:scale-[1.03] transition-transform duration-700 ease-out"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0d0e15] via-[#0d0e15]/50 to-transparent z-10" />
                   </div>

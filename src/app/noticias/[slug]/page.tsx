@@ -8,6 +8,7 @@ import { formatDate } from "@/lib/data";
 import { useAllNews } from "@/hooks/useAllNews";
 import { useUserSession } from "@/hooks/useUserSession";
 import team from "@/mocks/team";
+import CardCover from "@/components/ui/CardCover";
 
 interface Props { params: Promise<{ slug: string }> }
 
@@ -179,8 +180,8 @@ export default function NewsArticlePage({ params }: Props) {
 
       {/* Cover */}
       <div className="mb-8">
-        <div className="rounded-3xl overflow-hidden shadow-2xl relative max-h-[450px]">
-          <img src={article.cover} alt={article.title} className="w-full h-full object-cover" />
+        <div className="rounded-3xl overflow-hidden shadow-2xl relative h-[280px] sm:h-[380px] md:h-[450px]">
+          <CardCover src={article.cover} alt={article.title} priority />
         </div>
         {article.imageCredits && (
           <p className="text-xs text-gray-500 mt-2 text-right italic">
@@ -272,7 +273,7 @@ export default function NewsArticlePage({ params }: Props) {
                 className="group game-card bg-[#0f0f18] border border-white/5 rounded-2xl overflow-hidden hover:border-purple-500/20 transition-all flex flex-col"
               >
                 <div className="h-40 overflow-hidden relative">
-                  <img src={rel.cover} alt={rel.title} className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500" />
+                  <CardCover src={rel.cover} alt={rel.title} className="group-hover:scale-103 transition-transform duration-500" />
                   <span className="absolute top-2.5 left-2.5 text-[9px] font-bold uppercase tracking-wider text-white bg-[#0072ce] px-2 py-0.5 rounded-full">
                     {rel.category}
                   </span>

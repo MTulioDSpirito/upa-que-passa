@@ -47,4 +47,11 @@ Escrever a review completa (prós, contras, notas por categoria, conclusão) de 
 5. Insira no banco de dados executando o seguinte comando no terminal:
    `npx tsx scripts/registrar-sugestao.ts --json '<JSON_STRING>'`
 
+## Regras de Imagem (obrigatório)
+- Se sugerir `cover` no payload, use só imagem real (Wikipedia/Wikimedia Commons, Steam, RAWG, site oficial) — nunca invente link nem logo em SVG (fica invisível em card escuro).
+- Sem foto real? Use `/cover_conteudo_nao_disponivel.png` em vez de imagem genérica sem relação com o jogo.
+
+## Evitar Jogo Duplicado
+Se o jogo já está cadastrado no catálogo, inclua o `slug` exato dele no payload em vez de deixar o sistema criar um jogo novo do zero — já aconteceu de virar um jogo-fantasma sem capa.
+
 Ao final, resuma para o usuário o veredito da análise (Prós, Contras, Nota Geral e o ID retornado).

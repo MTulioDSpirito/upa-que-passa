@@ -5,7 +5,7 @@ import { readAdminGames } from "@/lib/adminGames";
 import { readAdminReviews } from "@/lib/adminReviews";
 import { Game } from "@/lib/types";
 import RecentGamesList from "./RecentGamesList";
-import GameImage from "@/components/GameImage";
+import CardCover from "@/components/ui/CardCover";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +20,22 @@ const UPCOMING = [
 ];
 
 const RECENT_WINDOW_DAYS = 60;
+
+// Aliases para jogos cujo título mudou entre a lista estática e o banco
+// (ex.: "GTA VI" nesta lista vs "Grand Theft Auto VI" cadastrado pelo agente Milo)
+const TITLE_ALIASES: Record<string, string> = {
+  "gta vi": "grand theft auto vi",
+};
+
+function canonicalTitle(title: string): string {
+  const normalized = title
+    .normalize("NFD")
+    .replace(new RegExp("[\\u0300-\\u036f]", "g"), "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+  return TITLE_ALIASES[normalized] || normalized;
+}
 
 function selectRecentGames(games: Game[]): Game[] {
   const now = Date.now();
@@ -60,7 +76,12 @@ export default async function LancamentosPage() {
   const adminGames = await readAdminGames();
   const adminReviews = await readAdminReviews();
   const recentGames = selectRecentGames(adminGames);
-  const upcoming = [...UPCOMING, ...selectUpcomingAdminGames(adminGames)].sort(
+  const adminUpcoming = selectUpcomingAdminGames(adminGames);
+  // Jogos cadastrados pelo agente Milo têm dados mais atuais (capa real, data confirmada) —
+  // se o mesmo título já existir na lista estática abaixo, descarta a versão estática.
+  const adminUpcomingTitles = new Set(adminUpcoming.map((g) => canonicalTitle(g.title)));
+  const staticUpcoming = UPCOMING.filter((g) => !adminUpcomingTitles.has(canonicalTitle(g.title)));
+  const upcoming = [...staticUpcoming, ...adminUpcoming].sort(
     (a, b) => new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime()
   );
 
@@ -90,10 +111,10 @@ export default async function LancamentosPage() {
               <div key={game.id} className="group relative bg-[#0f0f18]/60 border border-white/5 rounded-2xl overflow-hidden hover:border-orange-500/30 hover:shadow-[0_0_20px_rgba(249,115,22,0.08)] hover:bg-[#141422] transition-all duration-300 flex flex-col">
                 {/* Cover Preview & Overlays */}
                 <div className="relative h-44 overflow-hidden shrink-0">
-                  <GameImage
+                  <CardCover
                     src={game.cover}
                     alt={game.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f18] via-transparent to-black/40" />
 

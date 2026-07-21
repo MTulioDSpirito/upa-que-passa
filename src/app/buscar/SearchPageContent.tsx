@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Search, Gamepad2, Newspaper, Loader2, Calendar } from "lucide-react";
 import { Game, NewsArticle } from "@/lib/types";
+import CardCover from "@/components/ui/CardCover";
 
 export default function SearchPageContent() {
   const searchParams = useSearchParams();
@@ -193,11 +194,13 @@ export default function SearchPageContent() {
                         href={`/reviews/${game.slug}`}
                         className="flex items-center gap-4 bg-[#0b0b14]/50 border border-white/5 rounded-2xl p-3 hover:bg-white/5 hover:border-purple-500/20 transition-all group"
                       >
-                        <img
-                          src={game.cover}
-                          alt={game.title}
-                          className="w-14 h-20 object-cover rounded-lg flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
-                        />
+                        <div className="relative w-14 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                          <CardCover
+                            src={game.cover}
+                            alt={game.title}
+                            className="group-hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
                         <div className="min-w-0 flex-1">
                           <h3 className="text-sm font-bold text-white group-hover:text-purple-400 transition-colors truncate">
                             {game.title}

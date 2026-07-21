@@ -11,6 +11,7 @@ import {
   ArrowLeft,
   Store
 } from "lucide-react";
+import CardCover from "@/components/ui/CardCover";
 
 // ============================================================================
 // CÓDIGO ORIGINAL PRESERVADO (NÃO DELETADO - UTILIZAR QUANDO FOR PUBLICAR)
@@ -149,10 +150,10 @@ export function OriginalMarketplacePage() {
             <div key={listing.id} className="group bg-[#0f0f18] border border-white/5 rounded-2xl overflow-hidden hover:border-green-500/20 transition-all">
               {/ * Photo * /}
               <div className="relative h-48 overflow-hidden">
-                <img
+                <CardCover
                   src={listing.photos[0]}
                   alt={listing.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 

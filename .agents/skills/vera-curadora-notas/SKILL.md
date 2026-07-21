@@ -45,4 +45,7 @@ Agregar notas de crítica externa (Metacritic, OpenCritic, IGN, Push Square, Eur
 6. Insira no banco de dados executando o seguinte comando no terminal:
    `npx tsx scripts/registrar-sugestao.ts --json '<JSON_STRING>'`
 
+## Evitar Lançamento Duplicado
+O `slug`/`titulo` enviado precisa bater exatamente com o jogo já cadastrado (não invente variação) — é assim que o sistema decide atualizar o jogo existente em vez de criar um lançamento duplicado.
+
 Ao final, resuma para o usuário as notas coletadas e a média global (`worldAvg`), além do ID retornado.

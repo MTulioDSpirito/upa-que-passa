@@ -38,4 +38,13 @@ Varrer o calendário de PC, PS5 e Nintendo Switch atrás de lançamentos recente
 4. Insira no banco de dados executando o seguinte comando no terminal:
    `npx tsx scripts/registrar-sugestao.ts --json '<JSON_STRING>'`
 
+## Regras de Imagem (obrigatório)
+- Só use `capa_candidata` vinda de uma busca/leitura real (Wikipedia/Wikimedia Commons, Steam, RAWG, site oficial) — nunca invente um link.
+- Nunca use logo em SVG como capa (fundo transparente fica invisível em card escuro — já causou bug de "notícia sem foto"). Prefira sempre foto/arte real.
+- Sem foto real encontrada? Use `/cover_conteudo_nao_disponivel.png` em vez de imagem genérica sem relação com o jogo.
+- Não precisa ajustar zoom/proporção — o site já trata isso automaticamente.
+
+## Evitar Lançamentos Duplicados
+Antes de registrar, verifique se o jogo já existe no banco (mesmo título, ignorando acentos/maiúsculas/variações como "GTA VI" vs "Grand Theft Auto VI") — não crie uma segunda entrada com slug diferente para o mesmo jogo.
+
 Ao final, resuma para o usuário as sugestões cadastradas no banco (Nome do jogo e ID retornado pelo script).

@@ -9,6 +9,7 @@ import {
   ArrowRight
 } from "lucide-react";
 import { formatPrice } from "@/lib/data";
+import CardCover from "@/components/ui/CardCover";
 
 // Curated example listings to show what the marketplace offers
 const EXAMPLE_LISTINGS = [
@@ -152,11 +153,7 @@ export default function MarketplaceFeatured({ activeListings }: MarketplaceFeatu
             >
               {/* Photo & badges */}
               <div className="relative h-48 bg-black/20">
-                <img
-                  src={listing.photo}
-                  alt={listing.title}
-                  className="w-full h-full object-cover object-center"
-                />
+                <CardCover src={listing.photo} alt={listing.title} />
                 
                 {/* Console Badge */}
                 <div className="absolute top-3 right-3">

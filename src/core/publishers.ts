@@ -3,6 +3,18 @@ import { appendAdminNews } from "@/lib/adminNews";
 import { appendAdminReview } from "@/lib/adminReviews";
 import { appendAdminGame, readAdminGames, writeAdminGames } from "@/lib/adminGames";
 
+// Normaliza um título para comparação (remove acentos/pontuação, ignora maiúsculas).
+// Usado para achar um jogo já cadastrado mesmo quando o slug da nova sugestão é diferente
+// (ex.: "assassins-creed-black-flag-resynced" vs "acbf-resynced-patch"), evitando lançamentos duplicados.
+function canonicalGameTitle(title: string): string {
+  return title
+    .normalize("NFD")
+    .replace(new RegExp("[\\u0300-\\u036f]", "g"), "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
 export interface IPublisher {
   publish(sugestao: { id: string; titulo: string; slug: string }, authorName: string, updatedPayload: any): Promise<void>;
 }
@@ -22,7 +34,7 @@ export class NewsPublisher implements IPublisher {
       title: sugestao.titulo,
       excerpt: updatedPayload.excerpt || "",
       content: updatedPayload.body || updatedPayload.content || "",
-      cover: updatedPayload.cover || "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800",
+      cover: updatedPayload.cover || "/cover_conteudo_nao_disponivel.png",
       author: authorName,
       publishedAt: new Date().toISOString().split("T")[0],
       category: updatedPayload.category || "Notícias",
@@ -42,7 +54,15 @@ export class ReviewPublisher implements IPublisher {
     authorName: string,
     updatedPayload: any
   ): Promise<void> {
-    const gameId = updatedPayload.gameId || `dynamic-${sugestao.slug}`;
+    // Antes de criar um jogo-placeholder, tenta achar um jogo já cadastrado com o mesmo
+    // título (ex.: Milo já cadastrou o lançamento e agora Theo está enviando a review dele).
+    let gameId = updatedPayload.gameId;
+    if (!gameId) {
+      const reviewTitle = canonicalGameTitle(sugestao.titulo.split(" - ")[0]);
+      const existingGames = await readAdminGames();
+      const matchedGame = existingGames.find((g) => canonicalGameTitle(g.title) === reviewTitle);
+      gameId = matchedGame?.id || `dynamic-${sugestao.slug}`;
+    }
     const review: Review = {
       id: sugestao.id,
       gameId: gameId,
@@ -64,13 +84,14 @@ export class ReviewPublisher implements IPublisher {
     await appendAdminReview(review);
 
     // Criar o jogo correspondente apenas se for um jogo novo e não associado a um existente
-    if (!updatedPayload.gameId) {
+    // (nem por gameId explícito, nem por um jogo já cadastrado com o mesmo título)
+    if (!updatedPayload.gameId && gameId.startsWith("dynamic-")) {
       const game: Game = {
         id: gameId,
         slug: sugestao.slug.replace("-review", ""),
         title: sugestao.titulo.split(" - ")[0],
-        cover: updatedPayload.cover || "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800",
-        gallery: [updatedPayload.cover || "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800"],
+        cover: updatedPayload.cover || "/cover_conteudo_nao_disponivel.png",
+        gallery: [updatedPayload.cover || "/cover_conteudo_nao_disponivel.png"],
         description: updatedPayload.body || "",
         synopsis: updatedPayload.excerpt || "",
         developer: updatedPayload.gameDetails?.developer || "Independente",
@@ -107,8 +128,12 @@ export class LaunchPublisher implements IPublisher {
     // Normalize slug by removing '-notas' suffix if present
     const normalizedSlug = sugestao.slug.replace(/-notas$/, "");
     
+    const canonicalNewTitle = canonicalGameTitle(sugestao.titulo);
     const existingIndex = games.findIndex(
-      (g) => g.slug === normalizedSlug || g.slug === sugestao.slug
+      (g) =>
+        g.slug === normalizedSlug ||
+        g.slug === sugestao.slug ||
+        canonicalGameTitle(g.title) === canonicalNewTitle
     );
 
     if (existingIndex !== -1) {
@@ -144,7 +169,7 @@ export class LaunchPublisher implements IPublisher {
       if (updatedPayload.genres && updatedPayload.genres.length > 0) {
         existing.genres = updatedPayload.genres;
       }
-      if (updatedPayload.cover && (!existing.cover || existing.cover.includes("unsplash"))) {
+      if (updatedPayload.cover && (!existing.cover || existing.cover.includes("unsplash") || existing.cover.includes("cover_conteudo_nao_disponivel"))) {
         existing.cover = updatedPayload.cover;
       }
       if (updatedPayload.gallery && updatedPayload.gallery.length > 0) {
@@ -157,8 +182,8 @@ export class LaunchPublisher implements IPublisher {
         id: `launch-${sugestao.id}`,
         slug: sugestao.slug,
         title: sugestao.titulo,
-        cover: updatedPayload.cover || "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800",
-        gallery: [updatedPayload.cover || "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800"],
+        cover: updatedPayload.cover || "/cover_conteudo_nao_disponivel.png",
+        gallery: [updatedPayload.cover || "/cover_conteudo_nao_disponivel.png"],
         description: updatedPayload.excerpt || "",
         synopsis: updatedPayload.excerpt || "",
         developer: updatedPayload.developer || "Desconhecido",

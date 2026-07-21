@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Star, ThumbsUp, Calendar, User, ChevronRight, BookOpen } from "lucide-react";
 import { Game, Review } from "@/lib/types";
 import { getScoreColor, formatScore, formatDate } from "@/lib/data";
+import CardCover from "@/components/ui/CardCover";
 
 interface LatestReviewsProps {
   games: Game[];
@@ -55,10 +56,10 @@ export default function LatestReviews({ games, reviews }: LatestReviewsProps) {
             >
               {/* Cover & Score Overlay */}
               <div className="relative aspect-[16/10] w-full overflow-hidden">
-                <img
+                <CardCover
                   src={game.cover}
                   alt={game.title}
-                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                  className="group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f18] via-[#0f0f18]/40 to-transparent" />
                 

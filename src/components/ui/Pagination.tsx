@@ -17,7 +17,7 @@ export default function Pagination({
   if (totalPages <= 1) return null;
 
   const range = (start: number, end: number) => {
-    let length = end - start + 1;
+    const length = end - start + 1;
     return Array.from({ length }, (_, idx) => idx + start);
   };
 
@@ -40,20 +40,20 @@ export default function Pagination({
 
     // Case 2: Show right dots, but no left dots
     if (!shouldShowLeftDots && shouldShowRightDots) {
-      let leftItemCount = 3 + 2 * siblingCount;
-      let leftRange = range(1, leftItemCount);
+      const leftItemCount = 3 + 2 * siblingCount;
+      const leftRange = range(1, leftItemCount);
       return [...leftRange, "...", lastPageIndex];
     }
 
     // Case 3: Show left dots, but no right dots
     if (shouldShowLeftDots && !shouldShowRightDots) {
-      let rightItemCount = 3 + 2 * siblingCount;
-      let rightRange = range(totalPages - rightItemCount + 1, totalPages);
+      const rightItemCount = 3 + 2 * siblingCount;
+      const rightRange = range(totalPages - rightItemCount + 1, totalPages);
       return [firstPageIndex, "...", ...rightRange];
     }
 
     // Case 4: Show both left and right dots
-    let middleRange = range(leftSiblingIndex, rightSiblingIndex);
+    const middleRange = range(leftSiblingIndex, rightSiblingIndex);
     return [firstPageIndex, "...", ...middleRange, "...", lastPageIndex];
   };
 
