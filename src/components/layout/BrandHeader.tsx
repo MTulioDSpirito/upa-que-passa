@@ -42,7 +42,7 @@ export default function BrandHeader() {
             <div className="flex flex-wrap items-center gap-2 mb-2.5">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[9px] font-mono font-bold tracking-widest text-purple-400 bg-purple-950/20 border-l-2 border-l-purple-500 border-y border-r border-purple-500/20 rounded-r shadow-[0_0_10px_rgba(168,85,247,0.15)] backdrop-blur-sm">
                 <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-ping" />
-                // OFICIAL
+                {"// OFICIAL"}
               </span>
               <span className="inline-flex items-center px-2.5 py-0.5 text-[9px] font-mono font-bold tracking-widest text-[#00a2ff] bg-blue-950/20 border-l-2 border-l-[#00a2ff] border-y border-r border-[#00a2ff]/20 rounded-r shadow-[0_0_10px_rgba(0,162,255,0.15)] backdrop-blur-sm">
                 [PS5]

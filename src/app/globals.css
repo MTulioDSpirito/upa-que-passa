@@ -74,24 +74,11 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
 }
 
 /* Neon glow effects */
-.glow-purple {
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
-}
 .glow-blue {
   box-shadow: 0 0 20px rgba(0, 114, 206, 0.4);
 }
 .text-glow-purple {
   text-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
-}
-.text-glow-blue {
-  text-shadow: 0 0 20px rgba(0, 114, 206, 0.6);
-}
-
-/* Gradient borders */
-.border-gradient {
-  border: 1px solid transparent;
-  background: linear-gradient(#0f0f18, #0f0f18) padding-box,
-              linear-gradient(135deg, #7c3aed, #0072ce) border-box;
 }
 
 /* Soft ambient glow for hero/section tops — used sparingly, not on every card */
@@ -115,12 +102,6 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
   transform: translateY(-4px);
   box-shadow: 0 16px 32px -12px rgba(124, 58, 237, 0.35), 0 4px 10px -6px rgba(0, 0, 0, 0.5);
 }
-
-/* Score colors */
-.score-great { color: #22c55e; }
-.score-good { color: #84cc16; }
-.score-mixed { color: #eab308; }
-.score-bad { color: #ef4444; }
 
 /* Line clamp */
 .line-clamp-2 {

@@ -26,4 +26,8 @@ Nesta invocação você recebe um jogo e deve:
 Registre no banco de dados executando o comando no Bash:
 `npx tsx scripts/registrar-sugestao.ts --json '<JSON_STRING>'`
 
+## Evitar Lançamento Duplicado
+
+O `slug`/`titulo` que você mandar precisa bater exatamente com o jogo já cadastrado (não invente uma variação) — é assim que o sistema decide se atualiza as notas do jogo existente em vez de criar um segundo lançamento duplicado para o mesmo jogo.
+
 Ao final, resuma as notas agregadas inseridas no banco, eventuais divergências e o ID retornado.

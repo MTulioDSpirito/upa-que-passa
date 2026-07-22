@@ -4,8 +4,9 @@ import Link from "next/link";
 import { Eye, Heart, Calendar, Search, Clock, User, X } from "lucide-react";
 import { formatDate } from "@/lib/data";
 import { useAllNews } from "@/hooks/useAllNews";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Pagination from "@/components/ui/Pagination";
+import CardCover from "@/components/ui/CardCover";
 import team from "@/mocks/team";
 
 const CATEGORIES = ["Todas", "Notícias", "Hardware", "Eventos", "Lançamentos", "Reviews", "Análises"];
@@ -20,12 +21,15 @@ export default function NoticiasPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const newsPerPage = 6;
 
-  const filtered = NEWS.filter((n) => {
-    const matchSearch = n.title.toLowerCase().includes(search.toLowerCase()) || 
-                        n.excerpt.toLowerCase().includes(search.toLowerCase());
-    const matchCat = category === "Todas" || n.category === category;
-    return matchSearch && matchCat;
-  });
+  const filtered = useMemo(() => {
+    const searchLower = search.toLowerCase();
+    return NEWS.filter((n) => {
+      const matchSearch = n.title.toLowerCase().includes(searchLower) ||
+                          n.excerpt.toLowerCase().includes(searchLower);
+      const matchCat = category === "Todas" || n.category === category;
+      return matchSearch && matchCat;
+    });
+  }, [NEWS, search, category]);
 
   const [featured, ...rest] = filtered;
 
@@ -65,9 +69,9 @@ export default function NoticiasPage() {
   };
 
   const totalPages = Math.ceil(rest.length / newsPerPage);
-  const paginatedRest = rest.slice(
-    (currentPage - 1) * newsPerPage,
-    currentPage * newsPerPage
+  const paginatedRest = useMemo(
+    () => rest.slice((currentPage - 1) * newsPerPage, currentPage * newsPerPage),
+    [rest, currentPage]
   );
 
   return (
@@ -139,10 +143,10 @@ export default function NoticiasPage() {
         >
           <div className="grid lg:grid-cols-12 gap-0">
             <div className="lg:col-span-7 relative h-72 sm:h-96 lg:h-auto min-h-[320px] overflow-hidden">
-              <img 
-                src={featured.cover} 
-                alt={featured.title} 
-                className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" 
+              <CardCover
+                src={featured.cover}
+                alt={featured.title}
+                className="group-hover:scale-102 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent lg:hidden" />
               <div className="absolute bottom-4 left-4 lg:hidden">
@@ -199,10 +203,10 @@ export default function NoticiasPage() {
             className="group game-card bg-[#0f0f18] border border-white/5 rounded-2xl overflow-hidden hover:border-[#7c3aed]/20 transition-all flex flex-col"
           >
             <div className="relative h-52 overflow-hidden">
-              <img 
-                src={article.cover} 
-                alt={article.title} 
-                className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500" 
+              <CardCover
+                src={article.cover}
+                alt={article.title}
+                className="group-hover:scale-103 transition-transform duration-500"
               />
               <div className="absolute top-3 left-3">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-white bg-gradient-to-r from-[#7c3aed] to-[#0072ce] px-2.5 py-1 rounded-full shadow-lg">

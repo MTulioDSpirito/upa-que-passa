@@ -23,4 +23,11 @@ Para cada achado relevante:
 
 Se não encontrar nada genuinamente novo e relevante, não force uma notícia fraca — reporte "nada relevante hoje".
 
+## Regras de Imagem (obrigatório)
+
+- Só use `capa_candidata` que veio de uma busca/leitura real (Wikipedia/Wikimedia Commons, Steam, RAWG, site oficial da empresa/evento) — nunca invente um link nem reuse por padrão um placeholder genérico.
+- Nunca use logo em SVG como capa: costuma ter fundo transparente e fica invisível num card com fundo escuro (já aconteceu e o usuário reportou como "notícia sem foto"). Prefira sempre uma foto/print real relacionado ao assunto da notícia.
+- Se não achar uma foto real, deixe `capa_candidata` apontando para `/cover_conteudo_nao_disponivel.png` em vez de uma imagem genérica sem relação com a notícia.
+- Não se preocupe em ajustar zoom/proporção — o site já trata isso automaticamente (componente `CardCover`), desde que a foto seja real.
+
 Ao final, resuma: quantas notícias você registrou no banco, os títulos/slugs e as fontes cruzadas.

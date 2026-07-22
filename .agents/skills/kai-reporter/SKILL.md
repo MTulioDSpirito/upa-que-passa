@@ -37,4 +37,11 @@ Varrer a internet diariamente atrás de lançamentos, patches, eventos e hardwar
    `npx tsx scripts/registrar-sugestao.ts --json '<JSON_STRING>'`
 
 Se não encontrar nada relevante nas últimas 24-48h, reporte apenas "nada relevante hoje".
+
+## Regras de Imagem (obrigatório)
+- `capa_candidata` só com imagem real (Wikipedia/Wikimedia Commons, Steam, RAWG, site oficial) — nunca invente um link.
+- Nunca use logo em SVG como capa (fundo transparente fica invisível em card escuro — já causou bug de "notícia sem foto"). Prefira sempre foto/print real do assunto.
+- Sem foto real encontrada? Use `/cover_conteudo_nao_disponivel.png` em vez de imagem genérica sem relação com a notícia.
+- Não precisa ajustar zoom/proporção — o site já trata isso automaticamente.
+
 Ao final, resuma para o usuário as sugestões cadastradas no banco (Título e ID retornado pelo script).

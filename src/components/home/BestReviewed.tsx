@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Star, ChevronRight, Trophy, Award } from "lucide-react";
 import { Game } from "@/lib/types";
 import { getScoreColor, formatScore } from "@/lib/data";
+import CardCover from "@/components/ui/CardCover";
 
 interface BestReviewedProps {
   games: Game[];
@@ -113,10 +114,10 @@ export default function BestReviewed({ games }: BestReviewedProps) {
 
                 {/* Cover Image */}
                 <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden mb-4">
-                  <img
+                  <CardCover
                     src={game.cover}
                     alt={game.title}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                    className="group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                   

@@ -7,6 +7,7 @@ import { Star, Heart } from "lucide-react";
 import { Game } from "@/lib/types";
 import { getScoreColor, formatScore } from "@/lib/data";
 import { useUserSession } from "@/hooks/useUserSession";
+import CardCover from "@/components/ui/CardCover";
 
 interface GameCardProps {
   game: Game;
@@ -63,10 +64,10 @@ export default function GameCard({ game, compact = false }: GameCardProps) {
       <div className="relative bg-[#0f0f18] rounded-xl overflow-hidden border border-white/5 hover:border-purple-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-purple-900/20">
         {/* Cover */}
         <div className="relative aspect-[3/4] overflow-hidden">
-          <img
+          <CardCover
             src={game.cover}
             alt={game.title}
-            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+            className="group-hover:scale-105 transition-transform duration-300"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 

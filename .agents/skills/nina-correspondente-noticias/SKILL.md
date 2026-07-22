@@ -37,4 +37,11 @@ Cobrir noticiário gamer mais amplo que o canal oficial de PS5 do Kai — análi
    `npx tsx scripts/registrar-sugestao.ts --json '<JSON_STRING>'`
 
 Se não encontrar nada relevante além do que o Kai já reportou, retorne apenas "nada relevante hoje fora do que o Kai já cobriu".
+
+## Regras de Imagem (obrigatório)
+- `capa_candidata` só com imagem real (Wikipedia/Wikimedia Commons, Steam, RAWG, site oficial da empresa) — nunca invente um link.
+- Nunca use logo em SVG como capa (fundo transparente fica invisível em card escuro — já causou bug de "notícia sem foto"). Prefira foto real do assunto — ex.: prédio/campus da empresa em vez do logo.
+- Sem foto real encontrada? Use `/cover_conteudo_nao_disponivel.png` em vez de imagem genérica sem relação com a matéria.
+- Não precisa ajustar zoom/proporção — o site já trata isso automaticamente.
+
 Ao final, resuma para o usuário as sugestões cadastradas no banco (Título e ID retornado pelo script).
