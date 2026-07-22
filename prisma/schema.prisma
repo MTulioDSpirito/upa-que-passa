@@ -34,6 +34,9 @@ model SugestaoAgente {
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   revisadoPor    AdminUser?     @relation("RevisorSugestao", fields: [revisadoPorId], references: [id])
+
+  @@index([status])
+  @@index([createdAt])
 }
 
 model SiteUser {
@@ -104,6 +107,10 @@ model Game {
   updatedAt       DateTime @updatedAt
   reviews         Review[]
   comments        Comment[]
+
+  @@index([releaseDate])
+  @@index([featured])
+  @@index([createdAt])
 }
 
 model NewsArticle {
@@ -124,6 +131,8 @@ model NewsArticle {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   likesRelation NewsLike[]
+
+  @@index([createdAt])
 }
 
 model Review {
@@ -145,6 +154,10 @@ model Review {
   updatedAt    DateTime @updatedAt
   game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
   likesRelation ReviewLike[]
+
+  @@index([gameId])
+  @@index([createdAt])
+  @@index([featured])
 }
 
 enum AdminRole {

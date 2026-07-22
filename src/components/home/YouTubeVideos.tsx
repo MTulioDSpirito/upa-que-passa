@@ -1,5 +1,8 @@
+"use client";
+
 import { Play, ChevronRight } from "lucide-react";
 import { useAllYoutubeVideos } from "@/hooks/useAllYoutubeVideos";
+import { YoutubeVideo } from "@/lib/types";
 
 const YoutubeIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -40,9 +43,11 @@ const FALLBACK_VIDEOS = [
   },
 ];
 
-export default function YouTubeVideos() {
+export default function YouTubeVideos({ initialVideos }: { initialVideos?: YoutubeVideo[] }) {
   const dynamicVideos = useAllYoutubeVideos();
-  const videos = dynamicVideos.length > 0 ? dynamicVideos : FALLBACK_VIDEOS;
+  const videos = initialVideos && initialVideos.length > 0
+    ? initialVideos
+    : (dynamicVideos.length > 0 ? dynamicVideos : FALLBACK_VIDEOS);
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-16 border-t border-white/5 relative">

@@ -24,15 +24,26 @@ export async function readAdminReviews(): Promise<Review[]> {
 }
 
 export async function writeAdminReviews(reviews: Review[]): Promise<void> {
-  for (const r of reviews) {
-    // Garantir que o jogo correspondente existe no banco de dados para respeitar a chave estrangeira
-    const gameExists = await prisma.game.findUnique({ where: { id: r.gameId } });
-    if (!gameExists) {
+  if (reviews.length === 0) return;
+
+  const gameIds = Array.from(new Set(reviews.map((r) => r.gameId)));
+  
+  // Buscar em lote quais jogos já existem
+  const existingGames = await prisma.game.findMany({
+    where: { id: { in: gameIds } },
+    select: { id: true }
+  });
+  
+  const existingGameIds = new Set(existingGames.map((g) => g.id));
+  
+  // Criar em lote ou sequencial apenas os jogos ausentes
+  for (const gameId of gameIds) {
+    if (!existingGameIds.has(gameId)) {
       await prisma.game.create({
         data: {
-          id: r.gameId,
-          slug: `game-${r.gameId}`,
-          title: `Jogo de Review ${r.gameId}`,
+          id: gameId,
+          slug: `game-${gameId}`,
+          title: `Jogo de Review ${gameId}`,
           cover: "",
           description: "",
           synopsis: "",
@@ -55,42 +66,47 @@ export async function writeAdminReviews(reviews: Review[]): Promise<void> {
         }
       });
     }
-
-    await prisma.review.upsert({
-      where: { id: r.id },
-      update: {
-        gameId: r.gameId,
-        title: r.title,
-        text: r.text,
-        pros: r.pros || [],
-        cons: r.cons || [],
-        conclusion: r.conclusion || "",
-        scores: (r.scores as any) || {},
-        overallScore: r.overallScore,
-        author: r.author,
-        publishedAt: r.publishedAt,
-        likes: r.likes,
-        imageCredits: r.imageCredits || null,
-        featured: r.featured ?? false,
-      },
-      create: {
-        id: r.id,
-        gameId: r.gameId,
-        title: r.title,
-        text: r.text,
-        pros: r.pros || [],
-        cons: r.cons || [],
-        conclusion: r.conclusion || "",
-        scores: (r.scores as any) || {},
-        overallScore: r.overallScore,
-        author: r.author,
-        publishedAt: r.publishedAt,
-        likes: r.likes,
-        imageCredits: r.imageCredits || null,
-        featured: r.featured ?? false,
-      }
-    });
   }
+
+  // Executar upserts das reviews em uma transação do Prisma
+  await prisma.$transaction(
+    reviews.map((r) =>
+      prisma.review.upsert({
+        where: { id: r.id },
+        update: {
+          gameId: r.gameId,
+          title: r.title,
+          text: r.text,
+          pros: r.pros || [],
+          cons: r.cons || [],
+          conclusion: r.conclusion || "",
+          scores: (r.scores as any) || {},
+          overallScore: r.overallScore,
+          author: r.author,
+          publishedAt: r.publishedAt,
+          likes: r.likes,
+          imageCredits: r.imageCredits || null,
+          featured: r.featured ?? false,
+        },
+        create: {
+          id: r.id,
+          gameId: r.gameId,
+          title: r.title,
+          text: r.text,
+          pros: r.pros || [],
+          cons: r.cons || [],
+          conclusion: r.conclusion || "",
+          scores: (r.scores as any) || {},
+          overallScore: r.overallScore,
+          author: r.author,
+          publishedAt: r.publishedAt,
+          likes: r.likes,
+          imageCredits: r.imageCredits || null,
+          featured: r.featured ?? false,
+        }
+      })
+    )
+  );
 }
 
 export async function appendAdminReview(review: Review): Promise<void> {
