@@ -92,6 +92,14 @@ Componentes de interface comuns construídos com React e estilizados com Tailwin
 ### 📚 [[50 - Regras de Negócio|50 - Lógica e Regras de Negócio]]
 Utilitários de autenticação, criptografia, hooks customizados e middlewares.
 
+### 🛡️ Segurança e Performance (Auditoria Recente)
+Mecanismos de robustez e proteção implantados no monólito:
+* **Proteção contra Spam (Views)**: Controle de visualização de artigos dedupado por hash de IP (\`ArticleViewLog\`) com janela de 30 min.
+* **Segurança de Uploads**: Validação de arquivos via *magic bytes* (assinatura real de cabeçalho) bloqueando SVGs maliciosos (XSS).
+* **SSRF Hardening**: Resolução DNS ativa com bloqueio a redes locais e privadas para links externos.
+* **Lockout de Login**: Proteção contra força bruta (bloqueio por 15 min após 5 tentativas falhas).
+* **Performance ISR**: Rotas de alta leitura (\`/noticias\`, \`/reviews\`, \`/ranking\`) servidas via Server Components com revalidação dinâmica de 60s.
+
 ---
 *Gerado automaticamente em ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}.*
 `;

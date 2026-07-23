@@ -10,11 +10,11 @@ export function lockoutRemainingMinutes(lockedUntil: Date | null): number {
   return Math.max(1, Math.ceil((lockedUntil.getTime() - Date.now()) / 60000));
 }
 
-export function nextLockoutState(currentAttempts: number): {
+export function nextLockoutState(currentAttempts: number | null | undefined): {
   failedLoginAttempts: number;
   lockedUntil: Date | null;
 } {
-  const attempts = currentAttempts + 1;
+  const attempts = (currentAttempts ?? 0) + 1;
   if (attempts >= MAX_LOGIN_ATTEMPTS) {
     return { failedLoginAttempts: 0, lockedUntil: new Date(Date.now() + LOCKOUT_MINUTES * 60 * 1000) };
   }
