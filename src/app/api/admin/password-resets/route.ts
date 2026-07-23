@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/auth";
+import { requireAdminSession } from "@/lib/auth";
 import crypto from "crypto";
 
 // GET: List all password reset requests (active, pending, and approved)
 export async function GET(request: NextRequest) {
   try {
-    const session = await getSession();
-    if (!session || session.role !== "DEVELOPER") {
-      return NextResponse.json({ error: "Não autorizado." }, { status: 403 });
-    }
+    const auth = await requireAdminSession(["DEVELOPER"]);
+    if (auth instanceof NextResponse) return auth;
 
     const resets = await prisma.passwordResetToken.findMany({
       orderBy: { createdAt: "desc" },
@@ -25,10 +23,8 @@ export async function GET(request: NextRequest) {
 // POST: Approve a request, generating the final token and expiration
 export async function POST(request: NextRequest) {
   try {
-    const session = await getSession();
-    if (!session || session.role !== "DEVELOPER") {
-      return NextResponse.json({ error: "Não autorizado." }, { status: 403 });
-    }
+    const auth = await requireAdminSession(["DEVELOPER"]);
+    if (auth instanceof NextResponse) return auth;
 
     const { id } = await request.json();
     if (!id) {
@@ -83,10 +79,8 @@ export async function POST(request: NextRequest) {
 // DELETE: Cancel/delete a request
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await getSession();
-    if (!session || session.role !== "DEVELOPER") {
-      return NextResponse.json({ error: "Não autorizado." }, { status: 403 });
-    }
+    const auth = await requireAdminSession(["DEVELOPER"]);
+    if (auth instanceof NextResponse) return auth;
 
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
@@ -105,3 +99,4 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: "Erro interno do servidor." }, { status: 500 });
   }
 }
+

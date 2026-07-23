@@ -9,7 +9,7 @@ import {
   Shield, Users, Gamepad2, Info, Check, Eye, Sparkles, Award, Tv
 } from "lucide-react";
 import { getScoreColor, getScoreBg, formatScore, formatDate, formatPrice } from "@/lib/data";
-import GameCard from "@/components/GameCard";
+import GameCard from "@/components/games/GameCard";
 import team from "@/mocks/team";
 import { useUserSession } from "@/hooks/useUserSession";
 import { useAllGames } from "@/hooks/useAllGames";
