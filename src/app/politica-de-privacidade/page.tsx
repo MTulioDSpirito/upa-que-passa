@@ -26,7 +26,7 @@ export default function PoliticaDePrivacidadePage() {
         {/* Header Block */}
         <div className="relative mb-12 bg-gradient-to-br from-[#121220] to-[#0c0c14] border-4 border-black rounded-3xl p-6 md:p-10 shadow-[8px_8px_0px_0px_#000]">
           <div className="absolute -top-6 left-6 md:left-10 transform rotate-1 select-none">
-            <div className="absolute inset-0 bg-[#0072ce] rounded-xl translate-x-1.5 translate-y-1.5 border-4 border-black" />
+            <div className="absolute inset-0 bg-blue-neon rounded-xl translate-x-1.5 translate-y-1.5 border-4 border-black" />
             <div className="relative flex items-center gap-2 text-sm font-black uppercase tracking-wider text-white bg-black border-4 border-black px-5 py-2.5 rounded-xl">
               <Shield className="w-5 h-5 text-blue-400" />
               <span>Privacidade & LGPD</span>
@@ -35,7 +35,7 @@ export default function PoliticaDePrivacidadePage() {
 
           <div className="mt-6 md:mt-4">
             <h1 className="text-3xl md:text-5xl font-black font-display tracking-tight text-white leading-none uppercase mb-4">
-              POLÍTICA DE <span className="text-[#0072ce] bg-black px-2 py-0.5 inline-block transform -rotate-1">PRIVACIDADE</span>
+              POLÍTICA DE <span className="text-blue-neon bg-black px-2 py-0.5 inline-block transform -rotate-1">PRIVACIDADE</span>
             </h1>
             <p className="text-gray-400 text-sm md:text-base leading-relaxed">
               Última atualização: 20 de Julho de 2026. A sua privacidade é prioridade máxima para a guilda do Upa que Passa. Conheça abaixo como tratamos suas informações.
@@ -92,8 +92,8 @@ export default function PoliticaDePrivacidadePage() {
 
           {/* Card 3: Seus Direitos (LGPD) */}
           <section className="bg-[#121220] border-4 border-black rounded-2xl p-6 md:p-8 shadow-[6px_6px_0px_0px_#000]">
-            <h2 className="text-xl md:text-2xl font-display font-black text-[#0072ce] uppercase mb-4 flex items-center gap-2">
-              <UserCheck className="w-6 h-6 text-[#0072ce]" />
+            <h2 className="text-xl md:text-2xl font-display font-black text-blue-neon uppercase mb-4 flex items-center gap-2">
+              <UserCheck className="w-6 h-6 text-blue-neon" />
               3. Controle Total e Direitos LGPD
             </h2>
             <div className="text-gray-300 space-y-4 text-sm md:text-base leading-relaxed">

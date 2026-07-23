@@ -28,42 +28,46 @@ export async function readAdminNews(): Promise<NewsArticle[]> {
 }
 
 export async function writeAdminNews(newsList: NewsArticle[]): Promise<void> {
-  for (const n of newsList) {
-    await prisma.newsArticle.upsert({
-      where: { id: n.id },
-      update: {
-        slug: n.slug,
-        title: n.title,
-        excerpt: n.excerpt || "",
-        content: n.content || "",
-        cover: n.cover || "",
-        author: n.author || "Redação",
-        publishedAt: n.publishedAt,
-        category: n.category || "Notícias",
-        tags: n.tags || [],
-        views: n.views,
-        likes: n.likes,
-        imageCredits: n.imageCredits || null,
-        fontes: n.fontes || null,
-      },
-      create: {
-        id: n.id,
-        slug: n.slug,
-        title: n.title,
-        excerpt: n.excerpt || "",
-        content: n.content || "",
-        cover: n.cover || "",
-        author: n.author || "Redação",
-        publishedAt: n.publishedAt,
-        category: n.category || "Notícias",
-        tags: n.tags || [],
-        views: n.views,
-        likes: n.likes,
-        imageCredits: n.imageCredits || null,
-        fontes: n.fontes || null,
-      }
-    });
-  }
+  if (newsList.length === 0) return;
+
+  await prisma.$transaction(
+    newsList.map((n) =>
+      prisma.newsArticle.upsert({
+        where: { id: n.id },
+        update: {
+          slug: n.slug,
+          title: n.title,
+          excerpt: n.excerpt || "",
+          content: n.content || "",
+          cover: n.cover || "",
+          author: n.author || "Redação",
+          publishedAt: n.publishedAt,
+          category: n.category || "Notícias",
+          tags: n.tags || [],
+          views: n.views,
+          likes: n.likes,
+          imageCredits: n.imageCredits || null,
+          fontes: n.fontes || null,
+        },
+        create: {
+          id: n.id,
+          slug: n.slug,
+          title: n.title,
+          excerpt: n.excerpt || "",
+          content: n.content || "",
+          cover: n.cover || "",
+          author: n.author || "Redação",
+          publishedAt: n.publishedAt,
+          category: n.category || "Notícias",
+          tags: n.tags || [],
+          views: n.views,
+          likes: n.likes,
+          imageCredits: n.imageCredits || null,
+          fontes: n.fontes || null,
+        }
+      })
+    )
+  );
 }
 
 export async function appendAdminNews(news: NewsArticle): Promise<void> {

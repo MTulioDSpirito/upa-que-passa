@@ -84,7 +84,7 @@ export default function NewsArticlePage({ params }: Props) {
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-gray-500">
         <div className="text-6xl mb-4">📰</div>
         <h1 className="text-2xl font-bold text-white mb-2">Notícia não encontrada</h1>
-        <Link href="/noticias" className="text-[#0072ce] hover:text-blue-300">← Voltar às notícias</Link>
+        <Link href="/noticias" className="text-blue-neon hover:text-blue-300">← Voltar às notícias</Link>
       </div>
     );
   }
@@ -147,7 +147,7 @@ export default function NewsArticlePage({ params }: Props) {
       </div>
 
       {/* Category */}
-      <span className="text-xs font-bold uppercase tracking-wider text-white bg-gradient-to-r from-[#0072ce] to-[#7c3aed] px-3.5 py-1.5 rounded-full mb-5 inline-block shadow-lg">
+      <span className="text-xs font-bold uppercase tracking-wider text-white bg-gradient-to-r from-blue-neon to-purple px-3.5 py-1.5 rounded-full mb-5 inline-block shadow-lg">
         {article.category}
       </span>
 
@@ -193,7 +193,7 @@ export default function NewsArticlePage({ params }: Props) {
       {/* Content */}
       <div className="bg-[#0f0f18] border border-white/5 rounded-3xl p-6 sm:p-10 mb-8 shadow-xl">
         {/* Excerpt */}
-        <p className="text-lg text-gray-200 font-medium leading-relaxed mb-8 border-l-4 border-[#7c3aed] pl-4 sm:pl-6">
+        <p className="text-lg text-gray-200 font-medium leading-relaxed mb-8 border-l-4 border-purple pl-4 sm:pl-6">
           {article.excerpt}
         </p>
 
@@ -274,7 +274,7 @@ export default function NewsArticlePage({ params }: Props) {
               >
                 <div className="h-40 overflow-hidden relative">
                   <CardCover src={rel.cover} alt={rel.title} className="group-hover:scale-103 transition-transform duration-500" />
-                  <span className="absolute top-2.5 left-2.5 text-[9px] font-bold uppercase tracking-wider text-white bg-[#0072ce] px-2 py-0.5 rounded-full">
+                  <span className="absolute top-2.5 left-2.5 text-[9px] font-bold uppercase tracking-wider text-white bg-blue-neon px-2 py-0.5 rounded-full">
                     {rel.category}
                   </span>
                 </div>

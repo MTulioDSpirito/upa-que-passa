@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession, hashPassword } from "@/lib/auth";
+import { strongPasswordSchema } from "@/lib/passwordPolicy";
 import { z } from "zod";
 
 const createAdminSchema = z.object({
   name: z.string().trim().min(2, "Nome deve ter pelo menos 2 caracteres."),
   email: z.string().toLowerCase().trim().email("E-mail inválido."),
   role: z.enum(["DEVELOPER", "COLABORADOR"], { message: "Cargo inválido." }),
-  password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres."),
+  password: strongPasswordSchema,
 });
 
 export async function GET() {

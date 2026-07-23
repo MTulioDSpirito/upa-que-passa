@@ -8,16 +8,18 @@ datasource db {
 }
 
 model AdminUser {
-  id                 String           @id @default(cuid())
-  name               String
-  email              String           @unique
-  passwordHash       String
-  role               AdminRole
-  avatar             String?
-  active             Boolean          @default(true)
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
-  sugestoesRevisadas SugestaoAgente[] @relation("RevisorSugestao")
+  id                  String           @id @default(cuid())
+  name                String
+  email               String           @unique
+  passwordHash        String
+  role                AdminRole
+  avatar              String?
+  active              Boolean          @default(true)
+  failedLoginAttempts Int              @default(0)
+  lockedUntil         DateTime?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  sugestoesRevisadas  SugestaoAgente[] @relation("RevisorSugestao")
 }
 
 model SugestaoAgente {
@@ -50,6 +52,8 @@ model SiteUser {
   state        String?
   bio          String?
   active       Boolean    @default(true)
+  failedLoginAttempts Int @default(0)
+  lockedUntil  DateTime?
   registrationIp String?
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
@@ -194,6 +198,15 @@ model YoutubeVideo {
   resolution  String   @default("4K UHD")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model ArticleViewLog {
+  id        String   @id @default(cuid())
+  articleId String
+  ipHash    String
+  viewedAt  DateTime @default(now())
+
+  @@unique([articleId, ipHash])
 }
 
 model NewsLike {

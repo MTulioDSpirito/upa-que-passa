@@ -136,7 +136,7 @@ export default function SugestaoDetail({
                       href={url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-xs text-[#0072ce] hover:text-blue-300 bg-blue-900/10 border border-blue-800/20 rounded-lg px-2 py-1"
+                      className="flex items-center gap-1 text-xs text-blue-neon hover:text-blue-300 bg-blue-900/10 border border-blue-800/20 rounded-lg px-2 py-1"
                     >
                       <ExternalLink className="w-3 h-3" />
                       {hostname}

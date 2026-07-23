@@ -22,7 +22,7 @@ export default function Footer() {
               <span className="font-display text-xl tracking-tight font-extrabold">
                 <span className="text-white">UPA</span>
                 <span className="text-purple-400"> QUE</span>
-                <span className="text-[#0072ce]"> PASSA</span>
+                <span className="text-blue-neon"> PASSA</span>
               </span>
             </Link>
             
@@ -72,7 +72,7 @@ export default function Footer() {
 
           {/* Marketplace */}
           <div>
-            <h4 className="font-semibold text-white mb-5 text-sm uppercase tracking-wider border-l-2 border-[#0072ce] pl-3">
+            <h4 className="font-semibold text-white mb-5 text-sm uppercase tracking-wider border-l-2 border-blue-neon pl-3">
               Marketplace
             </h4>
             <ul className="space-y-3">
@@ -82,7 +82,7 @@ export default function Footer() {
                 { name: "Meu Perfil", path: "/perfil" }
               ].map((item) => (
                 <li key={item.name}>
-                  <Link href={item.path} className="text-sm text-gray-400 hover:text-[#0072ce] transition-colors">
+                  <Link href={item.path} className="text-sm text-gray-400 hover:text-blue-neon transition-colors">
                     {item.name}
                   </Link>
                 </li>

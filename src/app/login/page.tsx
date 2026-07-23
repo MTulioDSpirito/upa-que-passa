@@ -59,7 +59,7 @@ function LoginForm() {
           <h1 className="text-3xl font-black text-white tracking-wide">
             <span className="text-white">UPA</span>
             <span className="text-purple-400"> QUE</span>
-            <span className="text-[#0072ce]"> PASSA</span>
+            <span className="text-blue-neon"> PASSA</span>
           </h1>
           <p className="text-gray-400 mt-2 text-sm">Bem-vindo de volta!</p>
         </div>

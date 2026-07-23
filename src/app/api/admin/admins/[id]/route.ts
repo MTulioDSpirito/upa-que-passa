@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession, hashPassword } from "@/lib/auth";
+import { strongPasswordSchema } from "@/lib/passwordPolicy";
 import { z } from "zod";
 
 const updateAdminSchema = z.object({
@@ -8,7 +9,7 @@ const updateAdminSchema = z.object({
   email: z.string().toLowerCase().trim().email("E-mail inválido.").optional(),
   role: z.enum(["DEVELOPER", "COLABORADOR"], { message: "Cargo inválido." }).optional(),
   active: z.boolean({ message: "active deve ser booleano." }).optional(),
-  password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres.").optional(),
+  password: strongPasswordSchema.optional(),
 });
 
 export async function PATCH(

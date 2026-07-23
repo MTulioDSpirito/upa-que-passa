@@ -286,7 +286,7 @@ export default function VenderPage() {
 
             <div className="bg-blue-900/10 border border-blue-700/20 rounded-xl p-4">
               <div className="flex items-start gap-3">
-                <Shield className="w-5 h-5 text-[#0072ce] flex-shrink-0 mt-0.5" />
+                <Shield className="w-5 h-5 text-blue-neon flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-semibold text-blue-300 mb-1">Anúncio Gratuito</p>
                   <p className="text-xs text-gray-400">O Upa que Passa não cobra comissão sobre suas vendas. A negociação é direta entre comprador e vendedor.</p>

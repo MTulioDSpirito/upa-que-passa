@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession, hashPassword, verifyPassword } from "@/lib/auth";
+import { strongPasswordSchema } from "@/lib/passwordPolicy";
 import { z } from "zod";
 
 const changePasswordSchema = z.object({
   currentPassword: z.string().min(1, "Senha atual é obrigatória."),
-  newPassword: z.string().min(6, "A nova senha deve ter no mínimo 6 caracteres."),
+  newPassword: strongPasswordSchema,
 });
 
 export async function POST(request: Request) {

@@ -112,7 +112,7 @@ export default function Navbar() {
             <span className="font-display text-lg tracking-tight">
               <span className="text-white">UPA</span>
               <span className="text-purple-400"> QUE</span>
-              <span className="text-[#0072ce]"> PASSA</span>
+              <span className="text-blue-neon"> PASSA</span>
               <span className="text-xs ml-2 text-purple-400 font-sans font-bold uppercase tracking-wider">ADMIN</span>
             </span>
           </Link>

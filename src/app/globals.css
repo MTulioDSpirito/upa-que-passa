@@ -13,6 +13,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-purple: var(--purple);
+  --color-purple-light: var(--purple-light);
+  --color-blue-neon: var(--blue-neon);
+  --color-blue-glow: var(--blue-glow);
+  --color-amber-neon: var(--amber-neon);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-display);
@@ -92,6 +97,17 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
   z-index: -1;
   background: radial-gradient(ellipse 60% 45% at 50% 0%, rgba(124, 58, 237, 0.18), transparent 70%);
   pointer-events: none;
+}
+
+/* Padrão de fundo do banner de perfil (era style={{}} inline) */
+.profile-banner-pattern {
+  background-image: linear-gradient(45deg, #7c3aed 25%, transparent 25%), linear-gradient(-45deg, #3b82f6 25%, transparent 25%);
+  background-size: 40px 40px;
+}
+
+/* Spinner mais rápido que o animate-spin padrão (era style={{}} inline) */
+.spin-fast {
+  animation-duration: 0.8s;
 }
 
 /* Card hover effects — transform+shadow only (no `all`, keeps hover cheap) */

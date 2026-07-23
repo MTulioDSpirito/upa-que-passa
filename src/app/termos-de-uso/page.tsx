@@ -87,8 +87,8 @@ export default function TermosDeUsoPage() {
 
           {/* Card 3: Regras de Conteúdo e Conduta */}
           <section className="bg-[#121220] border-4 border-black rounded-2xl p-6 md:p-8 shadow-[6px_6px_0px_0px_#000]">
-            <h2 className="text-xl md:text-2xl font-display font-black text-[#0072ce] uppercase mb-4 flex items-center gap-2">
-              <Scale className="w-6 h-6 text-[#0072ce]" />
+            <h2 className="text-xl md:text-2xl font-display font-black text-blue-neon uppercase mb-4 flex items-center gap-2">
+              <Scale className="w-6 h-6 text-blue-neon" />
               3. Cadastro e Regras de Conduta
             </h2>
             <div className="text-gray-300 space-y-4 text-sm md:text-base leading-relaxed">

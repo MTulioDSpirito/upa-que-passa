@@ -131,7 +131,7 @@ export default function RecentGamesList({ games, reviews }: RecentGamesListProps
             <div className="flex items-center gap-3">
               <div className="flex gap-1 hidden sm:flex">
                 {game.platforms.slice(0, 2).map((p) => (
-                  <span key={p} className="text-xs bg-blue-900/20 text-[#0072ce] px-2 py-0.5 rounded-full whitespace-nowrap">{p}</span>
+                  <span key={p} className="text-xs bg-blue-900/20 text-blue-neon px-2 py-0.5 rounded-full whitespace-nowrap">{p}</span>
                 ))}
               </div>
 

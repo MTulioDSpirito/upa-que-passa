@@ -28,8 +28,7 @@ export default function LoadingSpinner({
         />
         {/* Spinning border ring */}
         <div
-          className={`${sizeClasses[size]} rounded-full border-white/10 border-t-purple-500 border-r-blue-500 animate-spin relative z-10`}
-          style={{ animationDuration: "0.8s" }}
+          className={`${sizeClasses[size]} rounded-full border-white/10 border-t-purple-500 border-r-blue-500 animate-spin spin-fast relative z-10`}
         />
       </div>
       {label && (

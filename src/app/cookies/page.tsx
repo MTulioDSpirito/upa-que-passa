@@ -26,7 +26,7 @@ export default function CookiesPage() {
         {/* Header Block */}
         <div className="relative mb-12 bg-gradient-to-br from-[#121220] to-[#0c0c14] border-4 border-black rounded-3xl p-6 md:p-10 shadow-[8px_8px_0px_0px_#000]">
           <div className="absolute -top-6 left-6 md:left-10 transform -rotate-1 select-none">
-            <div className="absolute inset-0 bg-[#7c3aed] rounded-xl translate-x-1.5 translate-y-1.5 border-4 border-black" />
+            <div className="absolute inset-0 bg-purple rounded-xl translate-x-1.5 translate-y-1.5 border-4 border-black" />
             <div className="relative flex items-center gap-2 text-sm font-black uppercase tracking-wider text-white bg-black border-4 border-black px-5 py-2.5 rounded-xl">
               <Cookie className="w-5 h-5 text-purple-400" />
               <span>Cookies do Sistema</span>
@@ -35,7 +35,7 @@ export default function CookiesPage() {
 
           <div className="mt-6 md:mt-4">
             <h1 className="text-3xl md:text-5xl font-black font-display tracking-tight text-white leading-none uppercase mb-4">
-              POLÍTICA DE <span className="text-[#a855f7] bg-black px-2 py-0.5 inline-block transform rotate-1">COOKIES</span>
+              POLÍTICA DE <span className="text-purple-light bg-black px-2 py-0.5 inline-block transform rotate-1">COOKIES</span>
             </h1>
             <p className="text-gray-400 text-sm md:text-base leading-relaxed">
               Última atualização: 20 de Julho de 2026. Entenda de forma honesta o que são e para que servem os cookies que o UQP utiliza.
@@ -87,8 +87,8 @@ export default function CookiesPage() {
 
           {/* Card 3: Como controlar */}
           <section className="bg-[#121220] border-4 border-black rounded-2xl p-6 md:p-8 shadow-[6px_6px_0px_0px_#000]">
-            <h2 className="text-xl md:text-2xl font-display font-black text-[#0072ce] uppercase mb-4 flex items-center gap-2">
-              <ToggleLeft className="w-6 h-6 text-[#0072ce]" />
+            <h2 className="text-xl md:text-2xl font-display font-black text-blue-neon uppercase mb-4 flex items-center gap-2">
+              <ToggleLeft className="w-6 h-6 text-blue-neon" />
               3. Como gerenciar os cookies no seu navegador?
             </h2>
             <div className="text-gray-300 space-y-4 text-sm md:text-base leading-relaxed">

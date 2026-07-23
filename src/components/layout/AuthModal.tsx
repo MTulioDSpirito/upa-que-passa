@@ -128,7 +128,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = "login" }: Au
                 <h2 className="text-2xl font-black text-white">
                   <span className="text-white">UPA</span>
                   <span className="text-purple-400"> QUE</span>
-                  <span className="text-[#0072ce]"> PASSA</span>
+                  <span className="text-blue-neon"> PASSA</span>
                 </h2>
               </div>
 

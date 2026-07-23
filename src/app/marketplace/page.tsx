@@ -161,7 +161,7 @@ export function OriginalMarketplacePage() {
                 <div className="absolute top-3 left-3 flex gap-2 flex-wrap">
                   <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${
                     listing.condition === "lacrado" ? "bg-green-600 text-white" :
-                    listing.condition === "como novo" ? "bg-[#0072ce] text-white" :
+                    listing.condition === "como novo" ? "bg-blue-neon text-white" :
                     listing.condition === "bom estado" ? "bg-yellow-600 text-black" :
                     "bg-gray-600 text-white"
                   }`}>
@@ -195,7 +195,7 @@ export function OriginalMarketplacePage() {
                     </span>
                   ))}
                   {listing.shipping && (
-                    <span className="text-xs bg-blue-900/30 text-[#0072ce] px-2 py-0.5 rounded-full">Frete</span>
+                    <span className="text-xs bg-blue-900/30 text-blue-neon px-2 py-0.5 rounded-full">Frete</span>
                   )}
                 </div>
 

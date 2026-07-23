@@ -53,12 +53,7 @@ export default function PerfilClient({
     <div className="max-w-5xl mx-auto px-4 py-10">
       {/* Banner */}
       <div className="relative rounded-3xl overflow-hidden mb-6 h-48 bg-gradient-to-r from-purple-900 via-blue-900 to-purple-900">
-        <div className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: "linear-gradient(45deg, #7c3aed 25%, transparent 25%), linear-gradient(-45deg, #3b82f6 25%, transparent 25%)",
-            backgroundSize: "40px 40px",
-          }}
-        />
+        <div className="absolute inset-0 opacity-20 profile-banner-pattern" />
         <button
           onClick={() => setEditing(true)}
           className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 bg-black/40 backdrop-blur text-white text-xs rounded-lg hover:bg-black/60 transition-all"
@@ -96,7 +91,7 @@ export default function PerfilClient({
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {[
           { icon: Star, label: "Reviews", value: commentsCount, color: "text-yellow-400" },
-          { icon: MessageSquare, label: "Comentários", value: commentsCount, color: "text-[#0072ce]" },
+          { icon: MessageSquare, label: "Comentários", value: commentsCount, color: "text-blue-neon" },
           { icon: ShoppingBag, label: "Trocas", value: tradesCount, color: "text-green-400" },
           { icon: Trophy, label: "Favoritos", value: favoriteGames.length, color: "text-purple-400" },
         ].map((stat) => (

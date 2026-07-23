@@ -62,7 +62,7 @@ export default function BrandHeader() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-fuchsia-400">
                 QUE
               </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0072ce] to-[#00d0ff] drop-shadow-[0_0_15px_rgba(0,114,206,0.4)]">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-neon to-[#00d0ff] drop-shadow-[0_0_15px_rgba(0,114,206,0.4)]">
                 PASSA
               </span>
             </h1>
@@ -77,7 +77,7 @@ export default function BrandHeader() {
                 notícias
               </span>{" "}
               e{" "}
-              <span className="text-purple-300 font-semibold underline decoration-[#0072ce]/40 decoration-2 underline-offset-2">
+              <span className="text-purple-300 font-semibold underline decoration-blue-neon/40 decoration-2 underline-offset-2">
                 marketplace
               </span>{" "}
               de jogos para{" "}

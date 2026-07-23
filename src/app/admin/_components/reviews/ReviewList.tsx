@@ -97,7 +97,7 @@ export default function ReviewList({
               <button
                 onClick={() => onEdit(review)}
                 disabled={actionLoading}
-                className="btn-press p-2 bg-blue-900/20 text-[#0072ce] rounded-lg hover:bg-blue-900/40 transition-colors"
+                className="btn-press p-2 bg-blue-900/20 text-blue-neon rounded-lg hover:bg-blue-900/40 transition-colors"
               >
                 <Edit className="w-4 h-4" />
               </button>

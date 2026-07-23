@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth";
 import { readAdminGames, appendAdminGame, writeAdminGames } from "@/lib/adminGames";
 import { Game } from "@/lib/types";
 import { prisma } from "@/lib/prisma";
+import { isSafeImageUrl } from "@/lib/safeUrl";
 
 function slugify(title: string): string {
   return title
@@ -11,23 +12,6 @@ function slugify(title: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
-}
-
-const BLOCKED_HOSTS = new Set(["localhost", "127.0.0.1", "0.0.0.0", "::1", "169.254.169.254"]);
-
-function isSafeImageUrl(raw: string): boolean {
-  if (raw.startsWith("/")) return true;
-  let url: URL;
-  try {
-    url = new URL(raw);
-  } catch {
-    return false;
-  }
-  if (url.protocol !== "http:" && url.protocol !== "https:") return false;
-  const host = url.hostname.toLowerCase();
-  if (BLOCKED_HOSTS.has(host)) return false;
-  if (/^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|169\.254\.)/.test(host)) return false;
-  return true;
 }
 
 export async function GET(request: Request) {
@@ -216,7 +200,7 @@ export async function POST(request: Request) {
     trailer, gallery, description, metacriticScore
   } = parsed.data;
 
-  if (!isSafeImageUrl(cover)) {
+  if (!(await isSafeImageUrl(cover))) {
     return NextResponse.json(
       { error: "URL da capa inválida — só são aceitos links http(s) para hosts públicos." },
       { status: 400 }

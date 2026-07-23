@@ -99,7 +99,7 @@ export default function ListingPage({ params }: Props) {
             <div className="flex items-center gap-3 flex-wrap mb-4">
               <span className={`text-sm px-3 py-1 rounded-full font-semibold ${
                 listing.condition === "lacrado" ? "bg-green-600/20 text-green-400 border border-green-700/30" :
-                listing.condition === "como novo" ? "bg-[#0072ce]/20 text-[#0072ce] border border-blue-700/30" :
+                listing.condition === "como novo" ? "bg-blue-neon/20 text-blue-neon border border-blue-700/30" :
                 "bg-yellow-600/20 text-yellow-400 border border-yellow-700/30"
               }`}>
                 {listing.condition.charAt(0).toUpperCase() + listing.condition.slice(1)}
@@ -138,7 +138,7 @@ export default function ListingPage({ params }: Props) {
                 <h4 className="text-xs text-gray-500 mb-2">Entrega / Retirada</h4>
                 <div className="space-y-1">
                   {listing.shipping && (
-                    <div className="flex items-center gap-1 text-xs text-[#0072ce]">
+                    <div className="flex items-center gap-1 text-xs text-blue-neon">
                       <Truck className="w-3 h-3" /> Frete disponível
                     </div>
                   )}
@@ -171,7 +171,7 @@ export default function ListingPage({ params }: Props) {
 
           {/* Safety tips */}
           <div className="bg-blue-900/10 border border-blue-700/20 rounded-2xl p-5">
-            <h3 className="flex items-center gap-2 text-[#0072ce] font-semibold mb-3">
+            <h3 className="flex items-center gap-2 text-blue-neon font-semibold mb-3">
               <Shield className="w-4 h-4" /> Dicas de Segurança
             </h3>
             <ul className="space-y-2 text-sm text-gray-400">

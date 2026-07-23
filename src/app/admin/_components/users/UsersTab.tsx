@@ -112,7 +112,7 @@ export default function UsersTab({
                 </span>
                 <button
                   onClick={() => setEditingUser(u)}
-                  className="btn-press p-1.5 bg-blue-900/20 text-[#0072ce] rounded-lg hover:bg-blue-900/40 transition-colors flex-shrink-0"
+                  className="btn-press p-1.5 bg-blue-900/20 text-blue-neon rounded-lg hover:bg-blue-900/40 transition-colors flex-shrink-0"
                 >
                   <Edit className="w-3.5 h-3.5" />
                 </button>

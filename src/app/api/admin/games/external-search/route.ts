@@ -11,8 +11,12 @@ export async function GET(request: NextRequest) {
   const query = searchParams.get("query");
   const id = searchParams.get("id");
 
-  const apiKey = process.env.RAWG_API_KEY || "cb474cde6b9a4c079219ea640eeec37b";
-  
+  const apiKey = process.env.RAWG_API_KEY;
+  if (!apiKey) {
+    console.error("RAWG_API_KEY não configurada no .env");
+    return NextResponse.json({ error: "Busca externa indisponível: RAWG_API_KEY não configurada." }, { status: 500 });
+  }
+
   try {
     if (id) {
       // Fetch details and screenshots of a single game in parallel
