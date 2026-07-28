@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import {
   LayoutDashboard, Star, ShoppingBag, Users, MessageSquare,
-  Newspaper, Trophy, Settings, BarChart3, Shield, Play, Calendar
+  Newspaper, Trophy, Settings, BarChart3, Shield, Play, Calendar, Key
 } from "lucide-react";
 import { useAllGames } from "@/hooks/useAllGames";
 
@@ -19,6 +19,7 @@ import LancamentosTab from "./_components/lancamentos/LancamentosTab";
 import NotBuiltTab from "./_components/layout/NotBuiltTab";
 import ModerationTab from "./_components/moderation/ModerationTab";
 import AdminManagementTab from "./_components/admin-users/AdminManagementTab";
+import PasswordResetsTab from "./_components/password-resets/PasswordResetsTab";
 
 import { usePendingSugestoes } from "./_hooks/usePendingSugestoes";
 import { useAdminUsers } from "./_hooks/useAdminUsers";
@@ -46,6 +47,7 @@ const SECTION_LABELS: Record<string, string> = {
   users: "Usuários",
   comments: "Comentários",
   admin_users: "Gerenciar Equipe",
+  password_resets: "Recuperar Senhas",
   marketplace: "Marketing Place",
   analytics: "Analytics",
   settings: "Configurações",
@@ -87,7 +89,10 @@ export default function AdminPanelLayout({ user }: { user: AdminUserSession }) {
   // Dynamic sidebar items: add "Gerenciar Equipe" only for DEVELOPER
   const sidebarItems = [
     ...SIDEBAR_ITEMS,
-    ...(user.role === "DEVELOPER" ? [{ icon: Shield, label: "Gerenciar Equipe", id: "admin_users" }] : []),
+    ...(user.role === "DEVELOPER" ? [
+      { icon: Shield, label: "Gerenciar Equipe", id: "admin_users" },
+      { icon: Key, label: "Recuperar Senhas", id: "password_resets" }
+    ] : []),
   ];
 
   return (
@@ -147,6 +152,10 @@ export default function AdminPanelLayout({ user }: { user: AdminUserSession }) {
 
         {activeSection === "admin_users" && user.role === "DEVELOPER" && (
           <AdminManagementTab adminUser={user} />
+        )}
+
+        {activeSection === "password_resets" && user.role === "DEVELOPER" && (
+          <PasswordResetsTab />
         )}
 
         {(activeSection === "comments" || activeSection === "moderation") && (

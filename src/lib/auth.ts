@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { SESSION_COOKIE, USER_SESSION_COOKIE, verifySessionToken, type SessionPayload } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 10);
@@ -36,6 +37,24 @@ export async function getSession(): Promise<SessionPayload | null> {
   return session;
 }
 
+/**
+ * Helper helper para validar sessões administrativas.
+ * Se a sessão for inválida ou não tiver as permissões necessárias, retorna um NextResponse com erro 403.
+ * Caso contrário, retorna um objeto contendo a sessão ativa.
+ */
+export async function requireAdminSession(allowedRoles?: string[]): Promise<{ session: SessionPayload } | NextResponse> {
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: "Não autorizado." }, { status: 403 });
+  }
+
+  if (allowedRoles && !allowedRoles.includes(session.role)) {
+    return NextResponse.json({ error: "Não autorizado." }, { status: 403 });
+  }
+
+  return { session };
+}
+
 export async function getUserSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get(USER_SESSION_COOKIE)?.value;
@@ -58,3 +77,4 @@ export async function getUserSession(): Promise<SessionPayload | null> {
 
 export { SESSION_COOKIE, USER_SESSION_COOKIE, SESSION_COOKIE_MAX_AGE, ADMIN_SESSION_DURATION_SECONDS, createSessionToken } from "@/lib/session";
 export type { SessionPayload } from "@/lib/session";
+

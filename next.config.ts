@@ -6,7 +6,9 @@ import type { NextConfig } from "next";
 // navegador. Em produção nenhum dos dois é necessário e enfraquece a CSP contra XSS,
 // então só liberamos em dev. O app não usa <script> inline nem eval() no próprio
 // código (grep confirmou) — isso é só para o runtime de desenvolvimento do Next.
-const scriptSrc = process.env.NODE_ENV === "production" ? "'self'" : "'self' 'unsafe-eval' 'unsafe-inline'";
+const scriptSrc = process.env.NODE_ENV === "production" 
+  ? "'self' https://challenges.cloudflare.com" 
+  : "'self' 'unsafe-eval' 'unsafe-inline' https://challenges.cloudflare.com";
 
 const nextConfig: NextConfig = {
   images: {
@@ -30,7 +32,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: `default-src 'self'; script-src ${scriptSrc}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self'; connect-src 'self';`,
+            value: `default-src 'self'; script-src ${scriptSrc}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self'; connect-src 'self'; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://challenges.cloudflare.com;`,
           },
           {
             key: "X-Frame-Options",

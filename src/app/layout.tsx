@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { Russo_One } from "next/font/google";
 import "./globals.css";
-import SiteShell from "@/components/SiteShell";
+import SiteShell from "@/components/layout/SiteShell";
+
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 const russoOne = Russo_One({ subsets: ["latin"], weight: "400", variable: "--font-display" });

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { 
   ShoppingBag,
@@ -6,10 +8,12 @@ import {
   MapPin, 
   Star,
   Lock,
+  Unlock,
   ArrowRight
 } from "lucide-react";
 import { formatPrice } from "@/lib/data";
 import CardCover from "@/components/ui/CardCover";
+import { useUserSession } from "@/hooks/useUserSession";
 
 // Curated example listings to show what the marketplace offers
 const EXAMPLE_LISTINGS = [
@@ -24,7 +28,8 @@ const EXAMPLE_LISTINGS = [
     acceptsTrade: true,
     userNickname: "PedroSwitch",
     userReputation: 99,
-    photo: "/images/marketingPlace/zelda.jpg"
+    photo: "/images/marketingPlace/zelda.jpg",
+    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Pedro"
   },
   {
     id: "ex-2",
@@ -37,21 +42,22 @@ const EXAMPLE_LISTINGS = [
     acceptsTrade: false,
     userNickname: "GamingZone",
     userReputation: 97,
-    photo: "/images/marketingPlace/DualSense Edge.png"
+    photo: "/images/marketingPlace/DualSense Edge.png",
+    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=GamingZone"
   },
   {
     id: "ex-3",
     title: "Console Xbox Series X 1TB - Com 2 Controles",
     platform: "Console Xbox",
-    condition: "bom estado",
-    price: 3200.00,
+    condition: "usado",
+    price: 3450.00,
     city: "Belo Horizonte",
     state: "MG",
     acceptsTrade: true,
     userNickname: "XboxFan99",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=XboxFan",
     userReputation: 95,
-    photo: "/images/marketingPlace/Xbox_Series.jpg"
+    photo: "/images/marketingPlace/Xbox_Series.jpg",
+    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=XboxFan"
   }
 ];
 
@@ -60,6 +66,9 @@ interface MarketplaceFeaturedProps {
 }
 
 export default function MarketplaceFeatured({ activeListings }: MarketplaceFeaturedProps = {}) {
+  const user = useUserSession();
+  const isLoggedIn = !!user;
+
   return (
     <section className="max-w-7xl mx-auto px-4 py-12">
       {/* Informative Header / Hero Box */}
@@ -67,7 +76,7 @@ export default function MarketplaceFeatured({ activeListings }: MarketplaceFeatu
         {/* Glow Effects */}
         <div className="absolute top-0 right-0 w-80 h-80 bg-green-500/5 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-purple-500/5 rounded-full blur-[100px] pointer-events-none" />
-
+ 
         <div className="relative z-10 grid lg:grid-cols-12 gap-8 items-center">
           {/* Main Info */}
           <div className="lg:col-span-7 space-y-5">
@@ -78,7 +87,7 @@ export default function MarketplaceFeatured({ activeListings }: MarketplaceFeatu
             <p className="text-gray-400 text-sm md:text-base max-w-xl leading-relaxed">
               O portal Upa que Passa conta com uma seção exclusiva onde você pode comprar, vender e trocar mídias físicas ou acessórios diretamente com outros membros do portal de forma 100% gratuita.
             </p>
-
+ 
             {/* Feature Bullets */}
             <div className="grid sm:grid-cols-3 gap-4 pt-2">
               <div className="flex items-start gap-3 bg-white/[0.02] border border-white/5 p-3.5 rounded-xl">
@@ -90,7 +99,7 @@ export default function MarketplaceFeatured({ activeListings }: MarketplaceFeatu
                   <p className="text-[11px] text-gray-400">Veja e crie anúncios de itens gamers rapidamente.</p>
                 </div>
               </div>
-
+ 
               <div className="flex items-start gap-3 bg-white/[0.02] border border-white/5 p-3.5 rounded-xl">
                 <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
                   <ArrowLeftRight className="w-5 h-5" />
@@ -100,7 +109,7 @@ export default function MarketplaceFeatured({ activeListings }: MarketplaceFeatu
                   <p className="text-[11px] text-gray-400">Pesquise por console, preço e estado de conservação.</p>
                 </div>
               </div>
-
+ 
               <div className="flex items-start gap-3 bg-white/[0.02] border border-white/5 p-3.5 rounded-xl">
                 <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
                   <MapPin className="w-5 h-5" />
@@ -112,12 +121,18 @@ export default function MarketplaceFeatured({ activeListings }: MarketplaceFeatu
               </div>
             </div>
           </div>
-
+ 
           {/* Action Callouts */}
           <div className="lg:col-span-5 flex flex-col sm:flex-row lg:flex-col gap-4 justify-center items-stretch lg:pl-6 border-t lg:border-t-0 lg:border-l border-white/5 pt-6 lg:pt-0">
             <div className="flex-1 text-center lg:text-left space-y-1 mb-2 sm:mb-0 lg:mb-4">
-              <span className="text-xs text-gray-500 block uppercase tracking-wider font-bold">Faça parte do ecossistema</span>
-              <p className="text-sm text-gray-300">Cadastre-se agora para publicar anúncios ou entrar em contato com vendedores.</p>
+              <span className="text-xs text-gray-500 block uppercase tracking-wider font-bold">
+                {isLoggedIn ? "Bem-vindo ao Ecossistema" : "Faça parte do ecossistema"}
+              </span>
+              <p className="text-sm text-gray-300">
+                {isLoggedIn 
+                  ? "Acesse a área de anúncios para negociar seus itens ou ver ofertas de outros membros."
+                  : "Cadastre-se agora para publicar anúncios ou entrar em contato com vendedores."}
+              </p>
             </div>
             
             <div className="flex flex-col sm:flex-row gap-3 w-full">
@@ -125,13 +140,13 @@ export default function MarketplaceFeatured({ activeListings }: MarketplaceFeatu
                 href="/marketplace" 
                 className="flex-1 flex items-center justify-center gap-2 px-5 py-3.5 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-green-950/20 active:scale-[0.98]"
               >
-                <ArrowRight className="w-4 h-4" /> Mais informações
+                <ArrowRight className="w-4 h-4" /> {isLoggedIn ? "Acessar Marketplace" : "Mais informações"}
               </Link>
             </div>
           </div>
         </div>
       </div>
-
+ 
       {/* Featured Listings Subsection Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
@@ -142,7 +157,7 @@ export default function MarketplaceFeatured({ activeListings }: MarketplaceFeatu
           Exemplos ilustrativos
         </span>
       </div>
-
+ 
       {/* Mock Listings Grid with Blur overlay */}
       <div className="relative">
         <div className="grid md:grid-cols-3 gap-6 select-none pointer-events-none filter blur-[3px] opacity-40">
@@ -161,7 +176,7 @@ export default function MarketplaceFeatured({ activeListings }: MarketplaceFeatu
                     {listing.platform}
                   </span>
                 </div>
-
+ 
                 {/* Condition & Trade badges */}
                 <div className="absolute top-3 left-3 flex flex-col gap-1.5">
                   <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-blue-500 text-white">
@@ -169,7 +184,7 @@ export default function MarketplaceFeatured({ activeListings }: MarketplaceFeatu
                   </span>
                 </div>
               </div>
-
+ 
               {/* Info block */}
               <div className="p-5 flex-1 flex flex-col justify-between">
                 <div>
@@ -188,7 +203,7 @@ export default function MarketplaceFeatured({ activeListings }: MarketplaceFeatu
                     </span>
                   </div>
                 </div>
-
+ 
                 {/* User card row */}
                 <div className="flex items-center gap-2.5 pt-3.5 border-t border-white/5">
                   <img src={listing.userAvatar} alt="" className="w-7 h-7 rounded-full bg-white/5" />
@@ -206,27 +221,29 @@ export default function MarketplaceFeatured({ activeListings }: MarketplaceFeatu
             </div>
           ))}
         </div>
-
+ 
         {/* Lock / Authentication Overlay */}
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-t from-[#07070a] via-[#07070a]/80 to-transparent p-6 text-center">
           <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-900/30 text-white mb-5 animate-pulse">
-            <Lock className="w-6 h-6" />
+            {isLoggedIn ? <Unlock className="w-6 h-6" /> : <Lock className="w-6 h-6" />}
           </div>
           
           <h4 className="text-xl md:text-2xl font-black text-white mb-2 max-w-md">
-            Desbloqueie o Acesso ao Marketplace
+            {isLoggedIn ? "Marketplace Desbloqueado" : "Desbloqueie o Acesso ao Marketplace"}
           </h4>
           
           <p className="text-gray-400 text-sm max-w-sm mb-6 leading-relaxed">
-            Cadastre-se na plataforma para visualizar todos os anúncios reais de outros usuários e negociar diretamente.
+            {isLoggedIn 
+              ? "Você já tem acesso completo a todos os anúncios reais. Entre para conferir as novidades!"
+              : "Cadastre-se na plataforma para visualizar todos os anúncios reais de outros usuários e negociar diretamente."}
           </p>
-
+ 
           <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
             <Link
-              href="/cadastrar"
+              href={isLoggedIn ? "/marketplace" : "/cadastrar"}
               className="flex-1 flex items-center justify-center gap-2 px-5 py-3.5 bg-green-500 hover:bg-green-400 text-white font-bold rounded-xl transition-all shadow-md shadow-green-950/20 active:scale-[0.98]"
             >
-              Criar Conta Grátis
+              {isLoggedIn ? "Acessar Marketplace" : "Criar Conta Grátis"}
             </Link>
           </div>
         </div>
@@ -234,3 +251,4 @@ export default function MarketplaceFeatured({ activeListings }: MarketplaceFeatu
     </section>
   );
 }
+

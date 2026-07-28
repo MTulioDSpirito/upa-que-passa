@@ -1,21 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useFetchData } from "./useFetchData";
 import { Game } from "@/lib/types";
 
 export function useAllGames(): [Game[], (game: Game) => void] {
-  const [allGames, setAllGames] = useState<Game[]>([]);
-
-  useEffect(() => {
-    fetch(`/api/admin/games?t=${Date.now()}`, { cache: "no-store" })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data?.games) {
-          setAllGames(data.games);
-        }
-      })
-      .catch(() => {});
-  }, []);
+  const [allGames, setAllGames] = useFetchData<Game[]>("/api/admin/games", [], "games");
 
   function addGame(game: Game) {
     setAllGames((prev) => {
@@ -31,3 +20,4 @@ export function useAllGames(): [Game[], (game: Game) => void] {
 
   return [allGames, addGame];
 }
+
