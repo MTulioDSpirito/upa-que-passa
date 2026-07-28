@@ -1,30 +1,54 @@
-"use client";
-
-import { use, useState } from "react";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronRight, MapPin, Heart, Share2, Eye, Star, Package, Truck, MessageSquare, Shield, ChevronLeft } from "lucide-react";
+import { ChevronRight, MapPin, Eye, Star, Package, Truck, Shield } from "lucide-react";
 import { LISTINGS, formatPrice, formatDate } from "@/lib/data";
-import { useAllGames } from "@/hooks/useAllGames";
+import { readAdminGames } from "@/lib/adminGames";
+import { SITE_URL } from "@/lib/site";
+import { PhotoGallery, ContactBox } from "./ListingInteractions";
 
 interface Props { params: Promise<{ id: string }> }
 
-export default function ListingPage({ params }: Props) {
-  const { id } = use(params);
-  const [GAMES] = useAllGames();
-  const listing = LISTINGS.find((l) => l.id === id);
-  const game = listing ? GAMES.find((g) => g.id === listing.gameId) : null;
-  const [photoIdx, setPhotoIdx] = useState(0);
-  const [showContact, setShowContact] = useState(false);
+async function getListing(id: string) {
+  const listing = LISTINGS.find((l) => l.id === id) ?? null;
+  if (!listing) return { listing: null, game: null };
+  const games = await readAdminGames();
+  const game = listing.gameId ? games.find((g) => g.id === listing.gameId) ?? null : null;
+  return { listing, game };
+}
 
-  if (!listing) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-gray-500">
-        <div className="text-6xl mb-4">😢</div>
-        <h1 className="text-2xl font-bold text-white mb-2">Anúncio não encontrado</h1>
-        <Link href="/marketplace" className="text-green-400 hover:text-green-300">← Voltar ao marketplace</Link>
-      </div>
-    );
-  }
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const { listing } = await getListing(id);
+  if (!listing) return { title: "Anúncio não encontrado — Upa que Passa" };
+
+  const url = `${SITE_URL}/marketplace/${listing.id}`;
+  const description = `${listing.description.slice(0, 150)} — ${formatPrice(listing.price)}`;
+  return {
+    title: `${listing.title} — Marketplace | Upa que Passa`,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: listing.title,
+      description,
+      type: "website",
+      url,
+      images: listing.photos[0] ? [{ url: listing.photos[0] }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: listing.title,
+      description,
+      images: listing.photos[0] ? [listing.photos[0]] : undefined,
+    },
+  };
+}
+
+export default async function ListingPage({ params }: Props) {
+  const { id } = await params;
+  const { listing, game } = await getListing(id);
+
+  if (!listing) notFound();
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
@@ -40,60 +64,12 @@ export default function ListingPage({ params }: Props) {
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Photos + Main info */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Photo gallery */}
-          <div className="bg-[#0f0f18] border border-white/5 rounded-2xl overflow-hidden">
-            <div className="relative aspect-video">
-              <img
-                src={listing.photos[photoIdx]}
-                alt={listing.title}
-                className="w-full h-full object-contain bg-black/40"
-              />
-              {listing.photos.length > 1 && (
-                <>
-                  <button
-                    onClick={() => setPhotoIdx(Math.max(0, photoIdx - 1))}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/60 text-white rounded-full flex items-center justify-center"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => setPhotoIdx(Math.min(listing.photos.length - 1, photoIdx + 1))}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/60 text-white rounded-full flex items-center justify-center"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
-                </>
-              )}
-            </div>
-            {listing.photos.length > 1 && (
-              <div className="flex gap-2 p-3 overflow-x-auto">
-                {listing.photos.map((photo, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setPhotoIdx(i)}
-                    className={`w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-all ${
-                      i === photoIdx ? "border-green-500" : "border-white/10"
-                    }`}
-                  >
-                    <img src={photo} alt="" className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          <PhotoGallery photos={listing.photos} title={listing.title} />
 
           {/* Listing details */}
           <div className="bg-[#0f0f18] border border-white/5 rounded-2xl p-6">
             <div className="flex items-start justify-between gap-4 mb-4">
               <h1 className="text-2xl font-black text-white leading-tight">{listing.title}</h1>
-              <div className="flex gap-2">
-                <button className="p-2 bg-white/5 border border-white/10 text-gray-400 hover:text-red-400 rounded-xl transition-colors">
-                  <Heart className="w-5 h-5" />
-                </button>
-                <button className="p-2 bg-white/5 border border-white/10 text-gray-400 hover:text-white rounded-xl transition-colors">
-                  <Share2 className="w-5 h-5" />
-                </button>
-              </div>
             </div>
 
             <div className="flex items-center gap-3 flex-wrap mb-4">
@@ -189,31 +165,7 @@ export default function ListingPage({ params }: Props) {
           {/* Price + CTA */}
           <div className="bg-[#0f0f18] border border-green-800/20 rounded-2xl p-5 sticky top-20">
             <div className="text-3xl font-black text-green-400 mb-4">{formatPrice(listing.price)}</div>
-
-            <button
-              onClick={() => setShowContact(!showContact)}
-              className="w-full flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white font-bold rounded-xl transition-all mb-3"
-            >
-              <MessageSquare className="w-5 h-5" />
-              Tenho Interesse
-            </button>
-
-            {showContact && (
-              <div className="bg-white/5 rounded-xl p-4 mb-3 text-sm">
-                <p className="text-gray-300 mb-3">Escolha como quer entrar em contato:</p>
-                <button className="w-full py-2.5 mb-2 bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/30 rounded-xl font-semibold text-sm hover:bg-[#25D366]/30 transition-all">
-                  💬 Conversar pelo WhatsApp
-                </button>
-                <button className="w-full py-2.5 bg-purple-600/20 text-purple-300 border border-purple-600/30 rounded-xl font-semibold text-sm hover:bg-purple-600/30 transition-all">
-                  💬 Chat Interno
-                </button>
-              </div>
-            )}
-
-            <button className="w-full flex items-center justify-center gap-2 py-3 bg-white/5 border border-white/10 text-white font-semibold rounded-xl hover:bg-white/10 transition-all">
-              <Heart className="w-4 h-4" />
-              Salvar Anúncio
-            </button>
+            <ContactBox />
           </div>
 
           {/* Seller info */}

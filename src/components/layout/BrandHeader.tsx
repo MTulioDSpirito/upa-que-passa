@@ -55,7 +55,7 @@ export default function BrandHeader() {
               </span>
             </div>
 
-            <h1 className="font-display text-3xl sm:text-5xl font-extrabold tracking-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex items-center gap-x-2 flex-wrap">
+            <p className="font-display text-3xl sm:text-5xl font-extrabold tracking-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex items-center gap-x-2 flex-wrap">
               <span className="text-white bg-clip-text bg-gradient-to-b from-white via-white to-gray-300">
                 UPA
               </span>
@@ -65,7 +65,7 @@ export default function BrandHeader() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-neon to-[#00d0ff] drop-shadow-[0_0_15px_rgba(0,114,206,0.4)]">
                 PASSA
               </span>
-            </h1>
+            </p>
 
             <p className="text-xs sm:text-sm text-gray-300 mt-2 max-w-xl font-medium leading-relaxed drop-shadow-sm">
               Portal brasileiro de{" "}

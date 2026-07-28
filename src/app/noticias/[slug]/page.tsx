@@ -1,14 +1,13 @@
-"use client";
-
-import { use, useState, useEffect } from "react";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
-import { ChevronRight, Eye, Heart, Calendar, User, Share2, Tag, Check, Clock } from "lucide-react";
+import { ChevronRight, Calendar, Clock, Tag } from "lucide-react";
 import { formatDate } from "@/lib/data";
-import { useAllNews } from "@/hooks/useAllNews";
-import { useUserSession } from "@/hooks/useUserSession";
+import { readAdminNews } from "@/lib/adminNews";
+import { SITE_URL } from "@/lib/site";
 import team from "@/mocks/team";
 import CardCover from "@/components/ui/CardCover";
+import { ViewsCounter, ReactionBar } from "./NewsInteractions";
 
 interface Props { params: Promise<{ slug: string }> }
 
@@ -19,124 +18,90 @@ const getAuthorInfo = (authorName: string) => {
   const cleanName = name.toLowerCase();
 
   return team.find((t) => t.name.toLowerCase() === cleanName) || {
-    name: name,
+    name,
     role: "Redator",
     avatar: avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`,
   };
 };
 
-export default function NewsArticlePage({ params }: Props) {
-  const { slug } = use(params);
-  const NEWS = useAllNews();
-  const article = NEWS.find((n) => n.slug === slug);
+const getReadTime = (content: string) => {
+  const words = content.split(/\s+/).length;
+  return Math.ceil(words / 200) || 1;
+};
 
-  const currentUser = useUserSession();
-  const router = useRouter();
-  const pathname = usePathname();
+export const revalidate = 60;
 
-  // States
-  const [liked, setLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(article ? article.likes : 0);
-  const [viewsCount, setViewsCount] = useState(article ? article.views : 0);
-  const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    if (article) {
-      setLikesCount(article.likes);
-      setViewsCount(article.views);
-      setLiked(false);
-      // Fetch dynamic like count & user liked status from API
-      fetch(`/api/noticias/like?articleId=${article.id}`)
-        .then((res) => (res.ok ? res.json() : null))
-        .then((data) => {
-          if (data) {
-            setLiked(data.liked);
-            setLikesCount(data.likesCount);
-          }
+async function getArticle(slug: string) {
+  const news = await readAdminNews();
+  const article = news.find((n) => n.slug === slug) ?? null;
+  const related = article
+    ? news
+        .filter((n) => n.slug !== slug)
+        .sort((a, b) => {
+          if (a.category === article.category && b.category !== article.category) return -1;
+          if (a.category !== article.category && b.category === article.category) return 1;
+          return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
         })
-        .catch(() => {});
-    }
-  }, [article, currentUser]);
+        .slice(0, 3)
+    : [];
+  return { article, related };
+}
 
-  useEffect(() => {
-    if (article) {
-      const sessionKey = `viewed_news_${article.id}`;
-      if (!sessionStorage.getItem(sessionKey)) {
-        fetch("/api/noticias/view", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ articleId: article.id }),
-        })
-          .then((res) => (res.ok ? res.json() : null))
-          .then((data) => {
-            if (data && typeof data.views === "number") {
-              setViewsCount(data.views);
-              sessionStorage.setItem(sessionKey, "true");
-            }
-          })
-          .catch(() => {});
-      }
-    }
-  }, [article]);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const { article } = await getArticle(slug);
+  if (!article) return { title: "Notícia não encontrada — Upa que Passa" };
 
-  if (!article) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-gray-500">
-        <div className="text-6xl mb-4">📰</div>
-        <h1 className="text-2xl font-bold text-white mb-2">Notícia não encontrada</h1>
-        <Link href="/noticias" className="text-blue-neon hover:text-blue-300">← Voltar às notícias</Link>
-      </div>
-    );
-  }
-
-  // Prioritize related articles in the same category
-  const related = NEWS.filter((n) => n.slug !== slug)
-    .sort((a, b) => {
-      if (a.category === article.category && b.category !== article.category) return -1;
-      if (a.category !== article.category && b.category === article.category) return 1;
-      return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
-    })
-    .slice(0, 3);
-
-  const getReadTime = (content: string) => {
-    const words = content.split(/\s+/).length;
-    return Math.ceil(words / 200) || 1;
+  const url = `${SITE_URL}/noticias/${article.slug}`;
+  return {
+    title: `${article.title} — Upa que Passa`,
+    description: article.excerpt,
+    alternates: { canonical: url },
+    openGraph: {
+      title: article.title,
+      description: article.excerpt,
+      type: "article",
+      url,
+      images: article.cover ? [{ url: article.cover }] : undefined,
+      publishedTime: article.publishedAt,
+      authors: [article.author],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: article.title,
+      description: article.excerpt,
+      images: article.cover ? [article.cover] : undefined,
+    },
   };
+}
 
-  const handleLike = async () => {
-    if (!currentUser) {
-      router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
-      return;
-    }
-    try {
-      const res = await fetch("/api/noticias/like", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ articleId: article.id }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setLiked(data.liked);
-        setLikesCount(data.likesCount);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+export default async function NewsArticlePage({ params }: Props) {
+  const { slug } = await params;
+  const { article, related } = await getArticle(slug);
 
-  const handleShare = () => {
-    if (typeof window !== "undefined") {
-      navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
+  if (!article) notFound();
 
   const articleParagraphs = article.content.split("\n\n").filter(Boolean);
   const authorInfo = getAuthorInfo(article.author);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: article.title,
+    description: article.excerpt,
+    image: article.cover ? [article.cover] : undefined,
+    datePublished: article.publishedAt,
+    author: [{ "@type": "Person", name: authorInfo.name }],
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-10 hero-glow-bg">
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
         <Link href="/" className="hover:text-white transition-colors">Home</Link>
@@ -172,9 +137,7 @@ export default function NewsArticlePage({ params }: Props) {
           <span className="flex items-center gap-1.5">
             <Clock className="w-4 h-4" /> {getReadTime(article.content)} min de leitura
           </span>
-          <span className="flex items-center gap-1.5">
-            <Eye className="w-4 h-4" /> {viewsCount.toLocaleString("pt-BR")} views
-          </span>
+          <ViewsCounter articleId={article.id} initialViews={article.views} />
         </div>
       </div>
 
@@ -227,39 +190,7 @@ export default function NewsArticlePage({ params }: Props) {
       </div>
 
       {/* Reactions */}
-      <div className="flex items-center gap-4 mb-14">
-        <button 
-          onClick={handleLike}
-          className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition-all duration-200 btn-press ${
-            liked 
-              ? "bg-red-500 text-white shadow-lg shadow-red-500/20" 
-              : "bg-red-900/10 border border-red-800/20 text-red-400 hover:bg-red-900/25"
-          }`}
-        >
-          <Heart className={`w-4 h-4 ${liked ? "fill-white" : ""}`} />
-          {likesCount} Curtidas
-        </button>
-        <button 
-          onClick={handleShare}
-          className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition-all duration-200 btn-press ${
-            copied
-              ? "bg-green-600 text-white shadow-lg shadow-green-600/20"
-              : "bg-white/5 border border-white/10 text-gray-400 hover:text-white"
-          }`}
-        >
-          {copied ? (
-            <>
-              <Check className="w-4 h-4" />
-              Copiado!
-            </>
-          ) : (
-            <>
-              <Share2 className="w-4 h-4" />
-              Compartilhar
-            </>
-          )}
-        </button>
-      </div>
+      <ReactionBar articleId={article.id} initialLikes={article.likes} />
 
       {/* Related */}
       {related.length > 0 && (
@@ -267,9 +198,9 @@ export default function NewsArticlePage({ params }: Props) {
           <h2 className="text-2xl font-black text-white mb-6">Notícias Relacionadas</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {related.map((rel) => (
-              <Link 
-                key={rel.id} 
-                href={`/noticias/${rel.slug}`} 
+              <Link
+                key={rel.id}
+                href={`/noticias/${rel.slug}`}
                 className="group game-card bg-[#0f0f18] border border-white/5 rounded-2xl overflow-hidden hover:border-purple-500/20 transition-all flex flex-col"
               >
                 <div className="h-40 overflow-hidden relative">
