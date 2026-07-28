@@ -207,6 +207,7 @@ model ArticleViewLog {
   viewedAt  DateTime @default(now())
 
   @@unique([articleId, ipHash])
+  @@index([viewedAt])
 }
 
 model NewsLike {

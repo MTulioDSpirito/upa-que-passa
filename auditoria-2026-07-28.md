@@ -17,9 +17,8 @@ Escopo: site público (`src/app/**` exceto `/admin`) + camada de dados (`prisma/
 
 Build/lint sem regressão em cada etapa (244 problemas, melhorou de 248).
 
-**1.2 — `useFetchData` invalida cache HTTP em toda requisição**
-`src/hooks/useFetchData.ts:23-25` acrescenta `?_t=${Date.now()}` em toda URL — usado por `useAllGames`/`useAllNews`/`useAllReviews`/`useAllYoutubeVideos`. Isso anula o header `Cache-Control: s-maxage=60` que `/api/admin/games` já define.
-*Fix:* remover o timestamp; confiar no `Cache-Control` existente (ou trocar por SWR/React Query).
+**1.2 — [RESOLVIDO 2026-07-28] `useFetchData` invalida cache HTTP em toda requisição**
+Removido o `?_t=${Date.now()}` do `fetch()` interno. Confirmado que os 4 consumidores (`useAllGames`/`useAllNews`/`useAllReviews`/`useAllYoutubeVideos`) só buscam uma vez por mount (sem polling), então a remoção não muda o comportamento de atualização — só deixa de invalidar à toa o `Cache-Control: s-maxage=60` já configurado em `/api/admin/games` (que só faz efeito real com CDN em produção; o projeto ainda não tem deploy, então risco de "dado desatualizado" local é nulo agora). Build/lint sem regressão.
 
 **1.3 — `AdminPanelLayout` busca a tabela de jogos inteira independente da aba ativa**
 `src/app/admin/AdminPanelLayout.tsx:61` chama `useAllGames()` incondicionalmente, mesmo em abas que nunca usam `allGames` (Youtube, Comments, Admin Users, Password Resets).
@@ -53,9 +52,8 @@ Confirmado que continua sem `select`/`take`. Na escala atual (dezenas a poucas c
 `src/app/api/admin/entregas/route.ts:11-20` carrega a tabela inteira com join toda vez que a fila de revisão abre.
 *Fix:* paginar ou pelo menos filtrar PENDING com `take`; considerar `@@index([status, createdAt])` composto.
 
-**2.3 — `ArticleViewLog` sem retenção/limpeza — a tabela que mais cresce no sistema**
-`prisma/schema.prisma:203-210`. 1 linha por (artigo, IP) a cada 30 min, sem nenhum cron/rota que apague linhas antigas.
-*Fix:* job periódico de limpeza (ex.: linhas com mais de 90 dias) + `@@index([viewedAt])` pra suportar a limpeza barata.
+**2.3 — [RESOLVIDO 2026-07-28] `ArticleViewLog` sem retenção/limpeza — a tabela que mais cresce no sistema**
+Adicionado `@@index([viewedAt])` (migration `20260728201609_add_article_view_log_index`). Como o projeto não tem infra de cron, a limpeza roda oportunisticamente dentro do próprio `POST /api/noticias/view` — ~1% das requisições disparam um `deleteMany` de linhas com mais de 90 dias, em vez de rodar em toda requisição.
 
 **2.4 — [RESOLVIDO 2026-07-28, parcial] `CommentReaction.commentId` sem índice independente**
 Adicionado `@@index([commentId])` em `CommentReaction` (mesma migration do item 2.1). `Favorite.gameId` continua sem índice independente — baixo volume, não priorizado agora.
@@ -74,9 +72,8 @@ Boa higiene no geral (`forgot-password`/`reset-password` já limpam nos próprio
 
 ### Bloqueantes
 
-**3.1 — Inputs de texto perdem todo indicador de foco (2.4.7 Focus Visible)**
-`SearchModal.tsx:75`, `AuthModal.tsx:99`, `ReviewClient.tsx:680` (textarea de comentário) usam `focus:outline-none` sem substituto. A regra global em `globals.css:50-57` só cobre `button, a, [role="button"]`, não `input`/`textarea`.
-*Fix:* `focus-visible:ring-2 focus-visible:ring-purple-500` nesses inputs.
+**3.1 — [RESOLVIDO 2026-07-28] Inputs de texto perdem todo indicador de foco (2.4.7 Focus Visible)**
+`AuthModal.tsx` é código morto (ver 3.2/3.3), não corrigido. `SearchModal.tsx` — adicionado `focus-within:ring-2 focus-within:border-purple-500/50` no formulário (o input é `bg-transparent` dentro de uma caixa, então o ring fica no container em vez do próprio input). `ReviewClient.tsx` (textarea de comentário) — adicionado `focus-visible:ring-2 focus-visible:ring-purple-500/30` complementando o `focus:border-purple-500/50` já existente. Build/lint sem regressão.
 
 **3.2/3.3 — [RESOLVIDO 2026-07-28, com correção de escopo] `AuthModal` não é usado em lugar nenhum do app**
 Descoberto ao investigar: `AuthModal.tsx` não tem nenhum import/renderização em `src/` (confirmado via grep) — o colaborador removeu seu uso em 20/07/2026 (commit `728bae4`) quando migrou login/cadastro pras páginas dedicadas `/login` e `/cadastrar`. É código morto; corrigir o modal seria esforço desperdiçado. O equivalente real (as duas páginas ao vivo) tinha um problema *mais grave* que o relatório original não pegou: `<label>` sem associação `htmlFor`/`id` com os `<input>` em ambos os formulários (nickname/e-mail/senha/console) — leitor de tela não anunciava o nome do campo (WCAG 1.3.1/4.1.2). Corrigido em `src/app/login/page.tsx` e `src/app/cadastrar/page.tsx`: `htmlFor`/`id` em todos os campos, `aria-label`/`aria-pressed` nos botões de mostrar/ocultar senha, e reforço do indicador de foco (`focus:ring-2`) no `/cadastrar` pra ficar consistente com o `/login`. Testado ao vivo: autofill do Chrome passou a reconhecer os campos corretamente (efeito colateral da associação correta), `find` confirmou nome acessível "Mostrar senha" nos dois toggles, zero erros de console. Build/lint sem regressão (250 problemas, mesmo baseline). *(Foco-trap/Escape/backdrop do relatório original não se aplicam — não são modais, são páginas inteiras.)*
@@ -129,9 +126,8 @@ Investigando antes de corrigir: a seção é um teaser proposital — sempre mos
 **4.7 — `catch` vazio no POST de contagem de views, não só nos GETs**
 `NewsInteractions.tsx:14-26` — se o POST de `/api/noticias/view` falhar, o `sessionStorage` nunca é setado (está dentro do `.then`), então a mesma notícia tenta de novo a cada reload, sem backoff nem sinal pro usuário. Severidade baixa, mas vale documentar se é "fire-and-forget" proposital.
 
-**4.8 — Botões do `ContactBox` sem handler nenhum**
-`src/app/marketplace/[id]/ListingInteractions.tsx:53-83` — "Conversar pelo WhatsApp" (linha 69), "Chat Interno" (72) e "Salvar Anúncio" (78) não têm `onClick`. Usuário clica e nada acontece.
-*Fix:* implementar os handlers ou marcar como "em breve" visualmente.
+**4.8 — [RESOLVIDO 2026-07-28] Botões do `ContactBox` sem handler nenhum**
+Investigado antes de corrigir: `Listing` (tipo em `src/lib/types.ts`) não tem campo de telefone/WhatsApp do vendedor, e não existe chat interno nem API de favoritar anúncio no backend — implementar de verdade seria escopo bem maior que "baixo esforço". Marcado como indisponível: os 3 botões (WhatsApp/Chat Interno/Salvar Anúncio) ganharam `disabled`, `title="Em breve"` e estilo esmaecido + "(Em breve)" no texto, em vez de parecerem funcionais sem fazer nada.
 
 **4.9 — Efeito do carrossel da home reinicia em vez de só pausar**
 `src/components/home/TrendingStrip.tsx:31-45` — `useEffect` com `[slideCount, isPaused]` recria o `setInterval` do zero a cada hover, então passar o mouse repetidamente reseta a contagem de 6s em vez de continuar de onde parou.

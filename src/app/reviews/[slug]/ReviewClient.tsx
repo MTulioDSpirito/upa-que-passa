@@ -677,7 +677,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                       placeholder="Deixe sua review curta sobre o jogo, jogabilidade ou enredo..."
                       value={commentText}
                       onChange={(e) => setCommentText(e.target.value.slice(0, 500))}
-                      className="w-full bg-white/5 border border-white/5 text-white placeholder-gray-600 rounded-2xl px-4 py-3.5 text-sm resize-none h-28 focus:outline-none focus:border-purple-500/50 transition-colors"
+                      className="w-full bg-white/5 border border-white/5 text-white placeholder-gray-600 rounded-2xl px-4 py-3.5 text-sm resize-none h-28 focus:outline-none focus:border-purple-500/50 focus-visible:ring-2 focus-visible:ring-purple-500/30 transition-colors"
                     />
 
                     {submitError && (

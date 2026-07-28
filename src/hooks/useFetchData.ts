@@ -19,12 +19,7 @@ export function useFetchData<T>(
   useEffect(() => {
     let active = true;
 
-    // Adiciona timestamp para evitar cache no fetch de forma dinâmica
-    const fetchUrl = url.includes("?") 
-      ? `${url}&_t=${Date.now()}` 
-      : `${url}?_t=${Date.now()}`;
-
-    fetch(fetchUrl)
+    fetch(url)
       .then((res) => (res.ok ? res.json() : null))
       .then((resData) => {
         if (!active) return;

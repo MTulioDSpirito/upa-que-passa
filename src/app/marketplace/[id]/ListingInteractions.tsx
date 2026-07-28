@@ -66,18 +66,30 @@ export function ContactBox() {
       {showContact && (
         <div className="bg-white/5 rounded-xl p-4 mb-3 text-sm">
           <p className="text-gray-300 mb-3">Escolha como quer entrar em contato:</p>
-          <button className="w-full py-2.5 mb-2 bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/30 rounded-xl font-semibold text-sm hover:bg-[#25D366]/30 transition-all">
-            💬 Conversar pelo WhatsApp
+          <button
+            disabled
+            title="Em breve"
+            className="w-full py-2.5 mb-2 bg-[#25D366]/10 text-[#25D366]/50 border border-[#25D366]/20 rounded-xl font-semibold text-sm cursor-not-allowed"
+          >
+            💬 Conversar pelo WhatsApp <span className="text-xs font-normal">(Em breve)</span>
           </button>
-          <button className="w-full py-2.5 bg-purple-600/20 text-purple-300 border border-purple-600/30 rounded-xl font-semibold text-sm hover:bg-purple-600/30 transition-all">
-            💬 Chat Interno
+          <button
+            disabled
+            title="Em breve"
+            className="w-full py-2.5 bg-purple-600/10 text-purple-300/50 border border-purple-600/20 rounded-xl font-semibold text-sm cursor-not-allowed"
+          >
+            💬 Chat Interno <span className="text-xs font-normal">(Em breve)</span>
           </button>
         </div>
       )}
 
-      <button className="w-full flex items-center justify-center gap-2 py-3 bg-white/5 border border-white/10 text-white font-semibold rounded-xl hover:bg-white/10 transition-all">
+      <button
+        disabled
+        title="Em breve"
+        className="w-full flex items-center justify-center gap-2 py-3 bg-white/5 border border-white/10 text-white/50 font-semibold rounded-xl cursor-not-allowed"
+      >
         <Heart className="w-4 h-4" />
-        Salvar Anúncio
+        Salvar Anúncio <span className="text-xs font-normal">(Em breve)</span>
       </button>
     </>
   );

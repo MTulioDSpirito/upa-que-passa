@@ -63,7 +63,7 @@ export default function SearchModal() {
           }}
         >
           <Dialog.Title className="sr-only">Buscar</Dialog.Title>
-          <form onSubmit={handleSearch} className="flex items-center gap-2 border border-white/10 bg-white/5 rounded-xl px-3 py-2.5">
+          <form onSubmit={handleSearch} className="flex items-center gap-2 border border-white/10 bg-white/5 rounded-xl px-3 py-2.5 focus-within:border-purple-500/50 focus-within:ring-2 focus-within:ring-purple-500/20 transition-colors">
             <button type="submit" className="text-gray-500 hover:text-white transition-colors flex-shrink-0" title="Buscar">
               <Search className="w-4 h-4" />
             </button>
