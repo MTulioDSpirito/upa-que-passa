@@ -21,7 +21,8 @@ export function useUserSession() {
         if (!cancelled) setUser(data.user);
       })
       .catch(() => {
-        if (!cancelled) setUser(null);
+        // Network/parse failure isn't the same as "no session" — leave state
+        // as undefined (loading) instead of falsely asserting logged-out.
       });
     return () => {
       cancelled = true;

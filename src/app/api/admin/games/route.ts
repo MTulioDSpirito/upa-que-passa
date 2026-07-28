@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import { readAdminGames, appendAdminGame, writeAdminGames } from "@/lib/adminGames";
+import { readAdminGames, appendAdminGame, mapGame } from "@/lib/adminGames";
 import { Game } from "@/lib/types";
 import { prisma } from "@/lib/prisma";
 import { isSafeImageUrl } from "@/lib/safeUrl";
@@ -28,40 +28,7 @@ export async function GET(request: Request) {
         { createdAt: "desc" }
       ]
     });
-    const games = dbGames.map((g) => ({
-      id: g.id,
-      slug: g.slug,
-      title: g.title,
-      cover: g.cover,
-      trailer: g.trailer ?? undefined,
-      gallery: g.gallery,
-      description: g.description,
-      synopsis: g.synopsis,
-      developer: g.developer,
-      publisher: g.publisher,
-      engine: g.engine ?? undefined,
-      releaseDate: g.releaseDate,
-      suggestedPrice: g.suggestedPrice,
-      platforms: g.platforms,
-      genres: g.genres,
-      avgPlayTime: g.avgPlayTime ?? undefined,
-      online: g.online,
-      offline: g.offline,
-      maxPlayers: g.maxPlayers,
-      languages: g.languages,
-      subtitles: g.subtitles,
-      dubbing: g.dubbing,
-      ageRating: g.ageRating,
-      links: (g.links as any) || [],
-      metacriticScore: g.metacriticScore ?? undefined,
-      openCriticScore: g.openCriticScore ?? undefined,
-      userScore: g.userScore,
-      adminScore: g.adminScore ?? undefined,
-      siteScores: (g.siteScores as any) || [],
-      worldAvg: g.worldAvg ?? undefined,
-      featured: g.featured,
-      tags: g.tags,
-    }));
+    const games = dbGames.map(mapGame);
     return NextResponse.json({ games }, {
       headers: {
         "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30"
@@ -110,40 +77,7 @@ export async function GET(request: Request) {
     })
   ]);
 
-  const games = dbGames.map((g) => ({
-    id: g.id,
-    slug: g.slug,
-    title: g.title,
-    cover: g.cover,
-    trailer: g.trailer ?? undefined,
-    gallery: g.gallery,
-    description: g.description,
-    synopsis: g.synopsis,
-    developer: g.developer,
-    publisher: g.publisher,
-    engine: g.engine ?? undefined,
-    releaseDate: g.releaseDate,
-    suggestedPrice: g.suggestedPrice,
-    platforms: g.platforms,
-    genres: g.genres,
-    avgPlayTime: g.avgPlayTime ?? undefined,
-    online: g.online,
-    offline: g.offline,
-    maxPlayers: g.maxPlayers,
-    languages: g.languages,
-    subtitles: g.subtitles,
-    dubbing: g.dubbing,
-    ageRating: g.ageRating,
-    links: (g.links as any) || [],
-    metacriticScore: g.metacriticScore ?? undefined,
-    openCriticScore: g.openCriticScore ?? undefined,
-    userScore: g.userScore,
-    adminScore: g.adminScore ?? undefined,
-    siteScores: (g.siteScores as any) || [],
-    worldAvg: g.worldAvg ?? undefined,
-    featured: g.featured,
-    tags: g.tags,
-  }));
+  const games = dbGames.map(mapGame);
 
   return NextResponse.json({
     games,
@@ -296,10 +230,12 @@ export async function PUT(request: Request) {
       trailer, gallery, description, metacriticScore
     } = parsed.data;
 
-    const games = await readAdminGames();
-    const index = games.findIndex((g) => g.id === id);
+    const existing = await prisma.game.findUnique({
+      where: { id },
+      select: { description: true, synopsis: true },
+    });
 
-    if (index === -1) {
+    if (!existing) {
       return NextResponse.json({ error: "Jogo não encontrado." }, { status: 404 });
     }
 
@@ -308,29 +244,28 @@ export async function PUT(request: Request) {
       : [];
     const worldAvg = metacriticScore ? metacriticScore / 10 : undefined;
 
-    const updatedGame: Game = {
-      ...games[index],
-      title,
-      cover,
-      developer,
-      publisher: publisher || developer,
-      releaseDate,
-      suggestedPrice,
-      platforms,
-      genres,
-      trailer: trailer || undefined,
-      gallery: gallery && gallery.length > 0 ? gallery : [cover],
-      description: description || games[index].description,
-      synopsis: synopsis || games[index].synopsis,
-      metacriticScore: metacriticScore || undefined,
-      siteScores,
-      worldAvg,
-    };
+    const dbGame = await prisma.game.update({
+      where: { id },
+      data: {
+        title,
+        cover,
+        developer,
+        publisher: publisher || developer,
+        releaseDate,
+        suggestedPrice,
+        platforms,
+        genres,
+        trailer: trailer || null,
+        gallery: gallery && gallery.length > 0 ? gallery : [cover],
+        description: description || existing.description,
+        synopsis: synopsis || existing.synopsis,
+        metacriticScore: metacriticScore || null,
+        siteScores,
+        worldAvg: worldAvg ?? null,
+      },
+    });
 
-    games[index] = updatedGame;
-    await writeAdminGames(games);
-
-    return NextResponse.json({ game: updatedGame });
+    return NextResponse.json({ game: mapGame(dbGame) });
   } catch (error) {
     console.error("Erro ao atualizar jogo:", error);
     return NextResponse.json({ error: "Erro interno do servidor." }, { status: 500 });

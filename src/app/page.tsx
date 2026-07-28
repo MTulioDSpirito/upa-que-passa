@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { LISTINGS } from "@/lib/data";
 import { Game, Review, NewsArticle, YoutubeVideo } from "@/lib/types";
 
 // Home components
@@ -144,8 +143,6 @@ export default async function Home() {
     featuredReviewGame ??
     (featuredGames.find((g) => g.adminScore) ?? featuredGames[0] ?? bestReviewedGames[0]);
 
-  const activeListings = LISTINGS.filter((l) => l.active).slice(0, 3);
-
   return (
     <div className="bg-[#07070a]">
       {/* ─── TRENDING STRIP ───────────────────────────────────── */}
@@ -158,7 +155,7 @@ export default async function Home() {
       <YouTubeVideos initialVideos={videos} />
 
       {/* ─── MARKETPLACE ─────────────────────────────────────── */}
-      <MarketplaceFeatured activeListings={activeListings} />
+      <MarketplaceFeatured />
 
       {/* ─── MELHORES AVALIADOS ───────────────────────────────── */}
       <BestReviewed games={bestReviewedGames} />

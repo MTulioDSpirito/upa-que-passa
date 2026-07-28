@@ -1,18 +1,16 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import { readAdminReviews, writeAdminReviews } from "@/lib/adminReviews";
-import { readAdminGames, writeAdminGames } from "@/lib/adminGames";
+import { readAdminReviews, writeAdminReviews, mapReview } from "@/lib/adminReviews";
 import { Review } from "@/lib/types";
+import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
 async function syncGameAdminScore(gameId: string, score: number | undefined) {
   try {
-    const games = await readAdminGames();
-    const idx = games.findIndex((g) => g.id === gameId);
-    if (idx > -1) {
-      games[idx].adminScore = score !== undefined ? score : games[idx].worldAvg;
-      await writeAdminGames(games);
-    }
+    const adminScore = score !== undefined
+      ? score
+      : (await prisma.game.findUnique({ where: { id: gameId }, select: { worldAvg: true } }))?.worldAvg ?? null;
+    await prisma.game.update({ where: { id: gameId }, data: { adminScore } });
   } catch (err) {
     console.error("Failed to sync game admin score:", err);
   }
@@ -117,26 +115,23 @@ export async function PUT(request: Request) {
       );
     }
 
-    const reviews = await readAdminReviews();
-    const index = reviews.findIndex((r) => r.id === id);
-
-    if (index === -1) {
+    const existing = await prisma.review.findUnique({ where: { id } });
+    if (!existing) {
       return NextResponse.json({ error: "Review não encontrada." }, { status: 404 });
     }
 
-    const updatedReview: Review = {
-      ...reviews[index],
-      ...parsed.data,
-      imageCredits: parsed.data.imageCredits || undefined,
-    };
-
-    reviews[index] = updatedReview;
-    await writeAdminReviews(reviews);
+    const dbReview = await prisma.review.update({
+      where: { id },
+      data: {
+        ...parsed.data,
+        imageCredits: parsed.data.imageCredits || null,
+      },
+    });
 
     // Sync game score
-    await syncGameAdminScore(updatedReview.gameId, updatedReview.overallScore);
+    await syncGameAdminScore(dbReview.gameId, dbReview.overallScore);
 
-    return NextResponse.json({ review: updatedReview });
+    return NextResponse.json({ review: mapReview(dbReview) });
   } catch (error) {
     console.error("Erro ao atualizar review:", error);
     return NextResponse.json({ error: "Erro interno do servidor." }, { status: 500 });
@@ -157,20 +152,15 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "ID inválido." }, { status: 400 });
     }
 
-    const reviews = await readAdminReviews();
-    const reviewToDelete = reviews.find((r) => r.id === id);
-    const filtered = reviews.filter((r) => r.id !== id);
-
-    if (reviews.length === filtered.length) {
+    const existing = await prisma.review.findUnique({ where: { id }, select: { gameId: true } });
+    if (!existing) {
       return NextResponse.json({ error: "Review não encontrada." }, { status: 404 });
     }
 
-    await writeAdminReviews(filtered);
+    await prisma.review.delete({ where: { id } });
 
     // Sync game score (revert to fallback)
-    if (reviewToDelete) {
-      await syncGameAdminScore(reviewToDelete.gameId, undefined);
-    }
+    await syncGameAdminScore(existing.gameId, undefined);
 
     return NextResponse.json({ ok: true });
   } catch (error) {

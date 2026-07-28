@@ -64,7 +64,7 @@ export default function CadastrarPage() {
     }
   }
 
-  const inputClass = "w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500/50 transition-colors";
+  const inputClass = "w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200";
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-10">
@@ -119,27 +119,33 @@ export default function CadastrarPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Nickname *</label>
+                  <label htmlFor="cadastro-nickname" className="block text-sm font-medium text-gray-300 mb-2">Nickname *</label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                    <input type="text" value={form.nickname} onChange={(e) => update("nickname", e.target.value)} placeholder="SeuNick_123" className={`${inputClass} pl-10`} />
+                    <input id="cadastro-nickname" type="text" value={form.nickname} onChange={(e) => update("nickname", e.target.value)} placeholder="SeuNick_123" className={`${inputClass} pl-10`} />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">E-mail *</label>
+                  <label htmlFor="cadastro-email" className="block text-sm font-medium text-gray-300 mb-2">E-mail *</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                    <input type="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="seu@email.com" className={`${inputClass} pl-10`} />
+                    <input id="cadastro-email" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="seu@email.com" className={`${inputClass} pl-10`} />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Senha *</label>
+                  <label htmlFor="cadastro-password" className="block text-sm font-medium text-gray-300 mb-2">Senha *</label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                    <input type={showPassword ? "text" : "password"} value={form.password} onChange={(e) => update("password", e.target.value)} placeholder="Mínimo 8 caracteres" className={`${inputClass} pl-10 pr-12`} />
-                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white">
+                    <input id="cadastro-password" type={showPassword ? "text" : "password"} value={form.password} onChange={(e) => update("password", e.target.value)} placeholder="Mínimo 8 caracteres" className={`${inputClass} pl-10 pr-12`} />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                      aria-pressed={showPassword}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"
+                    >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
@@ -182,11 +188,12 @@ export default function CadastrarPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Console Principal</label>
-                  <select 
-                    value={form.console} 
-                    onChange={(e) => update("console", e.target.value)} 
-                    className="w-full bg-[#151521] border border-white/10 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500/50 transition-colors"
+                  <label htmlFor="cadastro-console" className="block text-sm font-medium text-gray-300 mb-2">Console Principal</label>
+                  <select
+                    id="cadastro-console"
+                    value={form.console}
+                    onChange={(e) => update("console", e.target.value)}
+                    className="w-full bg-[#151521] border border-white/10 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200"
                   >
                     <option value="PS5" className="bg-[#151521] text-white">PlayStation 5</option>
                     <option value="PC" className="bg-[#151521] text-white">PC</option>

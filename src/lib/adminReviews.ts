@@ -1,11 +1,9 @@
 import { prisma } from "./prisma";
 import { Review } from "./types";
+import type { Review as PrismaReview } from "@prisma/client";
 
-export async function readAdminReviews(): Promise<Review[]> {
-  const dbReviews = await prisma.review.findMany({
-    orderBy: { createdAt: "desc" }
-  });
-  return dbReviews.map((r) => ({
+export function mapReview(r: PrismaReview): Review {
+  return {
     id: r.id,
     gameId: r.gameId,
     title: r.title,
@@ -20,7 +18,14 @@ export async function readAdminReviews(): Promise<Review[]> {
     likes: r.likes,
     imageCredits: r.imageCredits ?? undefined,
     featured: r.featured,
-  }));
+  };
+}
+
+export async function readAdminReviews(): Promise<Review[]> {
+  const dbReviews = await prisma.review.findMany({
+    orderBy: { createdAt: "desc" }
+  });
+  return dbReviews.map(mapReview);
 }
 
 export async function writeAdminReviews(reviews: Review[]): Promise<void> {

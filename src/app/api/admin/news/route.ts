@@ -4,8 +4,10 @@ import {
   readAdminNews,
   writeAdminNews,
   getMergedAdminNews,
+  mapNews,
 } from "@/lib/adminNews";
 import { NewsArticle } from "@/lib/types";
+import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
 const newsSchema = z.object({
@@ -90,26 +92,21 @@ export async function PUT(request: Request) {
       );
     }
 
-    const dynamicNews = await readAdminNews();
-    const index = dynamicNews.findIndex((n) => n.id === id);
-
-    const updatedArticle: NewsArticle = {
-      id,
-      views: body.views || 0,
-      likes: body.likes || 0,
-      ...parsed.data,
-      imageCredits: parsed.data.imageCredits || undefined,
-      fontes: parsed.data.fontes || undefined,
-    };
-
-    if (index === -1) {
+    const existing = await prisma.newsArticle.findUnique({ where: { id } });
+    if (!existing) {
       return NextResponse.json({ error: "Notícia não encontrada." }, { status: 404 });
-    } else {
-      dynamicNews[index] = updatedArticle;
     }
 
-    await writeAdminNews(dynamicNews);
-    return NextResponse.json({ news: updatedArticle });
+    const dbArticle = await prisma.newsArticle.update({
+      where: { id },
+      data: {
+        ...parsed.data,
+        imageCredits: parsed.data.imageCredits || null,
+        fontes: parsed.data.fontes || null,
+      },
+    });
+
+    return NextResponse.json({ news: mapNews(dbArticle) });
   } catch (error) {
     console.error("Erro ao atualizar notícia:", error);
     return NextResponse.json({ error: "Erro interno do servidor." }, { status: 500 });
@@ -130,12 +127,11 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "ID inválido." }, { status: 400 });
     }
 
-    const dynamicNews = await readAdminNews();
-    const filtered = dynamicNews.filter((n) => n.id !== id);
-    if (dynamicNews.length === filtered.length) {
+    const existing = await prisma.newsArticle.findUnique({ where: { id }, select: { id: true } });
+    if (!existing) {
       return NextResponse.json({ error: "Notícia não encontrada." }, { status: 404 });
     }
-    await writeAdminNews(filtered);
+    await prisma.newsArticle.delete({ where: { id } });
 
     return NextResponse.json({ ok: true });
   } catch (error) {

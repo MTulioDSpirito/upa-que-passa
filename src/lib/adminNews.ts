@@ -2,14 +2,12 @@ import fs from "fs/promises";
 import path from "path";
 import { NewsArticle } from "./types";
 import { prisma } from "./prisma";
+import type { NewsArticle as PrismaNewsArticle } from "@prisma/client";
 
 const DELETED_STATIC_PATH = path.join(process.cwd(), "data", "deleted-static-news.json");
 
-export async function readAdminNews(): Promise<NewsArticle[]> {
-  const dbNews = await prisma.newsArticle.findMany({
-    orderBy: { createdAt: "desc" }
-  });
-  return dbNews.map((n) => ({
+export function mapNews(n: PrismaNewsArticle): NewsArticle {
+  return {
     id: n.id,
     slug: n.slug,
     title: n.title,
@@ -24,7 +22,14 @@ export async function readAdminNews(): Promise<NewsArticle[]> {
     likes: n.likes,
     imageCredits: n.imageCredits ?? undefined,
     fontes: n.fontes ?? undefined,
-  }));
+  };
+}
+
+export async function readAdminNews(): Promise<NewsArticle[]> {
+  const dbNews = await prisma.newsArticle.findMany({
+    orderBy: { createdAt: "desc" }
+  });
+  return dbNews.map(mapNews);
 }
 
 export async function writeAdminNews(newsList: NewsArticle[]): Promise<void> {

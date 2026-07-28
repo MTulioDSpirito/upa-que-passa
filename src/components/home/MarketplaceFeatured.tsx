@@ -61,11 +61,7 @@ const EXAMPLE_LISTINGS = [
   }
 ];
 
-interface MarketplaceFeaturedProps {
-  activeListings?: any[];
-}
-
-export default function MarketplaceFeatured({ activeListings }: MarketplaceFeaturedProps = {}) {
+export default function MarketplaceFeatured() {
   const user = useUserSession();
   const isLoggedIn = !!user;
 

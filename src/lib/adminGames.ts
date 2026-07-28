@@ -1,11 +1,9 @@
 import { prisma } from "./prisma";
 import { Game } from "./types";
+import type { Game as PrismaGame } from "@prisma/client";
 
-export async function readAdminGames(): Promise<Game[]> {
-  const dbGames = await prisma.game.findMany({
-    orderBy: { createdAt: "desc" }
-  });
-  return dbGames.map((g) => ({
+export function mapGame(g: PrismaGame): Game {
+  return {
     id: g.id,
     slug: g.slug,
     title: g.title,
@@ -38,7 +36,14 @@ export async function readAdminGames(): Promise<Game[]> {
     worldAvg: g.worldAvg ?? undefined,
     featured: g.featured,
     tags: g.tags,
-  }));
+  };
+}
+
+export async function readAdminGames(): Promise<Game[]> {
+  const dbGames = await prisma.game.findMany({
+    orderBy: { createdAt: "desc" }
+  });
+  return dbGames.map(mapGame);
 }
 
 export async function writeAdminGames(games: Game[]): Promise<void> {

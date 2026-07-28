@@ -156,22 +156,17 @@ export default function ReviewsTab({ allGames, adminUser }: ReviewsTabProps) {
       }
 
       const cleanPayload = {
-        title: payload.title,
-        slug: payload.slug,
-        excerpt: payload.excerpt,
-        content: payload.content,
-        author: payload.author,
-        publishedAt: payload.publishedAt,
         gameId: finalGameId,
+        title: payload.title,
+        text: payload.text,
         pros: payload.pros,
         cons: payload.cons,
-        scoreGraphics: payload.scoreGraphics,
-        scoreGameplay: payload.scoreGameplay,
-        scoreSound: payload.scoreSound,
-        scoreFun: payload.scoreFun,
-        videoUrl: payload.videoUrl,
-        mainScore: payload.mainScore,
-        userId: adminUser.email,
+        conclusion: payload.conclusion,
+        scores: payload.scores,
+        overallScore: payload.overallScore,
+        author: payload.author,
+        publishedAt: payload.publishedAt,
+        imageCredits: payload.imageCredits,
       };
 
       const url = "/api/admin/reviews";

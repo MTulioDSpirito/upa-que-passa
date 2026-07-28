@@ -244,6 +244,8 @@ model Comment {
   user         SiteUser          @relation(fields: [userId], references: [id], onDelete: Cascade)
   game         Game              @relation(fields: [gameId], references: [id], onDelete: Cascade)
   reactions    CommentReaction[]
+
+  @@index([gameId])
 }
 
 model CommentReaction {
@@ -256,6 +258,7 @@ model CommentReaction {
   comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
   @@unique([userId, commentId])
+  @@index([commentId])
 }
 
 model PasswordResetToken {
