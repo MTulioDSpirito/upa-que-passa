@@ -7,17 +7,14 @@ import {
   TrendingUp, TrendingDown, Shield, Newspaper, ScrollText, ArrowRight
 } from "lucide-react";
 import { LISTINGS } from "@/lib/data";
-import { Game } from "@/lib/types";
 import { type AdminUserSession } from "../layout/AdminUserFooter";
 
 interface DashboardTabProps {
-  allGames: Game[];
   setActiveSection: (section: string) => void;
   user: AdminUserSession;
 }
 
 export default function DashboardTab({
-  allGames,
   setActiveSection,
   user,
 }: DashboardTabProps) {

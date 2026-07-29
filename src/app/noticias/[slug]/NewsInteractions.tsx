@@ -23,6 +23,8 @@ export function ViewsCounter({ articleId, initialViews }: { articleId: string; i
           sessionStorage.setItem(sessionKey, "true");
         }
       })
+      // Fire-and-forget proposital: se falhar, sessionKey não é setada e a
+      // próxima visita tenta de novo — sem backoff, mas sem travar a leitura da notícia.
       .catch(() => {});
   }, [articleId]);
 

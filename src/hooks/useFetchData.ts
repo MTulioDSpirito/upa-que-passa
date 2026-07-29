@@ -12,11 +12,14 @@ import { useEffect, useState, Dispatch, SetStateAction } from "react";
 export function useFetchData<T>(
   url: string,
   initialValue: T,
-  key?: string
+  key?: string,
+  enabled: boolean = true
 ): [T, Dispatch<SetStateAction<T>>] {
   const [data, setData] = useState<T>(initialValue);
 
   useEffect(() => {
+    if (!enabled) return;
+
     let active = true;
 
     fetch(url)
@@ -35,7 +38,7 @@ export function useFetchData<T>(
     return () => {
       active = false;
     };
-  }, [url, key]);
+  }, [url, key, enabled]);
 
   return [data, setData];
 }

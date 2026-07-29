@@ -37,8 +37,7 @@ model SugestaoAgente {
   updatedAt      DateTime       @updatedAt
   revisadoPor    AdminUser?     @relation("RevisorSugestao", fields: [revisadoPorId], references: [id])
 
-  @@index([status])
-  @@index([createdAt])
+  @@index([status, createdAt])
 }
 
 model SiteUser {

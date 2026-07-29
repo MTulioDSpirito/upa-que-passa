@@ -8,20 +8,33 @@ export async function GET() {
     return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
   }
 
-  const sugestoes = await prisma.sugestaoAgente.findMany({
-    orderBy: { createdAt: "desc" },
-    include: {
-      revisadoPor: {
-        select: {
-          name: true,
-        },
+  const include = {
+    revisadoPor: {
+      select: {
+        name: true,
       },
     },
-  });
+  } as const;
 
-  const pendentes = sugestoes.filter((s) => s.status === "PENDING");
-  const aprovados = sugestoes.filter((s) => s.status === "APPROVED");
-  const rejeitados = sugestoes.filter((s) => s.status === "REJECTED");
+  const [pendentes, aprovados, rejeitados] = await Promise.all([
+    prisma.sugestaoAgente.findMany({
+      where: { status: "PENDING" },
+      orderBy: { createdAt: "desc" },
+      include,
+    }),
+    prisma.sugestaoAgente.findMany({
+      where: { status: "APPROVED" },
+      orderBy: { createdAt: "desc" },
+      take: 100,
+      include,
+    }),
+    prisma.sugestaoAgente.findMany({
+      where: { status: "REJECTED" },
+      orderBy: { createdAt: "desc" },
+      take: 100,
+      include,
+    }),
+  ]);
 
   return NextResponse.json({ pendentes, aprovados, rejeitados });
 }

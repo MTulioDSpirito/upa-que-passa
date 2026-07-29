@@ -20,13 +20,11 @@ Build/lint sem regressão em cada etapa (244 problemas, melhorou de 248).
 **1.2 — [RESOLVIDO 2026-07-28] `useFetchData` invalida cache HTTP em toda requisição**
 Removido o `?_t=${Date.now()}` do `fetch()` interno. Confirmado que os 4 consumidores (`useAllGames`/`useAllNews`/`useAllReviews`/`useAllYoutubeVideos`) só buscam uma vez por mount (sem polling), então a remoção não muda o comportamento de atualização — só deixa de invalidar à toa o `Cache-Control: s-maxage=60` já configurado em `/api/admin/games` (que só faz efeito real com CDN em produção; o projeto ainda não tem deploy, então risco de "dado desatualizado" local é nulo agora). Build/lint sem regressão.
 
-**1.3 — `AdminPanelLayout` busca a tabela de jogos inteira independente da aba ativa**
-`src/app/admin/AdminPanelLayout.tsx:61` chama `useAllGames()` incondicionalmente, mesmo em abas que nunca usam `allGames` (Youtube, Comments, Admin Users, Password Resets).
-*Fix:* buscar só quando `activeSection` precisar, ou passar flag `skip` pro hook.
+**1.3 — [RESOLVIDO 2026-07-29] `AdminPanelLayout` busca a tabela de jogos inteira independente da aba ativa**
+`useFetchData`/`useAllGames` ganharam um parâmetro `enabled` (default `true`); `AdminPanelLayout.tsx` agora só busca jogos quando `activeSection` é `"reviews"` ou `"ranking"`. De quebra, descoberto que `DashboardTab` recebia `allGames` mas nunca usava (só na interface/destructure) — prop removida. Build/lint sem regressão.
 
-**1.4 — `PerfilClient` busca o catálogo inteiro de jogos só pra achar os favoritos**
-`src/app/perfil/PerfilClient.tsx:31,34` — `useAllGames()` traz tudo pra filtrar poucos `favoriteGameIds`, mesmo a página já sendo majoritariamente server-rendered.
-*Fix:* resolver os jogos favoritos no servidor (`prisma.game.findMany({ where: { id: { in: favoriteGameIds } } })`) e passar como prop.
+**1.4 — [RESOLVIDO 2026-07-29] `PerfilClient` busca o catálogo inteiro de jogos só pra achar os favoritos**
+`src/app/perfil/page.tsx` agora resolve `prisma.game.findMany({ where: { id: { in: favoriteGameIds } }, select: {...} })` no servidor e passa `favoriteGames` já prontos; `PerfilClient.tsx` não usa mais `useAllGames()`. Build/lint sem regressão.
 
 **1.5 — `/buscar` também busca jogos+notícias inteiros no client**
 `src/app/buscar/SearchPageContent.tsx:35-38` — `cache: "no-store"` + filtro `.includes()` no client. Funciona na escala atual, mas não escala.
@@ -47,9 +45,8 @@ Confirmado que continua sem `select`/`take`. Na escala atual (dezenas a poucas c
 **2.1 — [RESOLVIDO 2026-07-28] `Comment.gameId` sem índice — maior caminho de leitura pública sem cobertura**
 `prisma/schema.prisma`. Diferente de `Review`, `Comment` não tinha `@@index([gameId])`. Adicionado `@@index([gameId])` em `Comment`. Bundle com o item 2.4 (`@@index([commentId])` em `CommentReaction`) na mesma migration `20260728193646_add_comment_indexes`. `prisma generate`/`migrate dev`/build todos limpos.
 
-**2.2 — `SugestaoAgente` sem paginação — cresce sem limite (5 agentes inserem diariamente)**
-`src/app/api/admin/entregas/route.ts:11-20` carrega a tabela inteira com join toda vez que a fila de revisão abre.
-*Fix:* paginar ou pelo menos filtrar PENDING com `take`; considerar `@@index([status, createdAt])` composto.
+**2.2 — [RESOLVIDO 2026-07-29] `SugestaoAgente` sem paginação — cresce sem limite (5 agentes inserem diariamente)**
+`@@index([status])` + `@@index([createdAt])` trocados por um composto `@@index([status, createdAt])` (migration `20260729123703_replace_sugestao_index_with_composite`). `GET /api/admin/entregas` não carrega mais a tabela inteira pra filtrar em memória: 3 queries paralelas por `status`, com `take: 100` em `aprovados`/`rejeitados` (histórico que só cresce; `HistoricoSugestoes.tsx` já pagina 5 por página no client, então 100 dá margem de sobra). `pendentes` ficou sem limite — é a fila de trabalho ativa, naturalmente pequena.
 
 **2.3 — [RESOLVIDO 2026-07-28] `ArticleViewLog` sem retenção/limpeza — a tabela que mais cresce no sistema**
 Adicionado `@@index([viewedAt])` (migration `20260728201609_add_article_view_log_index`). Como o projeto não tem infra de cron, a limpeza roda oportunisticamente dentro do próprio `POST /api/noticias/view` — ~1% das requisições disparam um `deleteMany` de linhas com mais de 90 dias, em vez de rodar em toda requisição.
@@ -60,8 +57,8 @@ Adicionado `@@index([commentId])` em `CommentReaction` (mesma migration do item 
 **2.5 — [RESOLVIDO 2026-07-28] `PasswordResetToken` sem limpeza de tokens expirados-mas-nunca-usados**
 Adicionada limpeza oportunística global (mesmo padrão do item 2.3) em `POST /api/auth/forgot-password` — ~1% das requisições apagam tokens com `expiresAt` no passado, de qualquer e-mail. O `deleteMany` por e-mail específico que já existia continua intacto.
 
-**2.6 — `readAdminReviews`/`getMergedAdminNews` sem cache no dashboard admin**
-`src/app/api/admin/dashboard/stats/route.ts:30,36` — usa só `.length`/soma de `.views`, mas paga o custo do `findMany` completo (ver 1.7) a cada visita ao dashboard.
+**2.6 — [RESOLVIDO 2026-07-29] `readAdminReviews`/`getMergedAdminNews` sem cache no dashboard admin**
+`src/app/api/admin/dashboard/stats/route.ts` trocou `readAdminReviews()`/`getMergedAdminNews()` (findMany completo só pra `.length`/soma de `.views`) por `prisma.review.count()` e `prisma.newsArticle.aggregate({ _sum: { views } })`, em paralelo com o count de notícias.
 
 **Confirmado correto, sem ação necessária:** singleton do Prisma (`src/lib/prisma.ts`) bem implementado; zero SQL raw no projeto (sem risco de injection); `onDelete: Cascade` consistente em todas as FKs; 10 migrations revisadas sem drift ou edição manual arriscada.
 
@@ -113,14 +110,14 @@ Removida a checagem interna `usePathname`/`isAdmin` (nunca disparava, já que `S
 **4.4 — [RESOLVIDO 2026-07-28, parcial] `any` no boundary Prisma↔app pode corromper dado silenciosamente**
 Adicionado helper `asArray<T>()` (`Array.isArray` guard) usado no caminho de leitura (`mapGame`) pros campos `links`/`siteScores` — se uma linha tiver JSON mal formado, agora vira lista vazia de forma explícita em vez de propagar um formato errado silenciosamente. Os casts `as any` no caminho de escrita (`writeAdminGames`) não foram tocados — lá a entrada já é o tipo `Game` bem tipado do app, o cast é só formalidade pra satisfizer o tipo `Json` do Prisma, não um risco real de dado corrompido.
 
-**4.5 — `useFetchData` (hook novo do colaborador) só foi adotado pela metade**
-`useAllGames`/`useAllNews`/`useAllReviews` já usam, mas `useAdminUsers.ts:12-33`, `ReviewClient.tsx` (3 blocos ~91-130) e `NewsInteractions.tsx` (2 blocos, 11-27 e 44-54) continuam reimplementando o mesmo `fetch().then(ok?json:null).then(setState).catch(()=>{})` manualmente.
+**4.5 — [INVESTIGADO 2026-07-29, sem mudança] `useFetchData` só foi adotado pela metade**
+Investigado antes de forçar a adoção: `ReviewClient.tsx` e `NewsInteractions.tsx` extraem **múltiplos campos** de uma resposta (`{liked, likesCount}`, `{comments, averageScore}`), enquanto `useFetchData` só extrai uma chave; os efeitos também dependem de `currentUser` (refazem o fetch ao logar/deslogar) mesmo com a mesma URL, e `useFetchData` só reexecuta quando `url`/`key`/`enabled` mudam. Forçar o encaixe exigiria regredir esse comportamento ou inchar a API do hook com callback de transformação — abstração maior que o ganho. `useAdminUsers.ts` já tem paginação/debounce/loading próprios e já ganhou o guard `cancelled` no item 4.6. Deixado como está.
 
 **4.6 — [RESOLVIDO 2026-07-28] Busca de usuários admin sem debounce**
 `useAdminUsers.ts` — `search` agora passa por um debounce de 300ms antes de virar dependência do `useEffect` de fetch, e a busca ganhou um guard `cancelled` (mesmo padrão já usado em `useUserSession`/`useFetchData`) pra respostas fora de ordem não sobrescreverem o resultado mais recente.
 
-**4.7 — `catch` vazio no POST de contagem de views, não só nos GETs**
-`NewsInteractions.tsx:14-26` — se o POST de `/api/noticias/view` falhar, o `sessionStorage` nunca é setado (está dentro do `.then`), então a mesma notícia tenta de novo a cada reload, sem backoff nem sinal pro usuário. Severidade baixa, mas vale documentar se é "fire-and-forget" proposital.
+**4.7 — [RESOLVIDO 2026-07-29, documentado] `catch` vazio no POST de contagem de views, não só nos GETs**
+`NewsInteractions.tsx` — comportamento mantido (fire-and-forget é aceitável pra um contador de views), só documentado com comentário explicando que a falha silenciosa faz a mesma notícia tentar de novo no próximo reload, sem backoff.
 
 **4.8 — [RESOLVIDO 2026-07-28] Botões do `ContactBox` sem handler nenhum**
 Investigado antes de corrigir: `Listing` (tipo em `src/lib/types.ts`) não tem campo de telefone/WhatsApp do vendedor, e não existe chat interno nem API de favoritar anúncio no backend — implementar de verdade seria escopo bem maior que "baixo esforço". Marcado como indisponível: os 3 botões (WhatsApp/Chat Interno/Salvar Anúncio) ganharam `disabled`, `title="Em breve"` e estilo esmaecido + "(Em breve)" no texto, em vez de parecerem funcionais sem fazer nada.

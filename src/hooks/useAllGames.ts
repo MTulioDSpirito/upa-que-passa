@@ -3,8 +3,8 @@
 import { useFetchData } from "./useFetchData";
 import { Game } from "@/lib/types";
 
-export function useAllGames(): [Game[], (game: Game) => void] {
-  const [allGames, setAllGames] = useFetchData<Game[]>("/api/admin/games", [], "games");
+export function useAllGames(enabled: boolean = true): [Game[], (game: Game) => void] {
+  const [allGames, setAllGames] = useFetchData<Game[]>("/api/admin/games", [], "games", enabled);
 
   function addGame(game: Game) {
     setAllGames((prev) => {

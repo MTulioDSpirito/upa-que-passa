@@ -19,6 +19,11 @@ export default async function PerfilPage() {
     redirect("/login");
   }
 
+  const favoriteGames = await prisma.game.findMany({
+    where: { id: { in: favorites.map((f) => f.gameId) } },
+    select: { id: true, slug: true, title: true, cover: true, developer: true, adminScore: true },
+  });
+
   return (
     <PerfilClient
       user={{
@@ -30,7 +35,7 @@ export default async function PerfilPage() {
         console: user.console,
         createdAt: user.createdAt.toISOString(),
       }}
-      favoriteGameIds={favorites.map((f) => f.gameId)}
+      favoriteGames={favoriteGames.map((g) => ({ ...g, adminScore: g.adminScore ?? undefined }))}
       commentsCount={commentsCount}
     />
   );

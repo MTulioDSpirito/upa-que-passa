@@ -58,7 +58,7 @@ const NOT_YET_BUILT = ["marketplace", "analytics", "settings"];
 export default function AdminPanelLayout({ user }: { user: AdminUserSession }) {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [editingUser, setEditingUser] = useState<AdminSiteUser | null>(null);
-  const [allGames] = useAllGames();
+  const [allGames] = useAllGames(activeSection === "reviews" || activeSection === "ranking");
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -108,7 +108,6 @@ export default function AdminPanelLayout({ user }: { user: AdminUserSession }) {
       <main className="flex-1 p-6 overflow-y-auto h-full">
         {activeSection === "dashboard" && (
           <DashboardTab
-            allGames={allGames}
             setActiveSection={handleSetActiveSection}
             user={user}
           />

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Star, MessageSquare, ShoppingBag, Trophy, Settings } from "lucide-react";
 import { getScoreColor } from "@/lib/data";
 import EditProfileModal, { type EditableProfile } from "./EditProfileModal";
-import { useAllGames } from "@/hooks/useAllGames";
 
 import { LISTINGS } from "@/mocks/listings";
 
@@ -19,19 +18,26 @@ interface PerfilUser {
   createdAt: string;
 }
 
+interface FavoriteGame {
+  id: string;
+  slug: string;
+  title: string;
+  cover: string;
+  developer: string;
+  adminScore?: number;
+}
+
 export default function PerfilClient({
   user: initialUser,
-  favoriteGameIds,
+  favoriteGames,
   commentsCount,
 }: {
   user: PerfilUser;
-  favoriteGameIds: string[];
+  favoriteGames: FavoriteGame[];
   commentsCount: number;
 }) {
-  const [GAMES] = useAllGames();
   const [user, setUser] = useState(initialUser);
   const [editing, setEditing] = useState(false);
-  const favoriteGames = GAMES.filter((g) => favoriteGameIds.includes(g.id));
   const avatar = user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.nickname)}`;
   const location = [user.city, user.state].filter(Boolean).join(", ");
 

@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
-import { getMergedAdminNews } from "@/lib/adminNews";
-import { readAdminReviews } from "@/lib/adminReviews";
 import { LISTINGS } from "@/mocks/listings";
 
 export async function GET() {
@@ -27,15 +25,16 @@ export async function GET() {
     const usersChange = previousUsers > 0 ? parseFloat(((newUsers30d / previousUsers) * 100).toFixed(1)) : 0;
 
     // 2. Reviews Count & dummy growth
-    const reviews = await readAdminReviews();
-    const totalReviews = reviews.length;
+    const totalReviews = await prisma.review.count();
     // Simulate growth rate for reviews
     const reviewsChange = 12.5;
 
     // 3. News Articles, views & simulated change
-    const news = await getMergedAdminNews();
-    const totalNews = news.length;
-    const totalViews = news.reduce((acc, item) => acc + (item.views || 0), 0);
+    const [totalNews, newsViewsAgg] = await Promise.all([
+      prisma.newsArticle.count(),
+      prisma.newsArticle.aggregate({ _sum: { views: true } }),
+    ]);
+    const totalViews = newsViewsAgg._sum.views || 0;
     const viewsChange = 5.6;
 
     // 4. Comments total & today
