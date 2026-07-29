@@ -1,6 +1,15 @@
 import { prisma } from "./prisma";
-import { Game } from "./types";
+import { Game, SiteScore } from "./types";
 import type { Game as PrismaGame } from "@prisma/client";
+
+// g.links/g.siteScores vêm da coluna Json do Postgres sem checagem de schema —
+// um cast direto pra array tipado propagaria silenciosamente um formato errado
+// (linha legada, escrita ruim do pipeline de agentes) até quem consome esses
+// dados. Uma linha com formato inesperado vira lista vazia em vez de quebrar
+// em produção longe da causa.
+function asArray<T>(value: unknown): T[] {
+  return Array.isArray(value) ? (value as T[]) : [];
+}
 
 export function mapGame(g: PrismaGame): Game {
   return {
@@ -27,12 +36,12 @@ export function mapGame(g: PrismaGame): Game {
     subtitles: g.subtitles,
     dubbing: g.dubbing,
     ageRating: g.ageRating,
-    links: (g.links as any) || [],
+    links: asArray<{ label: string; url: string }>(g.links),
     metacriticScore: g.metacriticScore ?? undefined,
     openCriticScore: g.openCriticScore ?? undefined,
     userScore: g.userScore,
     adminScore: g.adminScore ?? undefined,
-    siteScores: (g.siteScores as any) || [],
+    siteScores: asArray<SiteScore>(g.siteScores),
     worldAvg: g.worldAvg ?? undefined,
     featured: g.featured,
     tags: g.tags,

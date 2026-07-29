@@ -7,8 +7,26 @@ const forgotPasswordSchema = z.object({
   email: z.string().email("E-mail inválido."),
 });
 
+const CLEANUP_PROBABILITY = 0.01; // ~1% das requisições disparam a limpeza
+
+// Tokens expirados de outros e-mails (nunca aprovados/usados) não são varridos
+// em lugar nenhum além do próprio e-mail que os criou; sem cron neste projeto,
+// a limpeza acontece oportunisticamente numa fração pequena das requisições.
+async function cleanupExpiredTokens() {
+  if (Math.random() >= CLEANUP_PROBABILITY) return;
+  try {
+    await prisma.passwordResetToken.deleteMany({
+      where: { expiresAt: { lt: new Date() } },
+    });
+  } catch (error) {
+    console.error("Erro ao limpar PasswordResetToken expirado:", error);
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
+    await cleanupExpiredTokens();
+
     const body = await request.json();
     const parsed = forgotPasswordSchema.safeParse(body);
 

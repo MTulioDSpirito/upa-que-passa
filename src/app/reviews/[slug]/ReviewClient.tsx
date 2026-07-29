@@ -294,7 +294,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                 </div>
               </div>
               {review?.imageCredits && (
-                <p className="text-[10px] text-gray-500 mt-2 text-center italic font-mono max-w-[224px] truncate" title={review.imageCredits}>
+                <p className="text-[10px] text-gray-400 mt-2 text-center italic font-mono max-w-[224px] truncate" title={review.imageCredits}>
                   {review.imageCredits}
                 </p>
               )}
@@ -357,17 +357,21 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
               <div className="grid grid-cols-3 gap-4 max-w-md bg-white/[0.02] border border-white/5 backdrop-blur-md rounded-2xl p-5 mb-6 shadow-xl">
                 {/* METACRITIC */}
                 <div className="flex flex-col items-center border-r border-white/5">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-gray-500 mb-2">Metacritic</span>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-gray-400 mb-2">Metacritic</span>
                   {game.metacriticScore ? (
-                    <div className="relative flex items-center justify-center">
-                      <svg className="w-18 h-18 transform -rotate-90">
+                    <div
+                      className="relative flex items-center justify-center"
+                      role="img"
+                      aria-label={`Metacritic: ${game.metacriticScore} de 100`}
+                    >
+                      <svg className="w-18 h-18 transform -rotate-90" aria-hidden="true">
                         <circle cx="36" cy="36" r="30" className="stroke-white/[0.05]" strokeWidth="4.5" fill="transparent" />
                         <circle cx="36" cy="36" r="30" className={`stroke-current ${getScoreColor(game.metacriticScore / 10)}`} strokeWidth="4.5" fill="transparent"
                           strokeDasharray={2 * Math.PI * 30}
                           strokeDashoffset={2 * Math.PI * 30 * (1 - game.metacriticScore / 100)}
                         />
                       </svg>
-                      <div className="absolute text-center">
+                      <div className="absolute text-center" aria-hidden="true">
                         <span className={`text-xl font-black font-display ${getScoreColor(game.metacriticScore / 10)}`}>
                           {game.metacriticScore}
                         </span>
@@ -380,17 +384,21 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
 
                 {/* WORLD AVG */}
                 <div className="flex flex-col items-center border-r border-white/5">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-gray-500 mb-2">Média Geral</span>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-gray-400 mb-2">Média Geral</span>
                   {game.worldAvg ? (
-                    <div className="relative flex items-center justify-center">
-                      <svg className="w-18 h-18 transform -rotate-90">
+                    <div
+                      className="relative flex items-center justify-center"
+                      role="img"
+                      aria-label={`Média geral: ${formatScore(game.worldAvg)} de 10`}
+                    >
+                      <svg className="w-18 h-18 transform -rotate-90" aria-hidden="true">
                         <circle cx="36" cy="36" r="30" className="stroke-white/[0.05]" strokeWidth="4.5" fill="transparent" />
                         <circle cx="36" cy="36" r="30" className={`stroke-current ${getScoreColor(game.worldAvg)}`} strokeWidth="4.5" fill="transparent"
                           strokeDasharray={2 * Math.PI * 30}
                           strokeDashoffset={2 * Math.PI * 30 * (1 - game.worldAvg / 10)}
                         />
                       </svg>
-                      <div className="absolute text-center">
+                      <div className="absolute text-center" aria-hidden="true">
                         <span className={`text-xl font-black font-display ${getScoreColor(game.worldAvg)}`}>
                           {formatScore(game.worldAvg)}
                         </span>
@@ -403,16 +411,20 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
 
                 {/* COMMUNITY SCORE */}
                 <div className="flex flex-col items-center">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-gray-500 mb-2">Comunidade</span>
-                  <div className="relative flex items-center justify-center">
-                    <svg className="w-18 h-18 transform -rotate-90">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-gray-400 mb-2">Comunidade</span>
+                  <div
+                    className="relative flex items-center justify-center"
+                    role="img"
+                    aria-label={gameUserScore > 0 ? `Nota da comunidade: ${formatScore(gameUserScore)} de 10` : "Nota da comunidade: sem avaliações ainda"}
+                  >
+                    <svg className="w-18 h-18 transform -rotate-90" aria-hidden="true">
                       <circle cx="36" cy="36" r="30" className="stroke-white/[0.05]" strokeWidth="4.5" fill="transparent" />
                       <circle cx="36" cy="36" r="30" className={`stroke-current ${getScoreColor(gameUserScore)}`} strokeWidth="4.5" fill="transparent"
                         strokeDasharray={2 * Math.PI * 30}
                         strokeDashoffset={2 * Math.PI * 30 * (1 - (gameUserScore || 0.1) / 10)}
                       />
                     </svg>
-                    <div className="absolute text-center">
+                    <div className="absolute text-center" aria-hidden="true">
                       <span className={`text-xl font-black font-display ${getScoreColor(gameUserScore)}`}>
                         {gameUserScore > 0 ? formatScore(gameUserScore) : "—"}
                       </span>
@@ -438,7 +450,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                   <ShoppingBag className="w-4 h-4 text-purple-400" />
                   Ver no Marketplace
                 </button>
-                <button className="p-3.5 bg-white/5 border border-white/10 text-white rounded-xl hover:bg-white/10 hover:border-white/20 transition-all duration-300 btn-press" title="Compartilhar">
+                <button className="p-3.5 bg-white/5 border border-white/10 text-white rounded-xl hover:bg-white/10 hover:border-white/20 transition-all duration-300 btn-press" title="Compartilhar" aria-label="Compartilhar">
                   <Share2 className="w-4 h-4 text-gray-400 hover:text-white" />
                 </button>
               </div>
@@ -538,7 +550,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                           <span className={`text-2xl font-black font-display tracking-tight ${getScoreColor(review.overallScore)}`}>
                             {formatScore(review.overallScore)}
                           </span>
-                          <span className="text-[10px] text-gray-600 font-bold font-mono">/10</span>
+                          <span className="text-[10px] text-gray-500 font-bold font-mono">/10</span>
                         </div>
                       </div>
                     </div>
@@ -563,9 +575,9 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                       {/* PROS */}
                       <div className="bg-green-500/[0.02] border border-green-500/10 rounded-2xl p-6 relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-20 h-20 bg-green-500/5 rounded-full blur-2xl pointer-events-none" />
-                        <h4 className="text-green-400 font-mono font-bold text-sm tracking-wider mb-4 flex items-center gap-2 uppercase">
+                        <h3 className="text-green-400 font-mono font-bold text-sm tracking-wider mb-4 flex items-center gap-2 uppercase">
                           <Check className="w-4 h-4 text-green-400" /> + PRÓS
-                        </h4>
+                        </h3>
                         <ul className="space-y-3">
                           {review.pros.map((p, i) => (
                             <li key={i} className="text-sm text-gray-300 flex items-start gap-2.5">
@@ -579,9 +591,9 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                       {/* CONS */}
                       <div className="bg-red-500/[0.02] border border-red-500/10 rounded-2xl p-6 relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-20 h-20 bg-red-500/5 rounded-full blur-2xl pointer-events-none" />
-                        <h4 className="text-red-400 font-mono font-bold text-sm tracking-wider mb-4 flex items-center gap-2 uppercase">
+                        <h3 className="text-red-400 font-mono font-bold text-sm tracking-wider mb-4 flex items-center gap-2 uppercase">
                           <AlertTriangle className="w-4 h-4 text-red-400" /> - CONTRAS
-                        </h4>
+                        </h3>
                         <ul className="space-y-3">
                           {review.cons.map((c, i) => (
                             <li key={i} className="text-sm text-gray-300 flex items-start gap-2.5">
@@ -596,7 +608,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                     {/* Veredict / Conclusion box */}
                     <div className="bg-gradient-to-r from-purple-950/30 to-blue-950/20 border border-purple-500/10 rounded-2xl p-6 relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-500 to-blue-500" />
-                      <h4 className="text-purple-400 font-mono font-bold text-xs tracking-widest uppercase mb-2">Conclusão Detalhada</h4>
+                      <h3 className="text-purple-400 font-mono font-bold text-xs tracking-widest uppercase mb-2">Conclusão Detalhada</h3>
                       <p className="text-sm text-gray-300 leading-relaxed italic">"{review.conclusion}"</p>
                     </div>
 
@@ -654,11 +666,14 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                     <p className="text-xs font-mono text-gray-400 mb-4 uppercase tracking-wider">Atribua sua nota gamer (1 a 10):</p>
 
                     {/* User Rating buttons */}
-                    <div className="flex gap-1.5 mb-4 overflow-x-auto no-scrollbar pb-2">
+                    <div className="flex gap-1.5 mb-4 overflow-x-auto no-scrollbar pb-2" role="radiogroup" aria-label="Sua nota, de 1 a 10">
                       {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
                         <button
                           type="button"
                           key={n}
+                          role="radio"
+                          aria-checked={n === userScore}
+                          aria-label={`Nota ${n}`}
                           onClick={() => setUserScore(n)}
                           onMouseEnter={() => setHoveredScore(n)}
                           onMouseLeave={() => setHoveredScore(0)}
@@ -767,7 +782,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                     Nota da Comunidade — UQP
                   </h2>
                   <div className="flex flex-col items-center justify-center p-6 bg-white/[0.02] border border-white/5 rounded-2xl text-center">
-                    <div className="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-1">Média dos Jogadores</div>
+                    <div className="text-[10px] font-mono uppercase tracking-widest text-gray-400 mb-1">Média dos Jogadores</div>
                     <div className={`text-5xl font-black font-display ${getScoreColor(gameUserScore)} text-glow-purple mb-4`}>
                       {gameUserScore > 0 ? `${formatScore(gameUserScore)}/10` : "Sem Avaliações"}
                     </div>
@@ -791,7 +806,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                           <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                             <Eye className="w-3.5 h-3.5 text-gray-500" />
                           </div>
-                          <div className="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-1">{s.site}</div>
+                          <div className="text-[10px] font-mono uppercase tracking-widest text-gray-400 mb-1">{s.site}</div>
                           <div className={`text-3xl font-black font-display ${getScoreColor(normalizedScore)} text-glow-purple mb-3`}>
                             {s.score > 10 ? s.score : `${s.score}/10`}
                           </div>
@@ -823,7 +838,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                             <div className="flex justify-between items-center text-xs font-mono">
                               <span className="text-gray-400 uppercase tracking-widest">{SCORE_LABELS[key]}</span>
                               <div className="flex items-center gap-2">
-                                <span className="text-gray-600 text-[10px] uppercase font-bold">{getScoreVerdict(val)}</span>
+                                <span className="text-gray-500 text-[10px] uppercase font-bold">{getScoreVerdict(val)}</span>
                                 <span className={`font-bold ${getScoreColor(val)}`}>{formatScore(val)}</span>
                               </div>
                             </div>
@@ -850,7 +865,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {game.gallery.map((img, i) => (
                       <div key={i} className="rounded-2xl overflow-hidden bg-black border border-white/5 group relative">
-                        <img src={img} alt={`Screenshot ${i + 1}`} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <img src={img} alt={`${game.title} — captura de tela ${i + 1}`} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <button className="px-4 py-2 bg-black/60 border border-white/10 text-xs font-mono uppercase rounded-lg">Ampliar Imagem</button>
                         </div>

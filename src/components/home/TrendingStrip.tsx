@@ -15,7 +15,7 @@ export default function TrendingStrip({ newsList }: TrendingStripProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(0); // -1 for left, 1 for right
   const [isPaused, setIsPaused] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const isPausedRef = useRef(isPaused);
 
   // Group news in chunks of 3
   const slides: NewsArticle[][] = [];
@@ -29,20 +29,20 @@ export default function TrendingStrip({ newsList }: TrendingStripProps) {
   const slideCount = slides.length;
 
   useEffect(() => {
-    if (slideCount === 0 || isPaused) {
-      if (timerRef.current) clearInterval(timerRef.current);
-      return;
-    }
+    isPausedRef.current = isPaused;
+  }, [isPaused]);
 
-    timerRef.current = setInterval(() => {
+  useEffect(() => {
+    if (slideCount === 0) return;
+
+    const id = setInterval(() => {
+      if (isPausedRef.current) return;
       setDirection(1);
       setCurrentSlide((prev) => (prev + 1) % slideCount);
     }, 6000);
 
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [slideCount, isPaused]);
+    return () => clearInterval(id);
+  }, [slideCount]);
 
   if (slideCount === 0) return null;
 

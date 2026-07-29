@@ -1,24 +1,17 @@
-"use client";
-
-import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 export default function BrandHeader() {
-  const pathname = usePathname();
-  const isAdmin = pathname?.startsWith("/admin") ?? false;
-
-  // No painel administrativo, não exibimos o header de marca
-  if (isAdmin) {
-    return null;
-  }
-
   return (
     <header className="relative w-full bg-[#07070a] border-b border-purple-900/20">
       {/* ─── BANNER SUPERIOR ────────────────────────────────────── */}
       <div className="relative w-full h-44 sm:h-56 md:h-64 overflow-hidden bg-black/40">
-        <img
+        <Image
           src="/upa_que_passa_banner.jpeg"
           alt="Upa que Passa Banner"
-          className="w-full h-full object-cover object-center opacity-85"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center opacity-85"
         />
         {/* Gradiente de sombra sobre o banner para legibilidade */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
@@ -29,10 +22,13 @@ export default function BrandHeader() {
         <div className="flex flex-col sm:flex-row sm:items-end gap-4 -mt-16 sm:-mt-20 pb-4 relative z-10">
           {/* Logo do Canal */}
           <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden border-4 border-purple-600 bg-[#0f0f18] shadow-2xl shadow-purple-900/50 flex-shrink-0 animate-pulse-slow transition-all duration-300 ease-out cursor-pointer animate-glitch-hover">
-            <img
+            <Image
               src="/logo_upa_que_passa.jpg"
               alt="Upa que Passa Logo"
-              className="w-full h-full object-cover transition-all duration-300 ease-out"
+              fill
+              priority
+              sizes="(min-width: 640px) 144px, 112px"
+              className="object-cover transition-all duration-300 ease-out"
             />
           </div>
 

@@ -153,6 +153,7 @@ export default function Navbar() {
           onClick={() => setMobileOpen(!mobileOpen)}
           className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"
           aria-label="Menu"
+          aria-expanded={mobileOpen}
         >
           {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -176,6 +177,8 @@ export default function Navbar() {
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
                 className="relative p-2 text-gray-400 hover:text-white transition-colors rounded-lg hover:bg-white/5"
                 aria-label="Notificações"
+                aria-haspopup="true"
+                aria-expanded={notificationsOpen}
               >
                 <Bell className="w-4 h-4" />
                 <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-purple-500 rounded-full shadow-[0_0_4px_#a855f7]" />

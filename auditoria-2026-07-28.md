@@ -32,9 +32,8 @@ Removido o `?_t=${Date.now()}` do `fetch()` interno. Confirmado que os 4 consumi
 `src/app/buscar/SearchPageContent.tsx:35-38` — `cache: "no-store"` + filtro `.includes()` no client. Funciona na escala atual, mas não escala.
 *Fix (não urgente):* mover a filtragem pro servidor via `/api/search?q=` com `contains`/`take`, quando o catálogo crescer.
 
-**1.6 — Imagens estáticas locais usando `<img>` em vez de `next/image`**
-`BrandHeader.tsx:18-22,32-36` (banner/logo — provável elemento LCP, aparece em toda página pública), `LoadingScreen.tsx:21-24`, `AboutUs.tsx:74-77` (7 fotos locais da equipe). Diferente do caso já documentado no CLAUDE.md (imagens *externas*, que exigem `remotePatterns`) — essas são locais (`public/`), então `next/image` é ganho grátis: lazy loading, `sizes` responsivo, conversão pra AVIF/WebP.
-*Fix:* trocar essas 3 por `next/image`, com `priority` no banner/logo do `BrandHeader` (provável LCP).
+**1.6 — [RESOLVIDO 2026-07-28] Imagens estáticas locais usando `<img>` em vez de `next/image`**
+`BrandHeader.tsx` (banner + logo, ambos `priority` — prováveis LCP, aparecem em toda página pública), `LoadingScreen.tsx` (logo), `AboutUs.tsx` (7 fotos locais da equipe) — todas trocadas por `next/image` com `fill` dentro dos containers já dimensionados/posicionados existentes + `sizes` apropriado. Testado ao vivo: banner/logo na home e as 7 fotos da seção "Quem Somos" renderizam idênticas, zero erro de console.
 
 **1.7 — `readAdminGames`/`readAdminNews`/`readAdminReviews` ainda sem paginação (já conhecido)**
 Confirmado que continua sem `select`/`take`. Na escala atual (dezenas a poucas centenas de linhas) é barato isoladamente, mas o custo se multiplica com 1.1–1.4 acima, que disparam esse mesmo scan completo repetidas vezes.
@@ -58,8 +57,8 @@ Adicionado `@@index([viewedAt])` (migration `20260728201609_add_article_view_log
 **2.4 — [RESOLVIDO 2026-07-28, parcial] `CommentReaction.commentId` sem índice independente**
 Adicionado `@@index([commentId])` em `CommentReaction` (mesma migration do item 2.1). `Favorite.gameId` continua sem índice independente — baixo volume, não priorizado agora.
 
-**2.5 — `PasswordResetToken` sem limpeza de tokens expirados-mas-nunca-usados**
-Boa higiene no geral (`forgot-password`/`reset-password` já limpam nos próprios fluxos), mas nada varre globalmente tokens que expiraram sem uso. Baixo risco (tem `@@index([email])`), mas vale um sweep periódico.
+**2.5 — [RESOLVIDO 2026-07-28] `PasswordResetToken` sem limpeza de tokens expirados-mas-nunca-usados**
+Adicionada limpeza oportunística global (mesmo padrão do item 2.3) em `POST /api/auth/forgot-password` — ~1% das requisições apagam tokens com `expiresAt` no passado, de qualquer e-mail. O `deleteMany` por e-mail específico que já existia continua intacto.
 
 **2.6 — `readAdminReviews`/`getMergedAdminNews` sem cache no dashboard admin**
 `src/app/api/admin/dashboard/stats/route.ts:30,36` — usa só `.length`/soma de `.views`, mas paga o custo do `findMany` completo (ver 1.7) a cada visita ao dashboard.
@@ -80,21 +79,21 @@ Descoberto ao investigar: `AuthModal.tsx` não tem nenhum import/renderização 
 
 ### Maiores
 
-- **3.4** Alt text genérico nas capturas de tela (`"Screenshot 1"`) — `ReviewClient.tsx:853`.
-- **3.5** Gauges de nota (Metacritic/comunidade) não expõem rótulo+número como unidade pra leitor de tela — `ReviewClient.tsx:357-422`. Fix: `role="img" aria-label="Metacritic: 78 de 100"`.
-- **3.6** Hierarquia de heading inconsistente na sidebar da review — `ReviewClient.tsx` (~900, ~930).
-- **3.7** Sem link "pular para o conteúdo" (2.4.1) — `layout.tsx`/`SiteShell.tsx:20`.
-- **3.8** Botões de mostrar/ocultar senha sem nome acessível — `AuthModal.tsx:218-224,286-292`, `login/page.tsx:125-131`.
-- **3.9** Seletor de nota 1-10 sem rótulo/estado selecionado — `ReviewClient.tsx:657-674`. Fix: `role="radiogroup"` + `aria-pressed`.
+- **3.4** — [RESOLVIDO 2026-07-28] Alt text genérico (`"Screenshot 1"`) trocado por `"${game.title} — captura de tela ${i+1}"` em `ReviewClient.tsx`.
+- **3.5** — [RESOLVIDO 2026-07-28] Os 3 gauges (Metacritic/Média Geral/Comunidade) ganharam `role="img" aria-label="..."` com o valor por extenso, e o SVG/número visual viraram `aria-hidden`.
+- **3.6** — [RESOLVIDO 2026-07-28] `h2` (título da review) pulava direto pra `h4` (PRÓS/CONTRAS/Conclusão) — corrigido pra `h3`.
+- **3.7** — [RESOLVIDO 2026-07-28] Link "Pular para o conteúdo" adicionado em `SiteShell.tsx` (`sr-only focus:not-sr-only`, primeiro elemento focável) apontando pra `id="main-content"` no `<main>`. Testado ao vivo: aparece corretamente no primeiro Tab.
+- **3.8** Botões de mostrar/ocultar senha sem nome acessível — já resolvido em `/login` e `/cadastrar` (ver 3.2/3.3); `AuthModal.tsx` é código morto, não corrigido.
+- **3.9** — [RESOLVIDO 2026-07-28] Seletor de nota 1-10 ganhou `role="radiogroup"` no container e `role="radio"`/`aria-checked`/`aria-label` em cada botão.
 
 ### Menores
 
-- **3.10** Botão de compartilhar só com `title`, sem `aria-label` (inconsistente com o botão de favoritar do `GameCard.tsx:122`) — `ReviewClient.tsx:441`.
-- **3.11** Texto pequeno de baixo contraste (`text-gray-500/600` em 10px sobre fundo escuro, ~3.9:1, abaixo do AA 4.5:1) — `ReviewClient.tsx:531,297`. Fix: subir pra `text-gray-400`.
-- **3.12** Dropdown de notificações sem `aria-expanded`/`aria-haspopup` — `Navbar.tsx:175-201`.
-- **3.13** Hambúrguer mobile tem `aria-label` mas não `aria-expanded` — `Navbar.tsx:152-158`.
-- **3.14** Asteriscos de campo obrigatório lidos como "asterisco" (faltando `aria-hidden`) — `AuthModal.tsx:245,260,275`.
-- **3.15** SVGs decorativos dos gauges não marcados `aria-hidden` — `ReviewClient.tsx:363,386,408`.
+- **3.10** — [RESOLVIDO 2026-07-28] Botão de compartilhar ganhou `aria-label="Compartilhar"` além do `title` já existente.
+- **3.11** — [RESOLVIDO 2026-07-28] Todas as 8 ocorrências de texto pequeno de baixo contraste em `ReviewClient.tsx` (`text-gray-500`→`text-gray-400`, `text-gray-600`→`text-gray-500`, mantendo 10px).
+- **3.12** — [RESOLVIDO 2026-07-28] Dropdown de notificações ganhou `aria-haspopup="true"`/`aria-expanded` em `Navbar.tsx`.
+- **3.13** — [RESOLVIDO 2026-07-28] Hambúrguer mobile ganhou `aria-expanded` em `Navbar.tsx`.
+- **3.14** Asteriscos de campo obrigatório — só existem em `AuthModal.tsx` (código morto), não em `/login`/`/cadastrar` (que usam `*` no texto do label, não em span separado) — não corrigido, baixo risco real.
+- **3.15** — [RESOLVIDO 2026-07-28] SVGs decorativos dos 3 gauges marcados `aria-hidden="true"` (junto com 3.5).
 
 **Pontos positivos confirmados:** `ScoreBadge.tsx` já expõe notas como texto real (não só cor); `SearchModal.tsx` já usa Radix Dialog com foco correto; `Footer.tsx` já tem `aria-label`s; `<html lang="pt-BR">` correto na raiz.
 
@@ -108,20 +107,17 @@ Investigando antes de corrigir: a seção é um teaser proposital — sempre mos
 **4.2 — [RESOLVIDO 2026-07-28] Falha de rede desloga o usuário silenciosamente**
 `src/hooks/useUserSession.ts` — o `.catch()` de erro de rede não seta mais `null` (que corresponde ao mesmo estado de "não logado"); agora deixa o estado como `undefined` (carregando), sem afirmar falsamente que o usuário está deslogado. Confirmado que nenhum dos 6 consumidores (`ReviewClient`, `NewsInteractions`, `Navbar`, `GameCard`, `MarketplaceFeatured`, `PerfilClient`) distingue `undefined` de `null` — só fazem `!currentUser`, então o comportamento de gating fica idêntico, só corrige o caso de falso-deslogado. Build/lint sem regressão.
 
-**4.3 — `BrandHeader` duplica checagem que o único chamador já faz**
-`SiteShell.tsx:11-16` já decide `isAdmin` e só renderiza `<BrandHeader />` quando não é admin. `BrandHeader.tsx:6-12` reimplementa a mesma checagem por dentro (código morto — nunca dispara) e é só por isso que o componente é `"use client"`.
-*Fix:* remover a checagem interna e o `"use client"` — vira server component puro, zero mudança visual.
+**4.3 — [RESOLVIDO 2026-07-28] `BrandHeader` duplicava checagem que o único chamador já fazia**
+Removida a checagem interna `usePathname`/`isAdmin` (nunca disparava, já que `SiteShell.tsx` só renderiza `<BrandHeader />` quando não é admin) e o `"use client"` — virou server component puro. Combinado com a conversão pra `next/image` do item 1.6 no mesmo arquivo.
 
-**4.4 — `any` no boundary Prisma↔app pode corromper dado silenciosamente**
-`src/lib/adminGames.ts:32,37,74,79,108,113` — `links`/`siteScores` (colunas `Json`) castados direto pra array tipado sem checagem de formato, tanto na leitura quanto nas 3 vias de escrita. Se uma linha tiver JSON mal formado (schema legado, ou escrita ruim vinda do pipeline de agentes), não quebra na borda — propaga silenciosamente um formato errado até `getScoreColor`/consumidores de `siteScores[].score`, bem longe da causa.
-*Fix:* guarda de runtime simples (`Array.isArray(x) ? x : []`) em vez do cast cego.
+**4.4 — [RESOLVIDO 2026-07-28, parcial] `any` no boundary Prisma↔app pode corromper dado silenciosamente**
+Adicionado helper `asArray<T>()` (`Array.isArray` guard) usado no caminho de leitura (`mapGame`) pros campos `links`/`siteScores` — se uma linha tiver JSON mal formado, agora vira lista vazia de forma explícita em vez de propagar um formato errado silenciosamente. Os casts `as any` no caminho de escrita (`writeAdminGames`) não foram tocados — lá a entrada já é o tipo `Game` bem tipado do app, o cast é só formalidade pra satisfizer o tipo `Json` do Prisma, não um risco real de dado corrompido.
 
 **4.5 — `useFetchData` (hook novo do colaborador) só foi adotado pela metade**
 `useAllGames`/`useAllNews`/`useAllReviews` já usam, mas `useAdminUsers.ts:12-33`, `ReviewClient.tsx` (3 blocos ~91-130) e `NewsInteractions.tsx` (2 blocos, 11-27 e 44-54) continuam reimplementando o mesmo `fetch().then(ok?json:null).then(setState).catch(()=>{})` manualmente.
 
-**4.6 — Busca de usuários admin sem debounce**
-`src/app/admin/_hooks/useAdminUsers.ts:12-33` — `search` como dependência direta do `useEffect`, dispara 1 requisição por tecla, sem cancelamento — respostas fora de ordem podem sobrescrever o resultado mais recente com um mais antigo.
-*Fix:* debounce de ~300ms antes de entrar no array de dependências.
+**4.6 — [RESOLVIDO 2026-07-28] Busca de usuários admin sem debounce**
+`useAdminUsers.ts` — `search` agora passa por um debounce de 300ms antes de virar dependência do `useEffect` de fetch, e a busca ganhou um guard `cancelled` (mesmo padrão já usado em `useUserSession`/`useFetchData`) pra respostas fora de ordem não sobrescreverem o resultado mais recente.
 
 **4.7 — `catch` vazio no POST de contagem de views, não só nos GETs**
 `NewsInteractions.tsx:14-26` — se o POST de `/api/noticias/view` falhar, o `sessionStorage` nunca é setado (está dentro do `.then`), então a mesma notícia tenta de novo a cada reload, sem backoff nem sinal pro usuário. Severidade baixa, mas vale documentar se é "fire-and-forget" proposital.
@@ -129,8 +125,8 @@ Investigando antes de corrigir: a seção é um teaser proposital — sempre mos
 **4.8 — [RESOLVIDO 2026-07-28] Botões do `ContactBox` sem handler nenhum**
 Investigado antes de corrigir: `Listing` (tipo em `src/lib/types.ts`) não tem campo de telefone/WhatsApp do vendedor, e não existe chat interno nem API de favoritar anúncio no backend — implementar de verdade seria escopo bem maior que "baixo esforço". Marcado como indisponível: os 3 botões (WhatsApp/Chat Interno/Salvar Anúncio) ganharam `disabled`, `title="Em breve"` e estilo esmaecido + "(Em breve)" no texto, em vez de parecerem funcionais sem fazer nada.
 
-**4.9 — Efeito do carrossel da home reinicia em vez de só pausar**
-`src/components/home/TrendingStrip.tsx:31-45` — `useEffect` com `[slideCount, isPaused]` recria o `setInterval` do zero a cada hover, então passar o mouse repetidamente reseta a contagem de 6s em vez de continuar de onde parou.
+**4.9 — [RESOLVIDO 2026-07-28] Efeito do carrossel da home reiniciava em vez de só pausar**
+`TrendingStrip.tsx` — o `setInterval` agora é criado uma única vez por `slideCount` (não mais recriado a cada toggle de `isPaused`); o estado de pausa é lido via `ref` dentro do callback do timer, então passar o mouse repetidamente só pula o avanço enquanto pausado, sem resetar a fase da contagem de 6s.
 
 ---
 

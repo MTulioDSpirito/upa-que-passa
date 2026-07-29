@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import LoadingSpinner from "./LoadingSpinner";
 
 interface LoadingScreenProps {
@@ -18,10 +19,12 @@ export default function LoadingScreen({ label = "Carregando o portal..." }: Load
       <div className="relative z-10 flex flex-col items-center gap-6">
         {/* Brand Logo with a nice neon glow border */}
         <div className="relative w-20 h-20 rounded-2xl overflow-hidden border-2 border-purple-600 bg-[#0f0f18] shadow-[0_0_25px_rgba(124,58,237,0.4)]">
-          <img
+          <Image
             src="/logo_upa_que_passa.jpg"
             alt="Upa que Passa Logo"
-            className="w-full h-full object-cover"
+            fill
+            sizes="80px"
+            className="object-cover"
           />
         </div>
 

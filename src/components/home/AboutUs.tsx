@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Users, ArrowRight, Sparkles } from "lucide-react";
 
 export default function AboutUs() {
@@ -71,10 +72,12 @@ export default function AboutUs() {
               >
                 <div className="relative w-16 h-16 mx-auto mb-3">
                   <div className="absolute inset-0 bg-gradient-to-tr from-purple-600 to-blue-500 rounded-full opacity-0 group-hover/card:opacity-100 blur-[8px] transition-all duration-300" />
-                  <img
+                  <Image
                     src={member.avatar}
                     alt={member.name}
-                    className="relative w-16 h-16 rounded-full bg-purple-950/20 border border-white/10 group-hover/card:border-purple-400 transition-all duration-300 object-cover"
+                    fill
+                    sizes="64px"
+                    className="rounded-full bg-purple-950/20 border border-white/10 group-hover/card:border-purple-400 transition-all duration-300 object-cover"
                   />
                 </div>
                 <h4 className="font-bold text-white text-sm group-hover/card:text-purple-300 transition-colors truncate">
