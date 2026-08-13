@@ -1,5 +1,16 @@
 import type { NextConfig } from "next";
 
+// 'unsafe-inline' é necessário mesmo em produção: o Next.js injeta o payload de
+// hidratação (RSC) via <script> inline, e não há como gerar um nonce por
+// requisição para páginas estáticas/ISR (o HTML é gerado uma vez no build ou a
+// cada revalidação, não a cada request — não existe nonce "certo" possível).
+// Sem isso, o React nunca hidrata: a página aparece renderizada mas nenhum botão,
+// formulário, paginação ou carrossel funciona. Tentamos CSP com nonce por
+// requisição via middleware antes disso; funcionava nas poucas rotas 100%
+// dinâmicas, mas quebrava todas as páginas estáticas/ISR (home, /noticias,
+// /reviews, /ranking, etc.), que são a maioria do site.
+const scriptSrc = "'self' 'unsafe-inline' https://challenges.cloudflare.com";
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -15,13 +26,15 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "blog.playstation.com" },
     ],
   },
-  // Content-Security-Policy fica no middleware (src/proxy.ts) porque precisa de um
-  // nonce diferente a cada requisição — aqui só ficam os headers que não mudam.
   async headers() {
     return [
       {
         source: "/:path*",
         headers: [
+          {
+            key: "Content-Security-Policy",
+            value: `default-src 'self'; script-src ${scriptSrc}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self'; connect-src 'self'; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://challenges.cloudflare.com;`,
+          },
           {
             key: "X-Frame-Options",
             value: "DENY",
