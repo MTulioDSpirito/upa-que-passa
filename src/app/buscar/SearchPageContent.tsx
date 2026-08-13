@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Search, Gamepad2, Newspaper, Loader2, Calendar } from "lucide-react";
 import { Game, NewsArticle } from "@/lib/types";
 import CardCover from "@/components/ui/CardCover";
+import { useSearchParam } from "@/lib/useSearchParam";
 
 export default function SearchPageContent() {
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const initialQuery = searchParams.get("q") || "";
+  const initialQuery = useSearchParam("q") ?? "";
 
   const [query, setQuery] = useState(initialQuery);
   const [activeSearch, setActiveSearch] = useState(initialQuery);
@@ -21,10 +21,11 @@ export default function SearchPageContent() {
   const [loading, setLoading] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
 
-  // Sync state if URL query changes
+  // Sync state if URL query changes (ex: busca de novo, botão voltar do navegador)
   useEffect(() => {
     setQuery(initialQuery);
     setActiveSearch(initialQuery);
+    setHasFetched(false);
   }, [initialQuery]);
 
   // Load data if search term is active
