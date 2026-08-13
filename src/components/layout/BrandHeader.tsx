@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function BrandHeader() {
   return (
@@ -21,7 +22,11 @@ export default function BrandHeader() {
       <div className="max-w-7xl mx-auto px-4 relative">
         <div className="flex flex-col sm:flex-row sm:items-end gap-4 -mt-16 sm:-mt-20 pb-4 relative z-10">
           {/* Logo do Canal */}
-          <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden border-4 border-purple-600 bg-[#0f0f18] shadow-2xl shadow-purple-900/50 flex-shrink-0 animate-pulse-slow transition-all duration-300 ease-out cursor-pointer animate-glitch-hover">
+          <Link
+            href="/"
+            aria-label="Voltar para a home"
+            className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden border-4 border-purple-600 bg-[#0f0f18] shadow-2xl shadow-purple-900/50 flex-shrink-0 animate-pulse-slow transition-all duration-300 ease-out cursor-pointer animate-glitch-hover block"
+          >
             <Image
               src="/logo_upa_que_passa.jpg"
               alt="Upa que Passa Logo"
@@ -30,7 +35,7 @@ export default function BrandHeader() {
               sizes="(min-width: 640px) 144px, 112px"
               className="object-cover transition-all duration-300 ease-out"
             />
-          </div>
+          </Link>
 
           {/* Nome e Descrição */}
           <div className="mb-2 flex-1 min-w-0">

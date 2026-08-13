@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import Image from "next/image";
+import Link from "next/link";
 import { Gamepad2, Eye, EyeOff, Lock, Mail, ShieldCheck, Loader2 } from "lucide-react";
 import { adminLoginAction, type AdminLoginActionState } from "./actions";
 import { useSearchParam } from "@/lib/useSearchParam";
@@ -44,7 +45,7 @@ export default function AdminLoginForm() {
       <div className="w-full max-w-md relative z-10">
         {/* Logo & Title */}
         <div className="text-center mb-8 group">
-          <div className="relative w-20 h-20 mx-auto mb-5">
+          <Link href="/" className="relative w-20 h-20 mx-auto mb-5 block" aria-label="Voltar para a home">
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-500 blur-md opacity-45 group-hover:opacity-80 transition-all duration-300 group-hover:scale-110" />
             <div className="relative w-20 h-20 rounded-2xl bg-[#0f0f18] border border-white/10 flex items-center justify-center shadow-lg group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
               <Image
@@ -55,7 +56,7 @@ export default function AdminLoginForm() {
                 className="object-contain"
               />
             </div>
-          </div>
+          </Link>
           <h1 className="text-3xl font-black tracking-wider text-white">
             <span className="text-white">PAINEL</span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400"> ADMIN</span>
