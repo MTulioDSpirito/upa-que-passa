@@ -32,3 +32,17 @@ export function formatDate(dateStr: string): string {
   const [year, month, day] = cleanDateStr.split("-").map(Number);
   return new Date(year, month - 1, day).toLocaleDateString("pt-BR");
 }
+
+export function getYouTubeEmbedUrl(url: string): string {
+  if (!url) return "";
+  
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  
+  if (match && match[2].length === 11) {
+    return `https://www.youtube.com/embed/${match[2]}`;
+  }
+  
+  return url;
+}
+

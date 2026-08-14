@@ -8,7 +8,7 @@ import {
   MessageSquare, ShoppingBag, BarChart3, Calendar, Clock, Layers, Globe,
   Shield, Users, Gamepad2, Info, Check, Eye, Sparkles, Award, Tv
 } from "lucide-react";
-import { getScoreColor, getScoreBg, formatScore, formatDate, formatPrice } from "@/lib/data";
+import { getScoreColor, getScoreBg, formatScore, formatDate, formatPrice, getYouTubeEmbedUrl } from "@/lib/data";
 import GameCard from "@/components/games/GameCard";
 import team from "@/mocks/team";
 import { useUserSession } from "@/hooks/useUserSession";
@@ -500,7 +500,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                       <div className="absolute -inset-1.5 bg-gradient-to-r from-red-600 to-purple-600 rounded-2xl blur opacity-15 group-hover:opacity-30 transition duration-700" />
                       <div className="relative rounded-2xl overflow-hidden aspect-video bg-black/90 border border-white/5 shadow-2xl">
                         <iframe
-                          src={game.trailer}
+                          src={getYouTubeEmbedUrl(game.trailer)}
                           className="w-full h-full"
                           allowFullScreen
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
