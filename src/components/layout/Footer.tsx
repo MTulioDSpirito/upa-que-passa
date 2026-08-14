@@ -112,7 +112,7 @@ export default function Footer() {
 
         <div className="border-t border-white/5 pt-8 mt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-col gap-1 text-center md:text-left">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500" suppressHydrationWarning>
               © {new Date().getFullYear()} Upa que Passa. Todos os direitos reservados. Site de fãs não afiliado à Sony Interactive Entertainment ou marcas parceiras.
             </p>
             <p className="text-xs text-gray-600">

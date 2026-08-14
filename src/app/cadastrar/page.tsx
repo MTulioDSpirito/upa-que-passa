@@ -253,13 +253,13 @@ export default function CadastrarPage() {
               <p className="text-gray-400 mb-8">
                 Bem-vindo ao Upa que Passa, <strong className="text-white">{form.nickname}</strong>! Sua conta já está ativa e você já entrou.
               </p>
-              <Link
+              <a
                 href="/"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-xl hover:from-purple-500 hover:to-blue-500 transition-all"
               >
                 <Gamepad2 className="w-4 h-4" />
                 Ir para a Home
-              </Link>
+              </a>
             </div>
           )}
         </div>
