@@ -111,9 +111,14 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-white/5 pt-8 mt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-gray-500 text-center md:text-left">
-            © {new Date().getFullYear()} Upa que Passa. Todos os direitos reservados. Site de fãs não afiliado à Sony Interactive Entertainment ou marcas parceiras.
-          </p>
+          <div className="flex flex-col gap-1 text-center md:text-left">
+            <p className="text-xs text-gray-500">
+              © {new Date().getFullYear()} Upa que Passa. Todos os direitos reservados. Site de fãs não afiliado à Sony Interactive Entertainment ou marcas parceiras.
+            </p>
+            <p className="text-xs text-gray-600">
+              Desenvolvido com ❤️ pelos devs <span className="text-purple-400/80 font-medium">Capelli</span> & <span className="text-blue-400/80 font-medium">inTúlio</span>.
+            </p>
+          </div>
           <div className="flex gap-6">
             <Link href="/termos-de-uso" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Termos de Uso</Link>
             <Link href="/politica-de-privacidade" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">Privacidade</Link>

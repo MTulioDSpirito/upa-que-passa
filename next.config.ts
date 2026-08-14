@@ -9,7 +9,8 @@ import type { NextConfig } from "next";
 // requisição via middleware antes disso; funcionava nas poucas rotas 100%
 // dinâmicas, mas quebrava todas as páginas estáticas/ISR (home, /noticias,
 // /reviews, /ranking, etc.), que são a maioria do site.
-const scriptSrc = "'self' 'unsafe-inline' https://challenges.cloudflare.com";
+const isDev = process.env.NODE_ENV === "development";
+const scriptSrc = `'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://challenges.cloudflare.com`;
 
 const nextConfig: NextConfig = {
   images: {

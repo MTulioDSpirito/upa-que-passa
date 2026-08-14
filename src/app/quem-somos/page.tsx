@@ -50,17 +50,17 @@ const teamExtras: Record<string, TeamMemberExtra> = {
     ]
   },
   "Fael": {
-    quote: "Nostalgia é o meu superpoder. No meu tempo tudo isso aqui era mato e pixel.",
-    favGame: "Jaleco Arcade Collection Vol. 1 & 2",
-    specialSkill: "Invocar Memória Afetiva Gamer (+50% de Hype)",
-    weakness: "Controles com mais de 4 botões",
+    quote: "Quando parece impossível, é que começa a partida de verdade",
+    favGame: "GTA V",
+    specialSkill: "invocar o ACREDITE aos 90 minutos do 2º tempo no FIFA",
+    weakness: "Farming infinito e Tela de 'Voce morreu' pela 37ª vez",
     themeColor: "bg-red-500 text-white",
     accentColor: "border-red-500 text-red-400",
     stats: [
-      { label: "Carisma", value: 95, icon: Smile },
-      { label: "Nostalgia", value: 99, icon: Heart },
-      { label: "Casual", value: 80, icon: Shield },
-      { label: "Hype", value: 85, icon: Zap },
+      { label: "Virada Heroica", value: 99, icon: Flame },
+      { label: "Nostalgia", value: 83, icon: Heart },
+      { label: "Estratégia", value: 92, icon: Sword },
+      { label: "Paciência", value: 53, icon: Trophy },
     ]
   },
   "Ique": {
