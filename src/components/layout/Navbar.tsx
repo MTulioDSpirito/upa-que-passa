@@ -159,11 +159,11 @@ export default function Navbar() {
         {/* Mobile Hamburguer Toggle (only visible on mobile/tablet) */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="lg:hidden p-1 text-gray-400 opacity-30 hover:opacity-100 hover:text-white transition-opacity"
+          className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"
           aria-label="Menu"
           aria-expanded={mobileOpen}
         >
-          {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
 
         {/* Right actions (Search, Bell, Account) */}
@@ -238,7 +238,7 @@ export default function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="lg:hidden fixed top-14 left-0 right-0 z-40 bg-[#0f0f18] border-t border-white/5 py-4 space-y-2 shadow-2xl shadow-black/50 max-h-[calc(100vh-3.5rem)] overflow-y-auto"
+              className="lg:hidden fixed top-14 left-0 w-1/2 z-40 bg-[#0f0f18]/70 backdrop-blur-md border-t border-r border-white/5 rounded-br-2xl py-4 space-y-2 shadow-2xl shadow-black/50 max-h-[calc(100vh-3.5rem)] overflow-y-auto"
             >
               <nav className="flex flex-col px-3 space-y-1">
                 {NAV_ITEMS.map((item) => {
