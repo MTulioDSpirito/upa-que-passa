@@ -31,11 +31,11 @@ export function AccountAuthBlock({
 
   if (user === null) {
     return (
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="grid grid-cols-2 gap-2">
         <Link
           href="/login"
           onClick={onNavigate}
-          className="btn-press flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 hover:shadow-[0_0_12px_rgba(168,85,247,0.25)] rounded-xl transition-all"
+          className="btn-press flex items-center justify-center gap-1.5 px-2 py-2 text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 hover:shadow-[0_0_12px_rgba(168,85,247,0.25)] rounded-xl transition-all"
         >
           <User className="w-4 h-4" />
           Entrar
@@ -43,7 +43,7 @@ export function AccountAuthBlock({
         <Link
           href="/cadastrar"
           onClick={onNavigate}
-          className="btn-press flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-purple-400 hover:text-white border border-purple-500/20 hover:border-purple-500/40 bg-white/5 hover:bg-white/10 rounded-xl transition-all"
+          className="btn-press flex items-center justify-center gap-1.5 px-2 py-2 text-sm font-semibold text-purple-400 hover:text-white border border-purple-500/20 hover:border-purple-500/40 bg-white/5 hover:bg-white/10 rounded-xl transition-all"
         >
           <UserPlus className="w-4 h-4" />
           Cadastrar
@@ -238,7 +238,7 @@ export default function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="lg:hidden fixed top-14 left-0 w-[70%] z-40 bg-[#0f0f18]/95 backdrop-blur-md border-t border-r border-white/5 rounded-br-2xl py-4 space-y-2 shadow-2xl shadow-black/50 max-h-[calc(100vh-3.5rem)] overflow-y-auto"
+              className="lg:hidden fixed top-14 left-0 w-[70%] z-40 bg-[#0f0f18]/95 backdrop-blur-md border-t border-r border-white/5 rounded-br-2xl py-4 space-y-2 shadow-2xl shadow-black/50 max-h-[calc(100dvh-3.5rem)] overflow-y-auto overscroll-contain"
             >
               <nav className="flex flex-col px-3 space-y-1">
                 {NAV_ITEMS.map((item) => {
