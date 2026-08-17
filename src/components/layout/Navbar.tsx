@@ -260,7 +260,7 @@ export default function Navbar() {
                   );
                 })}
               </nav>
-              <div className="px-3 pt-4 mt-4 border-t border-white/5 sm:hidden">
+              <div className="px-3 pt-4 mt-4 border-t border-white/5">
                 <AccountAuthBlock onNavigate={() => setMobileOpen(false)} />
               </div>
             </motion.div>
