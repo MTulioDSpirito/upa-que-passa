@@ -94,15 +94,15 @@ export default function BestReviewed({ games }: BestReviewedProps) {
           </div>
         </div>
 
-        {/* Right Side: The 3 Podium Cards */}
-        <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* Right Side: The 3 Podium Cards — carrossel (scroll-snap) no mobile, grid a partir do sm */}
+        <div className="lg:col-span-8 flex sm:grid sm:grid-cols-3 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
           {topThreeGames.map((game, index) => {
             const style = podiumStyles[index] || podiumStyles[2];
             return (
               <Link
                 key={game.id}
                 href={`/reviews/${game.slug}`}
-                className={`group relative bg-[#0f0f18]/60 backdrop-blur border rounded-2xl p-4 overflow-hidden transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between ${style.borderColor} ${style.glow}`}
+                className={`group relative snap-center shrink-0 w-[78%] sm:w-auto bg-[#0f0f18]/60 backdrop-blur border rounded-2xl p-4 overflow-hidden transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between ${style.borderColor} ${style.glow}`}
               >
                 {/* Medal and Rank Header */}
                 <div className="flex justify-between items-center mb-3">

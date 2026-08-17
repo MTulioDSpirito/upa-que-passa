@@ -7,6 +7,7 @@ import FeaturedMoment from "@/components/home/FeaturedMoment";
 import BestReviewed from "@/components/home/BestReviewed";
 import LatestReviews from "@/components/home/LatestReviews";
 import YouTubeVideos from "@/components/home/YouTubeVideos";
+import UpcomingReleases from "@/components/home/UpcomingReleases";
 import AboutUs from "@/components/home/AboutUs";
 
 // Revalidate this page every 60 seconds (Incremental Static Regeneration)
@@ -14,7 +15,7 @@ export const revalidate = 60;
 
 export default async function Home() {
   // Fetch data in parallel
-  const [dbNews, dbReviews, dbFeaturedGames, dbBestReviewedGames, dbVideos] = await Promise.all([
+  const [dbNews, dbReviews, dbFeaturedGames, dbBestReviewedGames, dbVideos, dbAllGamesForUpcoming] = await Promise.all([
     // 9 latest news articles
     prisma.newsArticle.findMany({
       orderBy: { publishedAt: "desc" },
@@ -41,6 +42,12 @@ export default async function Home() {
     prisma.youtubeVideo.findMany({
       orderBy: { createdAt: "desc" },
       take: 3
+    }),
+    // Candidatos a "próximos lançamentos" (filtramos por data futura em JS,
+    // já que releaseDate é String no schema — pega uma janela generosa ordenada)
+    prisma.game.findMany({
+      orderBy: { releaseDate: "asc" },
+      take: 40
     })
   ]);
 
@@ -121,6 +128,12 @@ export default async function Home() {
   const featuredGames: Game[] = dbFeaturedGames.map(mapGame);
   const bestReviewedGames: Game[] = dbBestReviewedGames.map(mapGame);
 
+  const today = new Date();
+  const upcomingGames: Game[] = dbAllGamesForUpcoming
+    .filter((g) => new Date(g.releaseDate) > today)
+    .map(mapGame)
+    .slice(0, 8);
+
   const videos: YoutubeVideo[] = dbVideos.map((v) => ({
     id: v.id,
     title: v.title,
@@ -149,6 +162,9 @@ export default async function Home() {
 
       {/* ─── DESTAQUE DO MOMENTO ─────────────────────────────── */}
       {topGame && <FeaturedMoment topGame={topGame} />}
+
+      {/* ─── PRÓXIMOS LANÇAMENTOS ─────────────────────────────── */}
+      {upcomingGames.length > 0 && <UpcomingReleases games={upcomingGames} />}
 
       {/* ─── YOUTUBE INTEGRATION (Últimos Vídeos) ────────────── */}
       <YouTubeVideos initialVideos={videos} />
