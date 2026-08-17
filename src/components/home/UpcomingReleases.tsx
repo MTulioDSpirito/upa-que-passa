@@ -23,7 +23,7 @@ export default function UpcomingReleases({ games }: UpcomingReleasesProps) {
         </div>
         <Link
           href="/lancamentos"
-          className="hidden sm:inline-flex items-center gap-2 text-sm font-bold text-orange-400 hover:text-orange-300 transition-colors group"
+          className="inline-flex items-center gap-2 text-sm font-bold text-orange-400 hover:text-orange-300 transition-colors group"
         >
           Ver Todos
           <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -61,15 +61,6 @@ export default function UpcomingReleases({ games }: UpcomingReleasesProps) {
           </Link>
         ))}
       </div>
-
-      {/* Botão pra todos os lançamentos — sempre visível no mobile, já que o link do header some lá */}
-      <Link
-        href="/lancamentos"
-        className="sm:hidden mt-6 flex items-center justify-center gap-2 w-full py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-sm rounded-xl transition-all"
-      >
-        Ver Todos os Lançamentos
-        <ChevronRight className="w-4 h-4" />
-      </Link>
     </section>
   );
 }

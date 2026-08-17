@@ -44,15 +44,15 @@ export default function LatestReviews({ games, reviews }: LatestReviewsProps) {
         </Link>
       </div>
 
-      {/* Grid of Reviews */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Carrossel (scroll-snap) no mobile, grid a partir do sm */}
+      <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
         {reviewsWithGames.map(({ review, game }) => {
           if (!game) return null;
           return (
             <Link
               key={review.id}
               href={`/reviews/${game.slug}#review`}
-              className="group flex flex-col bg-[#0f0f18]/60 backdrop-blur border border-white/5 hover:border-purple-500/20 rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-purple-950/10"
+              className="group snap-center shrink-0 w-[85%] sm:w-auto flex flex-col bg-[#0f0f18]/60 backdrop-blur border border-white/5 hover:border-purple-500/20 rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-purple-950/10"
             >
               {/* Cover & Score Overlay */}
               <div className="relative aspect-[16/10] w-full overflow-hidden">
