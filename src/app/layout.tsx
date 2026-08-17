@@ -25,6 +25,19 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${geist.variable} ${russoOne.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Preconnect pros CDNs de imagem mais usados no site — adianta DNS/TLS
+            antes da primeira imagem começar a baixar, sem precisar migrar pra
+            next/image (que exigiria cadastrar cada domínio externo). */}
+        <link rel="preconnect" href="https://media.rawg.io" />
+        <link rel="preconnect" href="https://cdn.cloudflare.steamstatic.com" />
+        <link rel="preconnect" href="https://upload.wikimedia.org" />
+        <link rel="preconnect" href="https://api.dicebear.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://media.rawg.io" />
+        <link rel="dns-prefetch" href="https://cdn.cloudflare.steamstatic.com" />
+        <link rel="dns-prefetch" href="https://upload.wikimedia.org" />
+        <link rel="dns-prefetch" href="https://api.dicebear.com" />
+      </head>
       <body className="bg-[#07070a] text-white antialiased overflow-x-hidden" suppressHydrationWarning>
         <SiteShell>{children}</SiteShell>
       </body>
