@@ -159,11 +159,11 @@ export default function Navbar() {
         {/* Mobile Hamburguer Toggle (only visible on mobile/tablet) */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="lg:hidden px-1.5 py-2 text-gray-400/60 hover:text-white transition-colors"
+          className="lg:hidden px-1 py-1.5 text-gray-400 opacity-50 hover:opacity-100 hover:text-white transition-opacity"
           aria-label="Menu"
           aria-expanded={mobileOpen}
         >
-          {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
 
         {/* Right actions (Search, Bell, Account) */}
