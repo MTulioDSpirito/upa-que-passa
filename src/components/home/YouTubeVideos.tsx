@@ -106,14 +106,14 @@ export default function YouTubeVideos({ initialVideos }: { initialVideos?: Youtu
         </a>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
+      <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0 relative z-10">
         {videos.map((video: any) => (
           <a
             key={video.id}
             href={video.videoUrl || "https://www.youtube.com/@upaquepassa"}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative p-[1px] bg-white/5 hover:bg-gradient-to-br hover:from-red-600 hover:to-orange-500 rounded-2xl transition-all duration-500 hover:shadow-[0_0_35px_rgba(239,68,68,0.18)] flex flex-col h-full cursor-pointer"
+            className="group relative snap-center shrink-0 w-[80%] sm:w-auto p-[1px] bg-white/5 hover:bg-gradient-to-br hover:from-red-600 hover:to-orange-500 rounded-2xl transition-all duration-500 hover:shadow-[0_0_35px_rgba(239,68,68,0.18)] flex flex-col h-full cursor-pointer"
           >
             {/* Outer floating brackets on card corners */}
             <div className="absolute -top-1 -left-1 w-3.5 h-3.5 border-t-2 border-l-2 border-transparent group-hover:border-red-500 transition-all duration-300 z-20 rounded-tl-sm" />

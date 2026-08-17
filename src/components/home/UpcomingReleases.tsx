@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Rocket, ChevronRight, Calendar } from "lucide-react";
 import { Game } from "@/lib/types";
-import CardCover from "@/components/ui/CardCover";
 
 interface UpcomingReleasesProps {
   games: Game[];
@@ -31,27 +30,33 @@ export default function UpcomingReleases({ games }: UpcomingReleasesProps) {
         </Link>
       </div>
 
-      {/* Carrossel (scroll-snap) no mobile, grid a partir do sm */}
-      <div className="flex sm:grid sm:grid-cols-3 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
+      {/* Carrossel (scroll-snap) no mobile, grid a partir do sm — 4 jogos só, então grid-cols-4 já cabe */}
+      <div className="flex sm:grid sm:grid-cols-4 gap-3 sm:gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
         {games.map((game) => (
           <Link
             key={game.id}
             href={`/reviews/${game.slug}`}
-            className="group snap-center shrink-0 w-[65%] sm:w-auto relative bg-[#0f0f18]/60 border border-white/5 rounded-2xl overflow-hidden hover:border-orange-500/30 transition-all duration-300 flex flex-col"
+            className="group snap-center shrink-0 w-[38%] sm:w-auto relative bg-[#0f0f18]/60 border border-white/5 rounded-2xl overflow-hidden hover:border-orange-500/30 transition-all duration-300 flex flex-col"
           >
-            <div className="relative aspect-[3/4] w-full overflow-hidden">
-              <CardCover src={game.cover} alt={game.title} className="group-hover:scale-105 transition-transform duration-500" />
+            <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#0a0a10]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={game.cover || "/cover_conteudo_nao_disponivel.png"}
+                alt={game.title}
+                loading="lazy"
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f18] via-transparent to-transparent" />
-              <div className="absolute bottom-2 left-2 right-2 flex items-center gap-1 bg-black/70 backdrop-blur-md rounded-lg px-2 py-1 text-[10px] font-bold text-orange-300">
+              <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center gap-1 bg-black/70 backdrop-blur-md rounded-lg px-1.5 py-0.5 text-[9px] font-bold text-orange-300">
                 <Calendar className="w-3 h-3 flex-shrink-0" />
-                {formatShortDate(game.releaseDate)}
+                <span className="truncate">{formatShortDate(game.releaseDate)}</span>
               </div>
             </div>
-            <div className="p-3">
-              <h3 className="text-sm font-bold text-white group-hover:text-orange-400 transition-colors line-clamp-1">
+            <div className="p-2 sm:p-3">
+              <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-orange-400 transition-colors line-clamp-1">
                 {game.title}
               </h3>
-              <p className="text-[11px] text-gray-500 truncate">{game.developer}</p>
+              <p className="text-[10px] sm:text-[11px] text-gray-500 truncate">{game.developer}</p>
             </div>
           </Link>
         ))}

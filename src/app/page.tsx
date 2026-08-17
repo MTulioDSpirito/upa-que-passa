@@ -132,7 +132,7 @@ export default async function Home() {
   const upcomingGames: Game[] = dbAllGamesForUpcoming
     .filter((g) => new Date(g.releaseDate) > today)
     .map(mapGame)
-    .slice(0, 8);
+    .slice(0, 4);
 
   const videos: YoutubeVideo[] = dbVideos.map((v) => ({
     id: v.id,
