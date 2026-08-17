@@ -9,12 +9,12 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 const russoOne = Russo_One({ subsets: ["latin"], weight: "400", variable: "--font-display" });
 
 export const metadata: Metadata = {
-  title: "Upa que Passa — Reviews, Notas e Marketplace de Jogos PS5",
-  description: "O maior portal brasileiro de reviews, notas e compra, venda e troca de jogos de PlayStation 5.",
-  keywords: ["reviews jogos", "PS5", "marketplace jogos", "notas jogos", "troca jogos"],
+  title: "Upa que Passa — Reviews e Notas de Jogos PS5",
+  description: "O maior portal brasileiro de reviews e notas de jogos de PlayStation 5.",
+  keywords: ["reviews jogos", "PS5", "notas jogos", "lançamentos jogos"],
   openGraph: {
     title: "Upa que Passa",
-    description: "O maior portal brasileiro de reviews e marketplace de jogos PS5",
+    description: "O maior portal brasileiro de reviews e notas de jogos PS5",
     type: "website",
   },
   icons: {
