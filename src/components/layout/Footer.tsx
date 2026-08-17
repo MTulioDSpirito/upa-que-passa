@@ -8,9 +8,9 @@ export default function Footer() {
       <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
       
       <div className="max-w-7xl mx-auto px-4 py-16 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-12">
           {/* Brand */}
-          <div className="flex flex-col gap-4">
+          <div className="col-span-2 lg:col-span-1 flex flex-col gap-4">
             <Link href="/" className="flex items-center gap-3 group w-fit">
               <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-purple-500/30 bg-[#0f0f18] transition-all duration-300 group-hover:border-purple-500/60 shadow-lg shadow-purple-500/10">
                 <img
@@ -30,7 +30,7 @@ export default function Footer() {
               O maior portal brasileiro de reviews e notícias de jogos para PlayStation 5, PC e Nintendo Switch.
             </p>
             
-            <div className="flex gap-3 mt-2">
+            <div className="hidden sm:flex gap-3 mt-2">
               {[
                 { Icon: Play, label: "YouTube", href: "https://youtube.com/@UpaquePassa", color: "hover:bg-red-600/20 hover:text-red-500" },
               ].map(({ Icon, label, href, color }) => (
@@ -90,7 +90,7 @@ export default function Footer() {
           </div>
 
           {/* Portal & Admin */}
-          <div>
+          <div className="col-span-2 lg:col-span-1">
             <h4 className="font-semibold text-white mb-5 text-sm uppercase tracking-wider border-l-2 border-pink-500 pl-3">
               Conta & Acesso
             </h4>
