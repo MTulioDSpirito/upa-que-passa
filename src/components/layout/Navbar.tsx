@@ -31,7 +31,7 @@ export function AccountAuthBlock({
 
   if (user === null) {
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
         <Link
           href="/login"
           onClick={onNavigate}
