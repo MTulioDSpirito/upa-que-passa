@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -95,14 +95,6 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const pathname = usePathname();
-
-  // Trava o scroll da página por trás enquanto o menu mobile (overlay) está aberto
-  useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileOpen]);
 
   if (pathname === "/admin/login") {
     return null;
@@ -228,17 +220,17 @@ export default function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.15 }}
               onClick={() => setMobileOpen(false)}
-              className="lg:hidden fixed inset-0 top-14 z-30 bg-black/70 backdrop-blur-sm"
+              className="lg:hidden fixed inset-0 top-14 z-30 bg-black/70"
             />
             {/* Drawer */}
             <motion.div
-              initial={{ opacity: 0, y: -16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="lg:hidden fixed top-14 left-0 w-[70%] z-40 bg-[#0f0f18]/95 backdrop-blur-md border-t border-r border-white/5 rounded-br-2xl py-4 space-y-2 shadow-2xl shadow-black/50 max-h-[calc(100dvh-3.5rem)] overflow-y-auto overscroll-contain"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="lg:hidden fixed top-14 left-0 w-[70%] z-40 bg-[#0f0f18] border-t border-r border-white/5 rounded-br-2xl py-4 space-y-2 shadow-2xl shadow-black/50 max-h-[calc(100dvh-3.5rem)] overflow-y-auto"
             >
               <nav className="flex flex-col px-3 space-y-1">
                 {NAV_ITEMS.map((item) => {
