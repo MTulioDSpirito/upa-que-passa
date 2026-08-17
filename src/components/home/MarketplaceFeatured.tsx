@@ -156,7 +156,7 @@ export default function MarketplaceFeatured() {
  
       {/* Mock Listings Grid with Blur overlay */}
       <div className="relative">
-        <div className="grid md:grid-cols-3 gap-6 select-none pointer-events-none filter blur-[3px] opacity-40">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 select-none pointer-events-none filter blur-[3px] opacity-40">
           {EXAMPLE_LISTINGS.map((listing) => (
             <div
               key={listing.id}

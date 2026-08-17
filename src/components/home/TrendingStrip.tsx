@@ -95,7 +95,7 @@ export default function TrendingStrip({ newsList }: TrendingStripProps) {
       onMouseLeave={() => setIsPaused(false)}
     >
       {/* Carousel Container with Overflow Hidden for Slide Transitions */}
-      <div className="relative overflow-hidden min-h-[580px] md:min-h-[480px]">
+      <div className="relative overflow-hidden min-h-[380px] sm:min-h-[580px] md:min-h-[480px]">
         <AnimatePresence initial={false} custom={direction} mode="wait">
           <motion.div
             key={currentSlide}
@@ -164,8 +164,8 @@ export default function TrendingStrip({ newsList }: TrendingStripProps) {
               </div>
             </div>
 
-            {/* SMALL CARDS (Right Column - Stack of 2) */}
-            <div className="flex flex-col gap-4 justify-between h-auto md:h-[480px]">
+            {/* SMALL CARDS (Right Column - Stack of 2) — ocultos em telas muito pequenas pra reduzir a quantidade de cards */}
+            <div className="hidden sm:flex flex-col gap-4 justify-between h-auto md:h-[480px]">
               {[smallArticle1, smallArticle2].map((article, idx) => (
                 <Link
                   key={article.id}
