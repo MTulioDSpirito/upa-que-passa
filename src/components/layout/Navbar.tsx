@@ -238,7 +238,7 @@ export default function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="lg:hidden fixed top-14 left-0 w-[70%] z-40 bg-[#0f0f18]/80 backdrop-blur-md border-t border-r border-white/5 rounded-br-2xl py-4 space-y-2 shadow-2xl shadow-black/50 max-h-[calc(100vh-3.5rem)] overflow-y-auto"
+              className="lg:hidden fixed top-14 left-0 w-[70%] z-40 bg-[#0f0f18]/95 backdrop-blur-md border-t border-r border-white/5 rounded-br-2xl py-4 space-y-2 shadow-2xl shadow-black/50 max-h-[calc(100vh-3.5rem)] overflow-y-auto"
             >
               <nav className="flex flex-col px-3 space-y-1">
                 {NAV_ITEMS.map((item) => {
