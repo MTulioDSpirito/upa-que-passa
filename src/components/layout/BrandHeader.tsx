@@ -72,14 +72,10 @@ export default function BrandHeader() {
               Portal brasileiro de{" "}
               <span className="text-white font-semibold underline decoration-purple-500/40 decoration-2 underline-offset-2">
                 reviews
-              </span>
-              ,{" "}
-              <span className="text-white font-semibold underline decoration-purple-500/40 decoration-2 underline-offset-2">
-                notícias
               </span>{" "}
               e{" "}
-              <span className="text-purple-300 font-semibold underline decoration-blue-neon/40 decoration-2 underline-offset-2">
-                marketplace
+              <span className="text-white font-semibold underline decoration-purple-500/40 decoration-2 underline-offset-2">
+                notícias
               </span>{" "}
               de jogos para{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00a2ff] to-[#00d0ff] font-bold">

@@ -16,16 +16,12 @@ export default function TrendingStrip({ newsList }: TrendingStripProps) {
   const [isPaused, setIsPaused] = useState(false);
   const isPausedRef = useRef(isPaused);
 
-  // Group news in chunks of 3
-  const slides: NewsArticle[][] = [];
-  for (let i = 0; i < newsList.length; i += 3) {
-    const chunk = newsList.slice(i, i + 3);
-    if (chunk.length === 3) {
-      slides.push(chunk);
-    }
-  }
-
-  const slideCount = slides.length;
+  // Cada notícia vira um slide próprio (em vez de agrupar fixo de 3 em 3, que
+  // descartava o resto e deixava menos manchetes distintas passando no mobile,
+  // onde só o card grande aparece). As duas próximas notícias entram como preview
+  // nos cards pequenos (visíveis a partir do sm) — assim, ao girar, todas as
+  // notícias aparecem como destaque em algum momento, sem repetir dentro de um ciclo.
+  const slideCount = newsList.length;
 
   useEffect(() => {
     isPausedRef.current = isPaused;
@@ -84,8 +80,11 @@ export default function TrendingStrip({ newsList }: TrendingStripProps) {
     }),
   };
 
-  const currentArticles = slides[currentSlide];
-  const [largeArticle, smallArticle1, smallArticle2] = currentArticles;
+  const largeArticle = newsList[currentSlide];
+  // Só mostra os cards pequenos se houver pelo menos 3 notícias distintas (evita repetir a mesma notícia)
+  const showSmallCards = slideCount >= 3;
+  const smallArticle1 = newsList[(currentSlide + 1) % slideCount];
+  const smallArticle2 = newsList[(currentSlide + 2) % slideCount];
 
   return (
     <section 
@@ -166,8 +165,9 @@ export default function TrendingStrip({ newsList }: TrendingStripProps) {
             </div>
 
             {/* SMALL CARDS (Right Column - Stack of 2) — ocultos em telas muito pequenas pra reduzir a quantidade de cards */}
+            {showSmallCards && (
             <div className="hidden sm:flex flex-col gap-4 justify-between h-auto md:h-[480px]">
-              {[smallArticle1, smallArticle2].map((article, idx) => (
+              {[smallArticle1, smallArticle2].map((article) => (
                 <Link
                   key={article.id}
                   href={`/noticias/${article.slug}`}
@@ -202,6 +202,7 @@ export default function TrendingStrip({ newsList }: TrendingStripProps) {
                 </Link>
               ))}
             </div>
+            )}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -217,8 +218,8 @@ export default function TrendingStrip({ newsList }: TrendingStripProps) {
         </button>
 
         {/* Bullet Indicator Dots */}
-        <div className="flex items-center gap-2">
-          {slides.map((_, index) => (
+        <div className="flex items-center gap-2 flex-wrap justify-center max-w-xs">
+          {newsList.map((_, index) => (
             <button
               key={index}
               onClick={() => handleDotClick(index)}

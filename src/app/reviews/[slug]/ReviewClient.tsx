@@ -69,7 +69,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
   const [authorName, authorAvatarUrl] = (review?.author || "").split("·").map((s: string) => s.trim());
   const authorInfo = review ? team.find((t: any) => t.name.toLowerCase() === authorName.toLowerCase()) : null;
   const authorAvatar = authorInfo?.avatar || authorAvatarUrl || (review ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${authorName}` : "");
-  const [activeTab, setActiveTab] = useState<"review" | "scores" | "gallery" | "marketplace">("review");
+  const [activeTab, setActiveTab] = useState<"review" | "scores" | "gallery">("review");
   const [userScore, setUserScore] = useState(0);
   const [hoveredScore, setHoveredScore] = useState(0);
   const [favorited, setFavorited] = useState(false);
@@ -239,7 +239,6 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
     { id: "review", label: "Review Oficial" },
     { id: "scores", label: "Notas e Análises" },
     { id: "gallery", label: "Galeria de Capturas" },
-    { id: "marketplace", label: "Marketplace" },
   ];
 
   // Helper function to get text level based on score
@@ -445,10 +444,6 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                 >
                   <Heart className={`w-4 h-4 ${favorited ? "fill-red-500 text-red-500 animate-pulse-slow" : "text-gray-400"}`} />
                   {favorited ? "Favoritado" : "Favoritar Jogo"}
-                </button>
-                <button className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600/20 to-blue-600/20 hover:from-purple-600/30 hover:to-blue-600/30 border border-purple-500/30 text-white font-bold rounded-xl hover:shadow-[0_0_15px_rgba(124,58,237,0.3)] transition-all duration-300 btn-press">
-                  <ShoppingBag className="w-4 h-4 text-purple-400" />
-                  Ver no Marketplace
                 </button>
                 <button className="p-3.5 bg-white/5 border border-white/10 text-white rounded-xl hover:bg-white/10 hover:border-white/20 transition-all duration-300 btn-press" title="Compartilhar" aria-label="Compartilhar">
                   <Share2 className="w-4 h-4 text-gray-400 hover:text-white" />
@@ -883,27 +878,6 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
               </div>
             )}
 
-            {/* TAB: MARKETPLACE */}
-            {activeTab === "marketplace" && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-mono font-bold text-white tracking-widest uppercase">Ofertas da Comunidade</h2>
-                  <Link href="/marketplace/vender" className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-500 text-white font-mono text-xs uppercase tracking-wider rounded-xl transition-all duration-300 btn-press">
-                    <ShoppingBag className="w-4 h-4" />
-                    Anunciar
-                  </Link>
-                </div>
-                <div className="text-center py-20 bg-white/[0.01] border border-white/5 rounded-3xl">
-                  <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4 border border-white/10">
-                    <ShoppingBag className="w-6 h-6 text-gray-500" />
-                  </div>
-                  <p className="text-sm font-mono text-gray-500 uppercase tracking-widest mb-3">Nenhum anúncio disponível para este jogo</p>
-                  <Link href="/marketplace/vender" className="text-xs font-mono uppercase text-green-400 hover:text-green-300 underline">
-                    Seja o primeiro a anunciar!
-                  </Link>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Sidebar Technical Column */}

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Search, Bell, Gamepad2, Home, Star, Newspaper, Trophy, Rocket, User, UserPlus, LogOut, Users } from "lucide-react";
 import { useUserSession } from "@/hooks/useUserSession";
 import { openSearch } from "./SearchModal";
@@ -95,6 +96,14 @@ export default function Navbar() {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const pathname = usePathname();
 
+  // Trava o scroll da página por trás enquanto o menu mobile (overlay) está aberto
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
   if (pathname === "/admin/login") {
     return null;
   }
@@ -150,7 +159,7 @@ export default function Navbar() {
         {/* Mobile Hamburguer Toggle (only visible on mobile/tablet) */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"
+          className="lg:hidden px-1.5 py-2 text-gray-400/60 hover:text-white transition-colors"
           aria-label="Menu"
           aria-expanded={mobileOpen}
         >
@@ -210,34 +219,54 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Navigation Drawer */}
-      {mobileOpen && (
-        <div className="lg:hidden bg-[#0f0f18] border-t border-white/5 py-4 space-y-2">
-          <nav className="flex flex-col px-3 space-y-1">
-            {NAV_ITEMS.map((item) => {
-              const active = pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                    active
-                      ? "bg-purple-600/20 text-purple-400 border border-purple-500/20"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  <item.icon className="w-4 h-4" />
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
-          <div className="px-3 pt-4 mt-4 border-t border-white/5 sm:hidden">
-            <AccountAuthBlock onNavigate={() => setMobileOpen(false)} />
-          </div>
-        </div>
-      )}
+      {/* Mobile Navigation Overlay — fixo, sobrepõe a página em vez de empurrar o conteúdo */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setMobileOpen(false)}
+              className="lg:hidden fixed inset-0 top-14 z-30 bg-black/70 backdrop-blur-sm"
+            />
+            {/* Drawer */}
+            <motion.div
+              initial={{ opacity: 0, y: -16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="lg:hidden fixed top-14 left-0 right-0 z-40 bg-[#0f0f18] border-t border-white/5 py-4 space-y-2 shadow-2xl shadow-black/50 max-h-[calc(100vh-3.5rem)] overflow-y-auto"
+            >
+              <nav className="flex flex-col px-3 space-y-1">
+                {NAV_ITEMS.map((item) => {
+                  const active = pathname === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                        active
+                          ? "bg-purple-600/20 text-purple-400 border border-purple-500/20"
+                          : "text-gray-400 hover:text-white hover:bg-white/5"
+                      }`}
+                    >
+                      <item.icon className="w-4 h-4" />
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+              <div className="px-3 pt-4 mt-4 border-t border-white/5 sm:hidden">
+                <AccountAuthBlock onNavigate={() => setMobileOpen(false)} />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
