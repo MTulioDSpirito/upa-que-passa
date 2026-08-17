@@ -103,6 +103,14 @@ const gameSchema = z.object({
   gallery: z.array(z.string()).catch([]),
   description: z.string().trim().catch(""),
   metacriticScore: z.coerce.number().optional().nullable().catch(null),
+  ageRating: z.string().trim().catch("L"),
+  avgPlayTime: z.string().trim().optional().nullable().catch(null),
+  online: z.boolean().catch(false),
+  offline: z.boolean().catch(true),
+  maxPlayers: z.coerce.number().catch(1),
+  languages: z.array(z.string()).catch([]),
+  subtitles: z.array(z.string()).catch([]),
+  dubbing: z.array(z.string()).catch([]),
 });
 
 export async function POST(request: Request) {
@@ -131,7 +139,8 @@ export async function POST(request: Request) {
 
   const {
     title, cover, developer, publisher, releaseDate, synopsis, genres, platforms, suggestedPrice,
-    trailer, gallery, description, metacriticScore
+    trailer, gallery, description, metacriticScore,
+    ageRating, avgPlayTime, online, offline, maxPlayers, languages, subtitles, dubbing
   } = parsed.data;
 
   if (!(await isSafeImageUrl(cover))) {
@@ -183,13 +192,13 @@ export async function POST(request: Request) {
     suggestedPrice,
     platforms,
     genres,
-    online: false,
-    offline: true,
-    maxPlayers: 1,
-    languages: ["Português (BR)", "Inglês"],
-    subtitles: ["Português (BR)", "Inglês"],
-    dubbing: [],
-    ageRating: "L",
+    online,
+    offline,
+    maxPlayers,
+    languages,
+    subtitles,
+    dubbing,
+    ageRating,
     links: [],
     userScore: 0,
     adminScore: worldAvg,
@@ -227,7 +236,8 @@ export async function PUT(request: Request) {
 
     const {
       title, cover, developer, publisher, releaseDate, synopsis, genres, platforms, suggestedPrice,
-      trailer, gallery, description, metacriticScore
+      trailer, gallery, description, metacriticScore,
+      ageRating, avgPlayTime, online, offline, maxPlayers, languages, subtitles, dubbing
     } = parsed.data;
 
     const existing = await prisma.game.findUnique({
@@ -262,6 +272,14 @@ export async function PUT(request: Request) {
         metacriticScore: metacriticScore || null,
         siteScores,
         worldAvg: worldAvg ?? null,
+        ageRating,
+        avgPlayTime,
+        online,
+        offline,
+        maxPlayers,
+        languages,
+        subtitles,
+        dubbing,
       },
     });
 
