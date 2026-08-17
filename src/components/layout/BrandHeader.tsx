@@ -5,7 +5,7 @@ export default function BrandHeader() {
   return (
     <header className="relative w-full bg-[#07070a] border-b border-purple-900/20">
       {/* ─── BANNER SUPERIOR ────────────────────────────────────── */}
-      <div className="relative w-full h-44 sm:h-56 md:h-64 overflow-hidden bg-black/40">
+      <div className="relative w-full h-32 sm:h-44 md:h-56 lg:h-64 overflow-hidden bg-black/40">
         <Image
           src="/upa_que_passa_banner.jpeg"
           alt="Upa que Passa Banner"
@@ -20,19 +20,19 @@ export default function BrandHeader() {
 
       {/* ─── LOGOTIPO E BARRA DE IDENTIDADE ──────────────────────── */}
       <div className="max-w-7xl mx-auto px-4 relative">
-        <div className="flex flex-col sm:flex-row sm:items-end gap-4 -mt-16 sm:-mt-20 pb-4 relative z-10">
+        <div className="flex flex-col sm:flex-row sm:items-end gap-4 -mt-8 sm:-mt-16 md:-mt-20 pb-4 relative z-10">
           {/* Logo do Canal */}
           <Link
             href="/"
             aria-label="Voltar para a home"
-            className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden border-4 border-purple-600 bg-[#0f0f18] shadow-2xl shadow-purple-900/50 flex-shrink-0 animate-pulse-slow transition-all duration-300 ease-out cursor-pointer animate-glitch-hover block"
+            className="relative w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 rounded-2xl overflow-hidden border-4 border-purple-600 bg-[#0f0f18] shadow-2xl shadow-purple-900/50 flex-shrink-0 animate-pulse-slow transition-all duration-300 ease-out cursor-pointer animate-glitch-hover block"
           >
             <Image
               src="/logo_upa_que_passa.jpg"
               alt="Upa que Passa Logo"
               fill
               priority
-              sizes="(min-width: 640px) 144px, 112px"
+              sizes="(min-width: 768px) 144px, (min-width: 640px) 112px, 80px"
               className="object-cover transition-all duration-300 ease-out"
             />
           </Link>

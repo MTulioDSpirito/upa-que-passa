@@ -297,7 +297,7 @@ export default function RankingClient({ initialGames }: { initialGames: Game[] }
 
       {/* Dynamic Podium */}
       {podiumGames.length > 0 && (
-        <div className="grid grid-cols-3 gap-4 items-end mb-12 max-w-2xl mx-auto bg-[#0a0a12]/30 border border-white/5 p-6 rounded-3xl backdrop-blur-sm">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 items-end mb-12 max-w-2xl mx-auto bg-[#0a0a12]/30 border border-white/5 p-3 sm:p-6 rounded-3xl backdrop-blur-sm">
           {podiumGames.map(({ game, pos, medal, color, bg }) => {
             const displayScore = getDisplayScore(game);
             const scoreNum = sortBy === "uqp" ? (game.adminScore || game.worldAvg || 0) : sortBy === "users" ? (game.userScore || 0) : (game.metacriticScore ? game.metacriticScore / 10 : 0);
@@ -313,7 +313,7 @@ export default function RankingClient({ initialGames }: { initialGames: Game[] }
                 <div className="text-4xl mb-2 filter drop-shadow">{medal}</div>
                 <div
                   className={`relative mb-3 overflow-hidden rounded-2xl border-2 ${color} shadow-2xl ${
-                    pos === 0 ? "w-28 h-40" : "w-24 h-32"
+                    pos === 0 ? "w-16 h-24 sm:w-20 sm:h-28 md:w-28 md:h-40" : "w-14 h-20 sm:w-16 sm:h-24 md:w-24 md:h-32"
                   }`}
                 >
                   <CardCover src={game.cover} alt={game.title} />
