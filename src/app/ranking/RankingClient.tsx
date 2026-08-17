@@ -356,7 +356,7 @@ export default function RankingClient({ initialGames }: { initialGames: Game[] }
               <Link
                 key={game.id}
                 href={`/reviews/${game.slug}`}
-                className="flex items-center gap-4 bg-[#0f0f18]/80 border border-white/5 rounded-2xl p-4 hover:border-purple-500/20 transition-all hover:bg-[#131322] group"
+                className="flex items-center gap-2 sm:gap-4 bg-[#0f0f18]/80 border border-white/5 rounded-2xl p-3 sm:p-4 hover:border-purple-500/20 transition-all hover:bg-[#131322] group overflow-hidden"
               >
                 <div
                   className={`text-xl font-black w-10 text-center ${
@@ -389,7 +389,7 @@ export default function RankingClient({ initialGames }: { initialGames: Game[] }
                     <p className="text-xs text-gray-500">
                       {game.developer} · {new Date(game.releaseDate).getFullYear()}
                     </p>
-                    <div className="flex gap-1.5 animate-fade-in">
+                    <div className="hidden sm:flex gap-1.5 flex-wrap animate-fade-in">
                       {game.platforms?.map((plat) => (
                         <span
                           key={plat}
