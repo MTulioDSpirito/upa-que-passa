@@ -9,33 +9,7 @@ import CardCover from "@/components/ui/CardCover";
 
 export const dynamic = "force-dynamic";
 
-const UPCOMING = [
-  { id: "u1", title: "Assassin's Creed Black Flag Resynced", developer: "Ubisoft Montpellier", releaseDate: "2026-07-09", cover: "https://media.rawg.io/media/screenshots/990/99088f6f170459244defd7afd9fce096.jpg", platforms: ["PS5", "Xbox Series X|S", "PC"], genres: ["Ação", "Aventura"] },
-  { id: "u2", title: "Marvel's Wolverine", developer: "Insomniac Games", releaseDate: "2026-09-15", cover: "https://media.rawg.io/media/games/28d/28d61be51ec0411e24c28f71122dcaaf.jpeg", platforms: ["PS5"], genres: ["Ação", "Aventura"] },
-  { id: "u3", title: "GTA VI", developer: "Rockstar Games", releaseDate: "2026-11-19", cover: "https://media.rawg.io/media/games/734/7342a1cd82c8997ec620084ae4c2e7e4.jpg", platforms: ["PS5", "Xbox Series X|S"], genres: ["Ação", "Mundo Aberto"] },
-  { id: "u4", title: "Halo: Campaign Evolved", developer: "Halo Studios", releaseDate: "2026-07-28", cover: "https://media.rawg.io/media/screenshots/c44/c445c015eb08b156eed3f047f9718508.jpg", platforms: ["PS5", "Xbox Series X|S", "PC"], genres: ["Tiro em Primeira Pessoa", "Ação"] },
-  { id: "u5", title: "Onimusha: Way of the Sword", developer: "Capcom", releaseDate: "2026-09-04", cover: "https://media.rawg.io/media/screenshots/965/9653d36f42d6a7a360c99963253384ff.jpg", platforms: ["PS5", "Xbox Series X|S", "PC", "Switch 2"], genres: ["Ação", "Aventura", "RPG"] },
-  { id: "u6", title: "Control Resonant", developer: "Remedy Entertainment", releaseDate: "2026-09-24", cover: "https://media.rawg.io/media/screenshots/5b8/5b812f73e4c5df28630747c52f57170b.jpg", platforms: ["PS5", "Xbox Series X|S", "PC"], genres: ["Ação", "Aventura"] },
-  { id: "u7", title: "Silent Hill: Townfall", developer: "Screen Burn Interactive", releaseDate: "2026-09-24", cover: "https://media.rawg.io/media/games/d1c/d1c4e52d3084231530fcab5d90033d42.jpg", platforms: ["PS5", "PC"], genres: ["Terror", "Aventura"] },
-];
-
 const RECENT_WINDOW_DAYS = 60;
-
-// Aliases para jogos cujo título mudou entre a lista estática e o banco
-// (ex.: "GTA VI" nesta lista vs "Grand Theft Auto VI" cadastrado pelo agente Milo)
-const TITLE_ALIASES: Record<string, string> = {
-  "gta vi": "grand theft auto vi",
-};
-
-function canonicalTitle(title: string): string {
-  const normalized = title
-    .normalize("NFD")
-    .replace(new RegExp("[\\u0300-\\u036f]", "g"), "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim();
-  return TITLE_ALIASES[normalized] || normalized;
-}
 
 function selectRecentGames(games: Game[]): Game[] {
   const now = Date.now();
@@ -77,11 +51,7 @@ export default async function LancamentosPage() {
   const adminReviews = await readAdminReviews();
   const recentGames = selectRecentGames(adminGames);
   const adminUpcoming = selectUpcomingAdminGames(adminGames);
-  // Jogos cadastrados pelo agente Milo têm dados mais atuais (capa real, data confirmada) —
-  // se o mesmo título já existir na lista estática abaixo, descarta a versão estática.
-  const adminUpcomingTitles = new Set(adminUpcoming.map((g) => canonicalTitle(g.title)));
-  const staticUpcoming = UPCOMING.filter((g) => !adminUpcomingTitles.has(canonicalTitle(g.title)));
-  const upcoming = [...staticUpcoming, ...adminUpcoming].sort(
+  const upcoming = adminUpcoming.sort(
     (a, b) => new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime()
   );
 

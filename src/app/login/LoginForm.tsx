@@ -25,6 +25,17 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const redirectTo = useSearchParam("redirect") ?? "/";
 
+  // Se o login for bem-sucedido, redireciona forçando o recarregamento da página (hard navigation)
+  // para que a navbar e a sessão global sejam atualizadas.
+  if (state?.success) {
+    window.location.href = state.redirectTo || "/";
+    return (
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-10">
+        <div className="text-center text-white">Carregando sessão...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-10 relative overflow-hidden">
       {/* Ambient background glows */}

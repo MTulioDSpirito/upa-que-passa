@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { Trophy, Star, TrendingUp, Calendar, SlidersHorizontal } from "lucide-react";
 import { getScoreColor, formatScore } from "@/lib/data";
@@ -43,8 +43,12 @@ export default function RankingClient({ initialGames }: { initialGames: Game[] }
   const [platform, setPlatform] = useState<string>("all");
   const [period, setPeriod] = useState<"all" | "year" | "month">("all");
   const [selectedYear, setSelectedYear] = useState<number>(2026);
-  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth() + 1);
+  const [selectedMonth, setSelectedMonth] = useState<number>(8); // Default static value for SSR
   const [activeGenre, setActiveGenre] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSelectedMonth(new Date().getMonth() + 1);
+  }, []);
 
   // Dynamically get available years from GAMES
   const availableYears = useMemo(() => {

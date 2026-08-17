@@ -90,12 +90,18 @@ export default function ReviewsClient({ initialReviews, initialGames }: { initia
     [REVIEWS, GAMES]
   );
 
+  const [currentYear, setCurrentYear] = useState<number>(2026);
+  const [currentMonth, setCurrentMonth] = useState<number>(7); // Default to August (7) to match system time/expected build year
+
+  useEffect(() => {
+    const d = new Date();
+    setCurrentYear(d.getFullYear());
+    setCurrentMonth(d.getMonth());
+  }, []);
+
   // Determine Highlight of the Month (Destaque do Mês)
   const highlight = useMemo(() => {
     // 1. Filtrar reviews do mês atual (Ano e Mês)
-    const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth(); // 0-indexed
-
     const currentMonthReviews = reviewsWithGames.filter(({ review }) => {
       const pubDate = new Date(review.publishedAt);
       return pubDate.getFullYear() === currentYear && pubDate.getMonth() === currentMonth;
@@ -108,7 +114,7 @@ export default function ReviewsClient({ initialReviews, initialGames }: { initia
     return targetReviews.reduce((max, r) =>
       r.review.overallScore > max.review.overallScore ? r : max
     , targetReviews[0]);
-  }, [reviewsWithGames]);
+  }, [reviewsWithGames, currentYear, currentMonth]);
 
   // Filter & Sort reviews
   const filteredReviews = useMemo(() => {
