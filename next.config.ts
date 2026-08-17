@@ -16,6 +16,8 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "image.api.playstation.com" },
+      { protocol: "https", hostname: "media.rawg.io" },
+      { protocol: "https", hostname: "cdn.cloudflare.steamstatic.com" },
       { protocol: "https", hostname: "cdn.mos.cms.futurecdn.net" },
       { protocol: "https", hostname: "www.pushsquare.com" },
       { protocol: "https", hostname: "api.dicebear.com" },
