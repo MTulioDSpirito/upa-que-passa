@@ -3,7 +3,6 @@ import { Game, Review, NewsArticle, YoutubeVideo } from "@/lib/types";
 
 // Home components
 import TrendingStrip from "@/components/home/TrendingStrip";
-import MarketplaceFeatured from "@/components/home/MarketplaceFeatured";
 import FeaturedMoment from "@/components/home/FeaturedMoment";
 import BestReviewed from "@/components/home/BestReviewed";
 import LatestReviews from "@/components/home/LatestReviews";
@@ -153,9 +152,6 @@ export default async function Home() {
 
       {/* ─── YOUTUBE INTEGRATION (Últimos Vídeos) ────────────── */}
       <YouTubeVideos initialVideos={videos} />
-
-      {/* ─── MARKETPLACE ─────────────────────────────────────── */}
-      <MarketplaceFeatured />
 
       {/* ─── MELHORES AVALIADOS ───────────────────────────────── */}
       <BestReviewed games={bestReviewedGames} />

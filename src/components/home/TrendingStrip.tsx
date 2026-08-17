@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight, BookOpen, Heart, Eye } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NewsArticle } from "@/lib/types";
-import CardCover from "@/components/ui/CardCover";
 
 interface TrendingStripProps {
   newsList: NewsArticle[];
@@ -108,13 +107,15 @@ export default function TrendingStrip({ newsList }: TrendingStripProps) {
           >
             {/* LARGE CARD (Left Column - Spans 2 cols on Desktop) */}
             <div className="md:col-span-2 relative group rounded-2xl overflow-hidden bg-[#0f0f18] border border-white/5 shadow-2xl h-[360px] md:h-[480px] flex flex-col justify-end">
-              {/* Background Image with Hover Zoom */}
+              {/* Background Image with Hover Zoom — object-cover porque a capa de notícia é uma imagem larga (não capa de jogo em pé), então cobrir o card sem letterbox fica melhor que CardCover */}
               <div className="absolute inset-0 z-0">
-                <CardCover
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src={largeArticle.cover}
                   alt={largeArticle.title}
-                  priority
-                  className="group-hover:scale-[1.03] transition-transform duration-700 ease-out"
+                  loading="eager"
+                  fetchPriority="high"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
                 />
                 {/* Steam-style ambient dark gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0d0e15] via-[#0d0e15]/40 to-transparent z-10" />
@@ -174,10 +175,12 @@ export default function TrendingStrip({ newsList }: TrendingStripProps) {
                 >
                   {/* Background Image */}
                   <div className="absolute inset-0 z-0">
-                    <CardCover
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
                       src={article.cover}
                       alt={article.title}
-                      className="group-hover:scale-[1.03] transition-transform duration-700 ease-out"
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0d0e15] via-[#0d0e15]/50 to-transparent z-10" />
                   </div>

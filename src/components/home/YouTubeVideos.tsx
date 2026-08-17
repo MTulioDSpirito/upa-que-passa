@@ -50,7 +50,7 @@ export default function YouTubeVideos({ initialVideos }: { initialVideos?: Youtu
     : (dynamicVideos.length > 0 ? dynamicVideos : FALLBACK_VIDEOS);
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-16 border-t border-white/5 relative">
+    <section className="max-w-7xl mx-auto px-4 py-8 sm:py-16 border-t border-white/5 relative">
       {/* Custom Styles for retro CRT TV screen effects */}
       <style>{`
         @keyframes hud-scan {

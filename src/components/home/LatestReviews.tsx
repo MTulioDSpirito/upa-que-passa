@@ -24,7 +24,7 @@ export default function LatestReviews({ games, reviews }: LatestReviewsProps) {
   if (reviewsWithGames.length === 0) return null;
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-16 border-t border-white/5">
+    <section className="max-w-7xl mx-auto px-4 py-8 sm:py-16 border-t border-white/5">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
         <div>

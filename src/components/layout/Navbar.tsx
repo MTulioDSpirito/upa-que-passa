@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Search, Bell, Gamepad2, Home, Star, Newspaper, ShoppingBag, Trophy, Rocket, User, UserPlus, LogOut, Users } from "lucide-react";
+import { Menu, X, Search, Bell, Gamepad2, Home, Star, Newspaper, Trophy, Rocket, User, UserPlus, LogOut, Users } from "lucide-react";
 import { useUserSession } from "@/hooks/useUserSession";
 import { openSearch } from "./SearchModal";
 
@@ -11,7 +11,6 @@ export const NAV_ITEMS = [
   { label: "Home", href: "/", icon: Home },
   { label: "Reviews", href: "/reviews", icon: Star },
   { label: "Notícias", href: "/noticias", icon: Newspaper },
-  { label: "Marketplace", href: "/marketplace", icon: ShoppingBag },
   { label: "Ranking", href: "/ranking", icon: Trophy },
   { label: "Lançamentos", href: "/lancamentos", icon: Rocket },
   { label: "Sobre", href: "/quem-somos", icon: Users },

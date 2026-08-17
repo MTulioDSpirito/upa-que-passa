@@ -44,7 +44,7 @@ export default function BestReviewed({ games }: BestReviewedProps) {
   ];
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-12">
+    <section className="max-w-7xl mx-auto px-4 py-6 sm:py-12">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
         
         {/* Left Side: CTA Box and Title */}
@@ -112,8 +112,8 @@ export default function BestReviewed({ games }: BestReviewedProps) {
                   </span>
                 </div>
 
-                {/* Cover Image */}
-                <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden mb-4">
+                {/* Cover Image — menor e centralizada em mobile, ocupa a coluna inteira a partir do sm (grid já vira 3 colunas) */}
+                <div className="relative aspect-[3/4] w-36 mx-auto sm:w-full rounded-xl overflow-hidden mb-4">
                   <CardCover
                     src={game.cover}
                     alt={game.title}

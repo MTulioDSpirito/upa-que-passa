@@ -6,7 +6,7 @@ import team from "@/mocks/team";
 export default function AboutUs() {
 
   return (
-    <section className="relative max-w-7xl mx-auto px-6 py-20 bg-[#0c0c14]/40 border border-white/5 rounded-3xl mb-16 overflow-hidden backdrop-blur-sm shadow-[0_0_50px_-12px_rgba(168,85,247,0.15)]">
+    <section className="relative max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-20 bg-[#0c0c14]/40 border border-white/5 rounded-3xl mb-8 sm:mb-16 overflow-hidden backdrop-blur-sm shadow-[0_0_50px_-12px_rgba(168,85,247,0.15)]">
       {/* Luzes de Fundo Gradientes */}
       <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-purple-600/10 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />

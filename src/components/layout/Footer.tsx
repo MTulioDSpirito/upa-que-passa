@@ -27,7 +27,7 @@ export default function Footer() {
             </Link>
             
             <p className="text-sm text-gray-400 leading-relaxed">
-              O maior portal brasileiro de reviews, notícias e marketplace de jogos para PlayStation 5, PC e Nintendo Switch.
+              O maior portal brasileiro de reviews e notícias de jogos para PlayStation 5, PC e Nintendo Switch.
             </p>
             
             <div className="flex gap-3 mt-2">
@@ -70,14 +70,13 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Marketplace */}
+          {/* Comunidade */}
           <div>
             <h4 className="font-semibold text-white mb-5 text-sm uppercase tracking-wider border-l-2 border-blue-neon pl-3">
-              Marketplace
+              Comunidade
             </h4>
             <ul className="space-y-3">
               {[
-                { name: "Ver Anúncios", path: "/marketplace" },
                 { name: "Quem Somos", path: "/quem-somos" },
                 { name: "Meu Perfil", path: "/perfil" }
               ].map((item) => (

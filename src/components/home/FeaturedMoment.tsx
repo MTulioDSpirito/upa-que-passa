@@ -36,7 +36,7 @@ export default function FeaturedMoment({ topGame }: FeaturedMomentProps) {
   }, []);
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-12" ref={containerRef}>
+    <section className="max-w-7xl mx-auto px-4 py-6 sm:py-12" ref={containerRef}>
       <div className="flex items-center gap-3 mb-6">
         <Flame className="w-6 h-6 text-orange-500 animate-pulse" />
         <h2 className="text-2xl font-black text-white tracking-wide uppercase">Destaque do Momento</h2>
