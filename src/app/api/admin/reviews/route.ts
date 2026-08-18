@@ -7,9 +7,18 @@ import { z } from "zod";
 
 async function syncGameAdminScore(gameId: string, score: number | undefined) {
   try {
-    const adminScore = score !== undefined
-      ? score
-      : (await prisma.game.findUnique({ where: { id: gameId }, select: { worldAvg: true } }))?.worldAvg ?? null;
+    let adminScore = null;
+    if (score !== undefined) {
+      adminScore = score;
+    } else {
+      const remainingReview = await prisma.review.findFirst({
+        where: { gameId },
+        orderBy: { createdAt: "desc" }
+      });
+      if (remainingReview) {
+        adminScore = remainingReview.overallScore;
+      }
+    }
     await prisma.game.update({ where: { id: gameId }, data: { adminScore } });
   } catch (err) {
     console.error("Failed to sync game admin score:", err);

@@ -97,8 +97,8 @@ export default function RankingClient({ initialGames }: { initialGames: Game[] }
         let scoreB = 0;
 
         if (sortBy === "uqp") {
-          scoreA = a.adminScore || a.worldAvg || 0;
-          scoreB = b.adminScore || b.worldAvg || 0;
+          scoreA = a.adminScore !== undefined && a.adminScore !== null ? a.adminScore : 0;
+          scoreB = b.adminScore !== undefined && b.adminScore !== null ? b.adminScore : 0;
         } else if (sortBy === "users") {
           scoreA = a.userScore || 0;
           scoreB = b.userScore || 0;
@@ -136,8 +136,8 @@ export default function RankingClient({ initialGames }: { initialGames: Game[] }
   // Helper to format correct score value based on current sort type
   const getDisplayScore = (game: typeof GAMES[0]) => {
     if (sortBy === "uqp") {
-      const val = game.adminScore || game.worldAvg || 0;
-      return { val: formatScore(val), label: "Nota UQP" };
+      const val = game.adminScore;
+      return { val: val !== undefined && val !== null ? formatScore(val) : "—", label: "Nota UQP" };
     }
     if (sortBy === "users") {
       const val = game.userScore || 0;
