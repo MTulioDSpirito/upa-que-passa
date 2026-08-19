@@ -453,7 +453,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
           </div>
 
           {/* Futuristic Tabs Navigation */}
-          <div className="flex gap-2 mt-8 overflow-x-auto no-scrollbar border-b border-white/5">
+          <div className="flex gap-2 mt-8 overflow-x-auto no-scrollbar border-b border-white/5 w-full max-w-full">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
@@ -479,7 +479,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
         <div className="grid lg:grid-cols-3 gap-8">
 
           {/* Main Left Side Column */}
-          <div className="lg:col-span-2 space-y-10">
+          <div className="lg:col-span-2 space-y-10 min-w-0 w-full">
 
             {/* TAB: REVIEW */}
             {activeTab === "review" && (
@@ -507,14 +507,14 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
 
                 {/* Main Review Article */}
                 {review ? (
-                  <div className="bg-white/[0.01] border border-white/5 rounded-3xl p-6 md:p-8 backdrop-blur-md shadow-2xl relative">
+                  <div className="bg-white/[0.01] border border-white/5 rounded-3xl p-4 sm:p-6 md:p-8 backdrop-blur-md shadow-2xl relative overflow-hidden">
 
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8 pb-6 border-b border-white/5">
-                      <div className="flex-1">
-                        <h2 className="text-2xl md:text-4xl font-extrabold font-display text-white leading-tight mb-3">
+                      <div className="flex-1 min-w-0 w-full">
+                        <h2 className="text-2xl md:text-4xl font-extrabold font-display text-white leading-tight mb-3 break-words">
                           {review.title}
                         </h2>
-                        <div className="flex items-center gap-3 text-xs font-mono text-gray-400">
+                        <div className="flex items-center gap-3 text-xs font-mono text-gray-400 flex-wrap">
                           {authorAvatar && (
                             <div className="relative flex-shrink-0">
                               <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full blur-xs opacity-50" />
@@ -525,7 +525,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                               />
                             </div>
                           )}
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <span>Por <strong className="text-purple-400">{authorName}</strong></span>
                             <span>·</span>
                             <span>{formatDate(review.publishedAt)}</span>
@@ -551,7 +551,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                     </div>
 
                     {/* Review text with dropped capital */}
-                    <div className="text-gray-300 text-base leading-relaxed space-y-6 mb-8 font-sans">
+                    <div className="text-gray-300 text-base leading-relaxed space-y-6 mb-8 font-sans break-words">
                       {review.text.split("\n\n").map((p, i) => {
                         if (i === 0) {
                           // Dropcap design
@@ -568,7 +568,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                     {/* Pros & Cons combat layout */}
                     <div className="grid md:grid-cols-2 gap-6 mb-8">
                       {/* PROS */}
-                      <div className="bg-green-500/[0.02] border border-green-500/10 rounded-2xl p-6 relative overflow-hidden">
+                      <div className="bg-green-500/[0.02] border border-green-500/10 rounded-2xl p-4 sm:p-6 relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-20 h-20 bg-green-500/5 rounded-full blur-2xl pointer-events-none" />
                         <h3 className="text-green-400 font-mono font-bold text-sm tracking-wider mb-4 flex items-center gap-2 uppercase">
                           <Check className="w-4 h-4 text-green-400" /> + PRÓS
@@ -577,14 +577,14 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                           {review.pros.map((p, i) => (
                             <li key={i} className="text-sm text-gray-300 flex items-start gap-2.5">
                               <span className="w-1.5 h-1.5 rounded-full bg-green-400 mt-1.5 flex-shrink-0 shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
-                              <span>{p}</span>
+                              <span className="break-words">{p}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
 
                       {/* CONS */}
-                      <div className="bg-red-500/[0.02] border border-red-500/10 rounded-2xl p-6 relative overflow-hidden">
+                      <div className="bg-red-500/[0.02] border border-red-500/10 rounded-2xl p-4 sm:p-6 relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-20 h-20 bg-red-500/5 rounded-full blur-2xl pointer-events-none" />
                         <h3 className="text-red-400 font-mono font-bold text-sm tracking-wider mb-4 flex items-center gap-2 uppercase">
                           <AlertTriangle className="w-4 h-4 text-red-400" /> - CONTRAS
@@ -593,7 +593,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                           {review.cons.map((c, i) => (
                             <li key={i} className="text-sm text-gray-300 flex items-start gap-2.5">
                               <span className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1.5 flex-shrink-0 shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
-                              <span>{c}</span>
+                              <span className="break-words">{c}</span>
                             </li>
                           ))}
                         </ul>
@@ -601,14 +601,14 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                     </div>
 
                     {/* Veredict / Conclusion box */}
-                    <div className="bg-gradient-to-r from-purple-950/30 to-blue-950/20 border border-purple-500/10 rounded-2xl p-6 relative overflow-hidden">
+                    <div className="bg-gradient-to-r from-purple-950/30 to-blue-950/20 border border-purple-500/10 rounded-2xl p-4 sm:p-6 relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-500 to-blue-500" />
                       <h3 className="text-purple-400 font-mono font-bold text-xs tracking-widest uppercase mb-2">Conclusão Detalhada</h3>
-                      <p className="text-sm text-gray-300 leading-relaxed italic">"{review.conclusion}"</p>
+                      <p className="text-sm text-gray-300 leading-relaxed italic break-words">"{review.conclusion}"</p>
                     </div>
 
                     {/* Like & Interaction bar */}
-                    <div className="flex items-center gap-4 mt-6 pt-6 border-t border-white/5">
+                    <div className="flex items-center gap-4 mt-6 pt-6 border-t border-white/5 flex-wrap">
                       <span className="text-xs font-mono text-gray-500">Esta review foi útil?</span>
                       <button
                         onClick={handleToggleReviewLike}
@@ -642,9 +642,9 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                   </h2>
 
                   {/* Add comment Form */}
-                  <form onSubmit={handleCommentSubmit} className="bg-white/[0.01] border border-white/5 rounded-3xl p-6 backdrop-blur-md relative overflow-hidden">
+                  <form onSubmit={handleCommentSubmit} className="bg-white/[0.01] border border-white/5 rounded-3xl p-4 sm:p-6 backdrop-blur-md relative overflow-hidden">
                     {!currentUser && (
-                      <div className="absolute inset-0 bg-[#050508]/90 backdrop-blur-md flex flex-col items-center justify-center text-center p-6 z-10">
+                      <div className="absolute inset-0 bg-[#050508]/90 backdrop-blur-md flex flex-col items-center justify-center text-center p-4 sm:p-6 z-10">
                         <Shield className="w-8 h-8 text-purple-500 mb-3" />
                         <p className="text-sm font-mono text-white uppercase tracking-wider mb-2">Avaliação Privada</p>
                         <p className="text-xs text-gray-400 max-w-xs mb-4">Você precisa estar logado para avaliar este jogo e deixar seu comentário.</p>
@@ -661,7 +661,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                     <p className="text-xs font-mono text-gray-400 mb-4 uppercase tracking-wider">Atribua sua nota gamer (1 a 10):</p>
 
                     {/* User Rating buttons */}
-                    <div className="flex gap-1.5 mb-4 overflow-x-auto no-scrollbar pb-2" role="radiogroup" aria-label="Sua nota, de 1 a 10">
+                    <div className="flex gap-1.5 mb-4 overflow-x-auto no-scrollbar pb-2 w-full max-w-full" role="radiogroup" aria-label="Sua nota, de 1 a 10">
                       {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
                         <button
                           type="button"
@@ -672,11 +672,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                           onClick={() => setUserScore(n)}
                           onMouseEnter={() => setHoveredScore(n)}
                           onMouseLeave={() => setHoveredScore(0)}
-                          className={`w-10 h-10 rounded-xl text-xs font-mono font-bold transition-all flex-shrink-0 flex items-center justify-center border ${
-                            n <= (hoveredScore || userScore)
-                              ? "bg-purple-600 border-purple-500 text-white shadow-[0_0_10px_rgba(124,58,237,0.4)]"
-                              : "bg-white/5 border-white/5 text-gray-500 hover:border-white/10 hover:text-gray-300"
-                          }`}
+                          className="w-10 h-10 rounded-xl text-xs font-mono font-bold transition-all flex-shrink-0 flex items-center justify-center border border-white/5 bg-white/5 text-gray-500 hover:border-white/10 hover:text-gray-300 aria-checked:bg-purple-600 aria-checked:border-purple-500 aria-checked:text-white aria-checked:shadow-[0_0_10px_rgba(124,58,237,0.4)]"
                         >
                           {n}
                         </button>
@@ -720,8 +716,8 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                       </div>
                     ) : (
                       comments.map((comment) => (
-                        <div key={comment.id} className="bg-white/[0.01] border border-white/5 rounded-2xl p-5 md:p-6 backdrop-blur-md">
-                          <div className="flex items-start gap-4">
+                        <div key={comment.id} className="bg-white/[0.01] border border-white/5 rounded-2xl p-4 sm:p-6 backdrop-blur-md overflow-hidden">
+                          <div className="flex items-start gap-3 sm:gap-4">
                             <div className="relative">
                               <div className="absolute -inset-0.5 bg-gradient-to-tr from-purple-500 to-blue-500 rounded-full blur opacity-30" />
                               <img src={comment.userAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.userNickname}`} alt="" className="relative w-10 h-10 rounded-full bg-black border border-white/10" />
@@ -881,7 +877,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
           </div>
 
           {/* Sidebar Technical Column */}
-          <div className="space-y-8">
+          <div className="space-y-8 min-w-0 w-full">
 
             {/* System Technical Specifications */}
             <div className="bg-white/[0.01] border border-white/5 rounded-3xl p-6 backdrop-blur-md shadow-2xl relative overflow-hidden">
@@ -908,7 +904,7 @@ export default function ReviewClient({ game, review, relatedGames }: Props) {
                       {icon}
                       <span>{label}</span>
                     </dt>
-                    <dd className="text-gray-200 text-right leading-tight max-w-[150px]">{value}</dd>
+                    <dd className="text-gray-200 text-right leading-tight max-w-[150px] sm:max-w-xs break-words flex-1 min-w-0">{value}</dd>
                   </div>
                 ))}
               </dl>

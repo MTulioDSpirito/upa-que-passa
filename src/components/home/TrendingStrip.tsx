@@ -16,8 +16,8 @@ export default function TrendingStrip({ newsList }: TrendingStripProps) {
   const [isPaused, setIsPaused] = useState(false);
   const isPausedRef = useRef(isPaused);
 
-  // Limitamos a exibição a no máximo 12 notícias (4 slides de 3 notícias)
-  const displayedNews = newsList.slice(0, 12);
+  // Limitamos a exibição a no máximo 9 notícias (3 slides de 3 notícias)
+  const displayedNews = newsList.slice(0, 9);
   const slideCount = Math.ceil(displayedNews.length / 3);
 
   useEffect(() => {
