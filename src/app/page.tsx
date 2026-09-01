@@ -16,10 +16,10 @@ export const revalidate = 60;
 export default async function Home() {
   // Fetch data in parallel
   const [dbNews, dbReviews, dbFeaturedGames, dbBestReviewedGames, dbVideos, dbAllGamesForUpcoming] = await Promise.all([
-    // 9 latest news articles
+    // 18 latest news articles (9 para o carrossel principal + 9 para o segundo carrossel)
     prisma.newsArticle.findMany({
       orderBy: { publishedAt: "desc" },
-      take: 9
+      take: 18
     }),
     // 3 latest reviews with their games
     prisma.review.findMany({
@@ -104,6 +104,10 @@ export default async function Home() {
     fontes: n.fontes ?? undefined,
   }));
 
+  // Divide as notícias entre o carrossel principal (9 primeiras) e o segundo carrossel (próximas 9)
+  const primaryNews = news.slice(0, 9);
+  const secondaryNews = news.slice(9, 18);
+
   const reviews: Review[] = dbReviews.map((r) => ({
     id: r.id,
     gameId: r.gameId,
@@ -158,10 +162,15 @@ export default async function Home() {
   return (
     <div className="bg-[#07070a]">
       {/* ─── TRENDING STRIP ───────────────────────────────────── */}
-      <TrendingStrip newsList={news} />
+      <TrendingStrip newsList={primaryNews} />
 
       {/* ─── DESTAQUE DO MOMENTO ─────────────────────────────── */}
       {topGame && <FeaturedMoment topGame={topGame} />}
+
+      {/* ─── MAIS NOTÍCIAS (2º CARROSSEL) ─────────────────────── */}
+      {secondaryNews.length > 0 && (
+        <TrendingStrip newsList={secondaryNews} heading="Mais Notícias" />
+      )}
 
       {/* ─── PRÓXIMOS LANÇAMENTOS ─────────────────────────────── */}
       {upcomingGames.length > 0 && <UpcomingReleases games={upcomingGames} />}

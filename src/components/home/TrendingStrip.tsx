@@ -8,9 +8,11 @@ import { NewsArticle } from "@/lib/types";
 
 interface TrendingStripProps {
   newsList: NewsArticle[];
+  /** Título opcional exibido acima do carrossel (usado no 2º bloco de notícias da home). */
+  heading?: string;
 }
 
-export default function TrendingStrip({ newsList }: TrendingStripProps) {
+export default function TrendingStrip({ newsList, heading }: TrendingStripProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(0); // -1 for left, 1 for right
   const [isPaused, setIsPaused] = useState(false);
@@ -89,6 +91,15 @@ export default function TrendingStrip({ newsList }: TrendingStripProps) {
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
+      {heading && (
+        <div className="flex items-center gap-3 mb-4">
+          <span className="h-6 w-1.5 rounded-full bg-gradient-to-b from-blue-500 to-indigo-600" />
+          <h2 className="text-lg md:text-2xl font-black text-white tracking-tight">
+            {heading}
+          </h2>
+        </div>
+      )}
+
       {/* Carousel Container with Overflow Hidden for Slide Transitions */}
       <div className="relative overflow-hidden min-h-[380px] sm:min-h-[580px] md:min-h-[480px]">
         <AnimatePresence initial={false} custom={direction} mode="wait">
