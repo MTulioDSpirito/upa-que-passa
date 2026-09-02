@@ -2,7 +2,31 @@ import { PrismaClient } from "@prisma/client";
 import * as https from "https";
 import * as http from "http";
 
+import * as fs from "fs";
+import * as path from "path";
+
 const prisma = new PrismaClient();
+
+// Carrega o .env local pra process.env (sem depender do pacote dotenv). Assim as
+// credenciais UPA_ADMIN_* ficam disponíveis sem o usuário precisar exportá-las toda
+// vez — basta tê-las no .env (gitignored). Não sobrescreve variáveis já definidas.
+function loadDotEnv() {
+  try {
+    const raw = fs.readFileSync(path.join(process.cwd(), ".env"), "utf-8");
+    for (const line of raw.split(/\r?\n/)) {
+      const m = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.*)\s*$/i);
+      if (!m || line.trimStart().startsWith("#")) continue;
+      const key = m[1];
+      let val = m[2];
+      if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+        val = val.slice(1, -1);
+      }
+      if (process.env[key] === undefined) process.env[key] = val;
+    }
+  } catch {
+    // sem .env — segue com o que estiver no ambiente
+  }
+}
 
 // Nenhum agente deve inserir foto inventada, genérica ou logo em SVG (fica invisível em
 // fundo escuro). Se a capa enviada bater em algum desses padrões, cai no ícone padrão do
@@ -140,6 +164,7 @@ async function enviarParaProducao(data: any): Promise<boolean> {
 }
 
 async function main() {
+  loadDotEnv();
   const args = process.argv.slice(2);
   const jsonArgIndex = args.indexOf("--json");
   
@@ -181,7 +206,12 @@ async function main() {
           status: "PENDING",
         },
       });
-      console.log(`SUCESSO: Rascunho inserido no banco LOCAL com ID: ${sugestao.id} (sem UPA_ADMIN_* no ambiente, não foi pra produção).`);
+      console.warn(
+        `\n⚠️  ATENÇÃO: sugestão gravada só no banco LOCAL (ID: ${sugestao.id}).\n` +
+          `   Ela NÃO vai aparecer em https://upaquepassa.com.br/admin/sugestoes.\n` +
+          `   Faltam UPA_ADMIN_EMAIL/UPA_ADMIN_PASSWORD — adicione ao .env (gitignored)\n` +
+          `   e rode de novo pra mandar direto pra fila de revisão em produção.\n`
+      );
     }
   } catch (error: any) {
     console.error("Erro ao analisar JSON ou inserir no banco de dados:", error.message);
