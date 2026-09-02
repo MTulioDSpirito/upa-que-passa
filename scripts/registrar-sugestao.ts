@@ -94,6 +94,51 @@ function sanitizeCover(payload: any) {
   }
 }
 
+// Envia a sugestão direto pra fila de PRODUÇÃO (/admin/sugestoes) via a API admin,
+// para o usuário revisar e aprovar no site ao vivo. Usado quando há credenciais de
+// admin no ambiente (UPA_ADMIN_EMAIL/UPA_ADMIN_PASSWORD); do contrário caímos no
+// insert local. Ver [[project_local_vs_prod_db]]: agentes gravam no banco local, que
+// não é o de produção — postar na API é a forma segura de subir sem o secret do DB.
+async function enviarParaProducao(data: any): Promise<boolean> {
+  const email = process.env.UPA_ADMIN_EMAIL;
+  const password = process.env.UPA_ADMIN_PASSWORD;
+  if (!email || !password) return false;
+  const base = (process.env.UPA_PROD_URL || "https://upaquepassa.com.br").replace(/\/$/, "");
+  const headers = { "content-type": "application/json", origin: base, referer: base + "/" };
+
+  const login = await fetch(base + "/api/auth/login", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ email, password }),
+  });
+  if (!login.ok) throw new Error(`Login na produção falhou (${login.status}): ${await login.text()}`);
+  const cookie = (login.headers.getSetCookie?.() ?? []).map((c) => c.split(";")[0]).filter(Boolean).join("; ");
+  if (!cookie) throw new Error("Login OK mas sem cookie de sessão.");
+
+  const res = await fetch(base + "/api/admin/entregas", {
+    method: "POST",
+    headers: { ...headers, cookie },
+    body: JSON.stringify({
+      tipo: data.tipo,
+      criador: data.criador,
+      titulo: data.titulo,
+      slug: data.slug,
+      payload: data.payload,
+      fontes: data.fontes || [],
+    }),
+  });
+  const j = await res.json().catch(() => ({}));
+  if (res.status === 201) {
+    console.log(`SUCESSO: Sugestão enviada pra fila de produção (ID: ${j.id}). Revise em ${base}/admin/sugestoes`);
+    return true;
+  }
+  if (res.ok && j.skipped) {
+    console.log(`IGNORADA: já existe sugestão com esse slug na fila/publicada (${j.motivo}).`);
+    return true;
+  }
+  throw new Error(`POST /api/admin/entregas falhou (${res.status}): ${JSON.stringify(j)}`);
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const jsonArgIndex = args.indexOf("--json");
@@ -120,19 +165,24 @@ async function main() {
     sanitizeCover(data.payload);
     await warnIfWrongOrientation(data.tipo, data.payload?.cover || data.payload?.capa_candidata);
 
-    const sugestao = await prisma.sugestaoAgente.create({
-      data: {
-        tipo: data.tipo,
-        criador: data.criador,
-        titulo: data.titulo,
-        slug: data.slug,
-        payload: data.payload,
-        fontes: data.fontes || [],
-        status: "PENDING",
-      },
-    });
-
-    console.log(`SUCESSO: Rascunho inserido com ID: ${sugestao.id}`);
+    // Com credenciais de admin no ambiente, a sugestão vai direto pra fila de
+    // PRODUÇÃO (o usuário revisa/aprova no site ao vivo). Sem credenciais, mantém
+    // o comportamento antigo: insere no banco local (útil pra dev/testes).
+    const enviou = await enviarParaProducao(data);
+    if (!enviou) {
+      const sugestao = await prisma.sugestaoAgente.create({
+        data: {
+          tipo: data.tipo,
+          criador: data.criador,
+          titulo: data.titulo,
+          slug: data.slug,
+          payload: data.payload,
+          fontes: data.fontes || [],
+          status: "PENDING",
+        },
+      });
+      console.log(`SUCESSO: Rascunho inserido no banco LOCAL com ID: ${sugestao.id} (sem UPA_ADMIN_* no ambiente, não foi pra produção).`);
+    }
   } catch (error: any) {
     console.error("Erro ao analisar JSON ou inserir no banco de dados:", error.message);
     process.exit(1);
