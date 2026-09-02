@@ -54,6 +54,10 @@ Five research personas — Kai (PS news), Nina (industry news), Milo (release ca
 - Legacy: `src/lib/entregas.ts` and the `Equipe/Entregas/{pendentes,aprovados,rejeitados}/` folders are the old file-based queue. The API no longer reads them, but the daily cloud routine (`RemoteTrigger` id `trig_018q9aogsE5hLed31mjrpvgK`, 08:07 America/Sao_Paulo, pushes to the GitHub repo) may still produce `.md` drafts there — `git pull` before assuming anything is current.
 - `suggestion-agents-work.md` and `worked-agents.md` (root) document the persistence architecture and proposed next steps.
 
+**Local DB ≠ production DB — publishing content live.** Agents (and `db:seed`) write to the **local** Postgres (Docker, `localhost:5434`). Production on Vercel uses a **separate** cloud database whose `DATABASE_URL` is a Vercel **secret** (can't be pulled with `vercel env pull`). So content generated/inserted locally does **not** appear on the live site until it's published to the production DB. The supported way to push it (no DB secret needed) is the admin API — the home reads `NewsArticle` directly, and `POST /api/admin/news` upserts into that same table via `writeAdminNews` (`src/lib/adminNews.ts`):
+  - `scripts/publicar-noticias.ts` — reconciles local news → production. `UPA_ADMIN_EMAIL=... UPA_ADMIN_PASSWORD=... npx tsx scripts/publicar-noticias.ts [--dry] [--since YYYY-MM-DD] [--incluir-similares]`. Logs in as an admin, skips slugs already in prod, and has a title-similarity guard (skips articles sharing ≥3 significant words with an existing one — e.g. the same story reworded). Run `--dry` first.
+  - Mutating `/api/*` calls need a same-origin `Origin`/`Referer` header (light CSRF check in `src/proxy.ts` → `hasTrustedOrigin`), so any script hitting the API must send `origin: <site url>`.
+
 ### Data layer — mock content in `src/mocks/`
 
 Public content (games, news, reviews, marketplace) is still mock data, now split by domain:
