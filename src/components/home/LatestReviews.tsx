@@ -76,7 +76,7 @@ export default function LatestReviews({ games, reviews }: LatestReviewsProps) {
             <Link
               key={review.id}
               href={`/reviews/${game.slug}#review`}
-              className="group snap-center shrink-0 w-[72%] sm:w-full sm:max-w-[320px] flex flex-col bg-[#0f0f18]/60 backdrop-blur border border-white/5 hover:border-purple-500/20 rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-purple-950/10"
+              className="group snap-center shrink-0 w-[80%] sm:w-full sm:max-w-[380px] flex flex-col bg-[#0f0f18]/60 backdrop-blur border border-white/5 hover:border-purple-500/20 rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-purple-950/10"
             >
               {/* Cover & Score Overlay */}
               <div className="relative aspect-[4/5] w-full overflow-hidden">
