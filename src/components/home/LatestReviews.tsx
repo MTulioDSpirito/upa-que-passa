@@ -67,15 +67,16 @@ export default function LatestReviews({ games, reviews }: LatestReviewsProps) {
         </Link>
       </div>
 
-      {/* Carrossel (scroll-snap) no mobile, grid a partir do sm */}
-      <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
+      {/* Carrossel (scroll-snap) no mobile, grid a partir do sm.
+          Cards um pouco menores: max-w por card + centralização na coluna */}
+      <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0 sm:justify-items-center">
         {reviewsWithGames.map(({ review, game }) => {
           if (!game) return null;
           return (
             <Link
               key={review.id}
               href={`/reviews/${game.slug}#review`}
-              className="group snap-center shrink-0 w-[85%] sm:w-auto flex flex-col bg-[#0f0f18]/60 backdrop-blur border border-white/5 hover:border-purple-500/20 rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-purple-950/10"
+              className="group snap-center shrink-0 w-[72%] sm:w-full sm:max-w-[320px] flex flex-col bg-[#0f0f18]/60 backdrop-blur border border-white/5 hover:border-purple-500/20 rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-purple-950/10"
             >
               {/* Cover & Score Overlay */}
               <div className="relative aspect-[3/4] w-full overflow-hidden">
@@ -96,21 +97,21 @@ export default function LatestReviews({ games, reviews }: LatestReviewsProps) {
               </div>
 
               {/* Review Info */}
-              <div className="flex-1 p-6 flex flex-col justify-between">
+              <div className="flex-1 p-4 flex flex-col justify-between">
                 <div>
-                  <span className="text-[10px] text-purple-400 font-extrabold uppercase tracking-wider block mb-2">
+                  <span className="text-[10px] text-purple-400 font-extrabold uppercase tracking-wider block mb-1.5">
                     {game.title}
                   </span>
-                  <h3 className="text-lg font-bold text-white group-hover:text-purple-300 transition-colors line-clamp-2 mb-3 leading-snug">
+                  <h3 className="text-base font-bold text-white group-hover:text-purple-300 transition-colors line-clamp-2 mb-2 leading-snug">
                     {review.title}
                   </h3>
-                  <p className="text-xs text-gray-400 leading-relaxed line-clamp-3 mb-6">
+                  <p className="text-xs text-gray-400 leading-relaxed line-clamp-3 mb-4">
                     {review.text}
                   </p>
                 </div>
 
                 {/* Footer Metadata */}
-                <div className="border-t border-white/5 pt-4 mt-auto flex items-center justify-between text-[11px] text-gray-500">
+                <div className="border-t border-white/5 pt-3 mt-auto flex items-center justify-between text-[11px] text-gray-500">
                   <div className="flex items-center gap-2">
                     <User className="w-3.5 h-3.5 text-purple-400" />
                     <span>{review.author}</span>

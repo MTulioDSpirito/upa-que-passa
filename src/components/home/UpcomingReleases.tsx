@@ -44,7 +44,7 @@ export default function UpcomingReleases({ games }: UpcomingReleasesProps) {
                 src={game.cover || "/cover_conteudo_nao_disponivel.png"}
                 alt={game.title}
                 loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-95 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f18] via-transparent to-transparent" />
               <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center gap-1 bg-black/70 backdrop-blur-md rounded-lg px-1.5 py-0.5 text-[9px] font-bold text-orange-300">
