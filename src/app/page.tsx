@@ -21,10 +21,10 @@ export default async function Home() {
       orderBy: { publishedAt: "desc" },
       take: 12
     }),
-    // 3 latest reviews with their games
+    // Pool de reviews recentes (com jogos) para amostra aleatória na home
     prisma.review.findMany({
       orderBy: { publishedAt: "desc" },
-      take: 3,
+      take: 12,
       include: { game: true }
     }),
     // Featured games for FeaturedMoment
@@ -166,14 +166,14 @@ export default async function Home() {
       {/* ─── PRÓXIMOS LANÇAMENTOS ─────────────────────────────── */}
       {upcomingGames.length > 0 && <UpcomingReleases games={upcomingGames} />}
 
-      {/* ─── YOUTUBE INTEGRATION (Últimos Vídeos) ────────────── */}
-      <YouTubeVideos initialVideos={videos} />
+      {/* ─── REVIEWS DA EQUIPE (amostra aleatória a cada reload) ─ */}
+      <LatestReviews games={latestReviewsGames} reviews={reviews} />
 
       {/* ─── MELHORES AVALIADOS ───────────────────────────────── */}
       <BestReviewed games={bestReviewedGames} />
 
-      {/* ─── REVIEWS DA EQUIPE ───────────────────────────────── */}
-      <LatestReviews games={latestReviewsGames} reviews={reviews} />
+      {/* ─── ANÁLISES DE IMPACTO (YouTube) ────────────────────── */}
+      <YouTubeVideos initialVideos={videos} />
 
       {/* ─── QUEM SOMOS (HISTÓRIA E EQUIPE) ───────────────────── */}
       <AboutUs />

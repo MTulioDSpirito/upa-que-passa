@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
-import { Star, ThumbsUp, Calendar, User, ChevronRight, BookOpen } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Calendar, User, ChevronRight } from "lucide-react";
 import { Game, Review } from "@/lib/types";
 import { getScoreColor, formatScore, formatDate } from "@/lib/data";
 import CardCover from "@/components/ui/CardCover";
@@ -9,17 +12,37 @@ interface LatestReviewsProps {
   reviews: Review[];
 }
 
+const SAMPLE_SIZE = 3;
+
 export default function LatestReviews({ games, reviews }: LatestReviewsProps) {
-  // Map reviews to their corresponding games and filter out any reviews without a matching game
-  const reviewsWithGames = reviews.map((r) => ({
-    review: r,
-    game: games.find((g) => g.id === r.gameId),
-  }))
-    .filter((r) => r.game)
-    // Sort by publication date (descending)
-    .sort((a, b) => new Date(b.review.publishedAt).getTime() - new Date(a.review.publishedAt).getTime())
-    // Get the latest 3 reviews
-    .slice(0, 3);
+  // Pool completo: cada review casada com seu jogo (descarta reviews sem jogo)
+  const pool = reviews
+    .map((r) => ({ review: r, game: games.find((g) => g.id === r.gameId) }))
+    .filter((r): r is { review: Review; game: Game } => Boolean(r.game))
+    .sort(
+      (a, b) =>
+        new Date(b.review.publishedAt).getTime() -
+        new Date(a.review.publishedAt).getTime()
+    );
+
+  // No SSR/primeira renderização mostramos os mais recentes (determinístico → sem
+  // hydration mismatch). Depois de montar, embaralhamos o pool e trocamos por uma
+  // amostra aleatória — reexecuta a cada carregamento/reload da página.
+  const [reviewsWithGames, setReviewsWithGames] = useState(() =>
+    pool.slice(0, SAMPLE_SIZE)
+  );
+
+  useEffect(() => {
+    if (pool.length <= SAMPLE_SIZE) return;
+    // Fisher-Yates sobre uma cópia do pool
+    const shuffled = [...pool];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    setReviewsWithGames(shuffled.slice(0, SAMPLE_SIZE));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reviews]);
 
   if (reviewsWithGames.length === 0) return null;
 
