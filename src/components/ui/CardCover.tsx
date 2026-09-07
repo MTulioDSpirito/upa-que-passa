@@ -11,6 +11,12 @@ interface CardCoverProps {
   /** Set true for above-the-fold hero covers (e.g. featured slide, article hero) so the
    * browser fetches them eagerly instead of deferring — improves LCP for those spots. */
   priority?: boolean;
+  /** "auto" (default) picks cover vs contain by comparing aspect ratios — good enough for
+   * most cards, but still crops when the mismatch is inside ASPECT_RATIO_TOLERANCE. Pass
+   * "contain" to always show the full image (blurred backdrop fills the rest), guaranteeing
+   * zero crop regardless of aspect ratio — use where showing the whole cover matters more
+   * than filling every pixel. */
+  fit?: "auto" | "contain";
 }
 
 // Se a proporção da imagem for parecida com a do card (dentro dessa margem), object-cover
@@ -63,6 +69,7 @@ export default function CardCover({
   className = "",
   fallbackSrc = "/cover_conteudo_nao_disponivel.png",
   priority = false,
+  fit = "auto",
 }: CardCoverProps) {
   const [imgSrc, setImgSrc] = useState(src || fallbackSrc);
   // Guarda pra qual src a medição vale, junto com o resultado — evita ler ref durante o render.
@@ -89,7 +96,8 @@ export default function CardCover({
 
   // Enquanto a imagem atual não foi medida (troca de src, ex: fallback), assume cover — evita
   // um flash de "contain" antes da medição real, já que a maioria das capas cobre bem o card.
-  const showBackdrop = measured?.src === imgSrc && measured.fit === "contain";
+  // fit="contain" força sempre a imagem inteira, sem depender da medição de aspecto.
+  const showBackdrop = fit === "contain" || (measured?.src === imgSrc && measured.fit === "contain");
 
   if (optimized) {
     return (

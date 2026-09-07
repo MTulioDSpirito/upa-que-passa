@@ -37,12 +37,13 @@ export default function UpcomingReleases({ games }: UpcomingReleasesProps) {
           <Link
             key={game.id}
             href={`/reviews/${game.slug}`}
-            className="group snap-center shrink-0 w-[38%] sm:w-auto relative bg-[#0f0f18]/60 border border-white/5 rounded-2xl overflow-hidden hover:border-orange-500/30 transition-all duration-300 flex flex-col"
+            className="group snap-center shrink-0 w-[38%] sm:w-auto relative bg-[#0f0f18]/60 backdrop-blur border border-white/5 hover:border-orange-500/30 rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-orange-950/10 flex flex-col"
           >
             <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#0a0a10]">
               <CardCover
                 src={game.cover}
                 alt={game.title}
+                fit="contain"
                 className="group-hover:scale-95 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f18] via-transparent to-transparent" />
