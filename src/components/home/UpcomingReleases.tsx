@@ -32,14 +32,14 @@ export default function UpcomingReleases({ games }: UpcomingReleasesProps) {
       </div>
 
       {/* Carrossel (scroll-snap) no mobile, grid a partir do sm — cards em formato horizontal */}
-      <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
+      <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
         {games.map((game) => (
           <Link
             key={game.id}
             href={`/reviews/${game.slug}`}
-            className="group snap-center shrink-0 w-[80%] sm:w-auto relative bg-[#0f0f18]/60 backdrop-blur border border-white/5 hover:border-orange-500/30 rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-orange-950/10 flex flex-col"
+            className="group snap-center shrink-0 w-[86%] sm:w-auto relative bg-[#0f0f18]/60 backdrop-blur border border-white/5 hover:border-orange-500/30 rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-orange-950/10 flex flex-col"
           >
-            <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#0a0a10]">
+            <div className="relative aspect-[3/2] w-full overflow-hidden bg-[#0a0a10]">
               <CardCover
                 src={game.cover}
                 alt={game.title}

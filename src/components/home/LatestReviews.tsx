@@ -68,15 +68,15 @@ export default function LatestReviews({ games, reviews }: LatestReviewsProps) {
       </div>
 
       {/* Carrossel (scroll-snap) no mobile, grid a partir do sm.
-          Cards um pouco menores: max-w por card + centralização na coluna */}
-      <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0 sm:justify-items-center">
+          Cards bem menores e padronizados no mobile; tamanho normal a partir do sm */}
+      <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0 sm:justify-items-center">
         {reviewsWithGames.map(({ review, game }) => {
           if (!game) return null;
           return (
             <Link
               key={review.id}
               href={`/reviews/${game.slug}#review`}
-              className="group snap-center shrink-0 w-[80%] sm:w-full sm:max-w-[380px] flex flex-col bg-[#0f0f18]/60 backdrop-blur border border-white/5 hover:border-purple-500/20 rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-purple-950/10"
+              className="group snap-center shrink-0 w-[58%] sm:w-full sm:max-w-[380px] flex flex-col bg-[#0f0f18]/60 backdrop-blur border border-white/5 hover:border-purple-500/20 rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-purple-950/10"
             >
               {/* Cover & Score Overlay */}
               <div className="relative aspect-[4/5] w-full overflow-hidden">
@@ -86,39 +86,39 @@ export default function LatestReviews({ games, reviews }: LatestReviewsProps) {
                   className="group-hover:scale-100 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f18] via-[#0f0f18]/40 to-transparent" />
-                
+
                 {/* Overall Score Badge */}
-                <div className="absolute top-4 right-4 bg-[#07070a]/90 border border-white/10 backdrop-blur rounded-2xl p-2 px-3 flex items-center gap-2 shadow-lg">
-                  <span className="text-[10px] font-black tracking-wider text-gray-400">NOTA</span>
-                  <span className={`text-xl font-black ${getScoreColor(review.overallScore)}`}>
+                <div className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-[#07070a]/90 border border-white/10 backdrop-blur rounded-xl sm:rounded-2xl p-1.5 px-2 sm:p-2 sm:px-3 flex items-center gap-1 sm:gap-2 shadow-lg">
+                  <span className="text-[8px] sm:text-[10px] font-black tracking-wider text-gray-400">NOTA</span>
+                  <span className={`text-sm sm:text-xl font-black ${getScoreColor(review.overallScore)}`}>
                     {formatScore(review.overallScore)}
                   </span>
                 </div>
               </div>
 
               {/* Review Info */}
-              <div className="flex-1 p-4 flex flex-col justify-between">
+              <div className="flex-1 p-2.5 sm:p-4 flex flex-col justify-between">
                 <div>
-                  <span className="text-[10px] text-purple-400 font-extrabold uppercase tracking-wider block mb-1.5">
+                  <span className="text-[8px] sm:text-[10px] text-purple-400 font-extrabold uppercase tracking-wider block mb-1 sm:mb-1.5">
                     {game.title}
                   </span>
-                  <h3 className="text-base font-bold text-white group-hover:text-purple-300 transition-colors line-clamp-2 mb-2 leading-snug">
+                  <h3 className="text-xs sm:text-base font-bold text-white group-hover:text-purple-300 transition-colors line-clamp-2 mb-1 sm:mb-2 leading-snug">
                     {review.title}
                   </h3>
-                  <p className="text-xs text-gray-400 leading-relaxed line-clamp-3 mb-4">
+                  <p className="hidden sm:block text-xs text-gray-400 leading-relaxed line-clamp-3 mb-4">
                     {review.text}
                   </p>
                 </div>
 
                 {/* Footer Metadata */}
-                <div className="border-t border-white/5 pt-3 mt-auto flex items-center justify-between text-[11px] text-gray-500">
-                  <div className="flex items-center gap-2">
-                    <User className="w-3.5 h-3.5 text-purple-400" />
-                    <span>{review.author}</span>
+                <div className="border-t border-white/5 pt-1.5 sm:pt-3 mt-auto flex items-center justify-between text-[9px] sm:text-[11px] text-gray-500">
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <User className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-purple-400" />
+                    <span className="truncate">{review.author}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5" />
-                    <span>{formatDate(review.publishedAt)}</span>
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                    <span className="truncate">{formatDate(review.publishedAt)}</span>
                   </div>
                 </div>
               </div>
