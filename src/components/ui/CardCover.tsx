@@ -15,8 +15,10 @@ interface CardCoverProps {
    * most cards, but still crops when the mismatch is inside ASPECT_RATIO_TOLERANCE. Pass
    * "contain" to always show the full image (blurred backdrop fills the rest), guaranteeing
    * zero crop regardless of aspect ratio — use where showing the whole cover matters more
-   * than filling every pixel. */
-  fit?: "auto" | "contain";
+   * than filling every pixel. Pass "cover" to always fill the card edge-to-edge (crops
+   * whatever doesn't fit) — use where a fully filled card matters more than showing 100%
+   * of the source image, e.g. a horizontal card housing a portrait cover. */
+  fit?: "auto" | "contain" | "cover";
 }
 
 // Se a proporção da imagem for parecida com a do card (dentro dessa margem), object-cover
@@ -96,8 +98,9 @@ export default function CardCover({
 
   // Enquanto a imagem atual não foi medida (troca de src, ex: fallback), assume cover — evita
   // um flash de "contain" antes da medição real, já que a maioria das capas cobre bem o card.
-  // fit="contain" força sempre a imagem inteira, sem depender da medição de aspecto.
-  const showBackdrop = fit === "contain" || (measured?.src === imgSrc && measured.fit === "contain");
+  // fit="contain"/"cover" força o resultado, ignorando a medição de aspecto.
+  const showBackdrop =
+    fit === "contain" || (fit === "auto" && measured?.src === imgSrc && measured.fit === "contain");
 
   if (optimized) {
     return (
