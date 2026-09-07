@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Rocket, ChevronRight, Calendar } from "lucide-react";
 import { Game } from "@/lib/types";
+import CardCover from "@/components/ui/CardCover";
 
 interface UpcomingReleasesProps {
   games: Game[];
@@ -38,13 +39,11 @@ export default function UpcomingReleases({ games }: UpcomingReleasesProps) {
             href={`/reviews/${game.slug}`}
             className="group snap-center shrink-0 w-[38%] sm:w-auto relative bg-[#0f0f18]/60 border border-white/5 rounded-2xl overflow-hidden hover:border-orange-500/30 transition-all duration-300 flex flex-col"
           >
-            <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#0a0a10]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={game.cover || "/cover_conteudo_nao_disponivel.png"}
+            <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#0a0a10]">
+              <CardCover
+                src={game.cover}
                 alt={game.title}
-                loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-95 transition-transform duration-500"
+                className="group-hover:scale-95 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f18] via-transparent to-transparent" />
               <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center gap-1 bg-black/70 backdrop-blur-md rounded-lg px-1.5 py-0.5 text-[9px] font-bold text-orange-300">

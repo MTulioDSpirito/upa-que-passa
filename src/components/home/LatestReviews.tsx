@@ -79,11 +79,11 @@ export default function LatestReviews({ games, reviews }: LatestReviewsProps) {
               className="group snap-center shrink-0 w-[72%] sm:w-full sm:max-w-[320px] flex flex-col bg-[#0f0f18]/60 backdrop-blur border border-white/5 hover:border-purple-500/20 rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-purple-950/10"
             >
               {/* Cover & Score Overlay */}
-              <div className="relative aspect-[3/4] w-full overflow-hidden">
+              <div className="relative aspect-[4/5] w-full overflow-hidden">
                 <CardCover
                   src={game.cover}
                   alt={game.title}
-                  className="group-hover:scale-105 transition-transform duration-500"
+                  className="group-hover:scale-100 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f18] via-[#0f0f18]/40 to-transparent" />
                 
