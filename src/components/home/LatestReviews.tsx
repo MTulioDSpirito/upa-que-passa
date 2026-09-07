@@ -47,7 +47,7 @@ export default function LatestReviews({ games, reviews }: LatestReviewsProps) {
   if (reviewsWithGames.length === 0) return null;
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-8 sm:py-16 border-t border-white/5">
+    <section className="max-w-7xl mx-auto px-4 py-8 sm:py-16 sm:border-t sm:border-white/5">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
         <div>
@@ -83,6 +83,7 @@ export default function LatestReviews({ games, reviews }: LatestReviewsProps) {
                 <CardCover
                   src={game.cover}
                   alt={game.title}
+                  fit="cover"
                   className="group-hover:scale-100 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f18] via-[#0f0f18]/40 to-transparent" />
