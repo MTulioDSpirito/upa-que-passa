@@ -90,8 +90,8 @@ export default function ReviewsClient({ initialReviews, initialGames }: { initia
     [REVIEWS, GAMES]
   );
 
-  const [currentYear, setCurrentYear] = useState<number>(2026);
-  const [currentMonth, setCurrentMonth] = useState<number>(7); // Default to August (7) to match system time/expected build year
+  const [currentYear, setCurrentYear] = useState<number>(() => new Date().getFullYear());
+  const [currentMonth, setCurrentMonth] = useState<number>(() => new Date().getMonth());
 
   useEffect(() => {
     const d = new Date();
@@ -198,6 +198,7 @@ export default function ReviewsClient({ initialReviews, initialGames }: { initia
               <div className="absolute -inset-1.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur-lg opacity-40 group-hover:opacity-70 transition-opacity duration-300"></div>
               <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-2xl">
                 <CardCover
+                  key={highlight.game!.id}
                   src={highlight.game!.cover}
                   alt={highlight.game!.title}
                   priority

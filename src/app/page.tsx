@@ -18,7 +18,7 @@ export default async function Home() {
   const [dbNews, dbReviews, dbFeaturedGames, dbBestReviewedGames, dbVideos, dbAllGamesForUpcoming] = await Promise.all([
     // 12 latest news articles (4 páginas de 3 no carrossel)
     prisma.newsArticle.findMany({
-      orderBy: { publishedAt: "desc" },
+      orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
       take: 12
     }),
     // Pool de reviews recentes (com jogos) para amostra aleatória na home

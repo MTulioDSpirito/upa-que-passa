@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 
 interface CardCoverProps {
   src: string;
@@ -74,6 +74,13 @@ export default function CardCover({
   fit = "auto",
 }: CardCoverProps) {
   const [imgSrc, setImgSrc] = useState(src || fallbackSrc);
+
+  // Sincroniza se a prop `src` mudar dinamicamente no componente pai
+  useEffect(() => {
+    setImgSrc(src || fallbackSrc);
+    setMeasured(null);
+  }, [src, fallbackSrc]);
+
   // Guarda pra qual src a medição vale, junto com o resultado — evita ler ref durante o render.
   const [measured, setMeasured] = useState<{ src: string; fit: "cover" | "contain" } | null>(null);
   const loading = priority ? "eager" : "lazy";
@@ -121,6 +128,7 @@ export default function CardCover({
           fill
           sizes={SIZES}
           priority={priority}
+          loading={priority ? "eager" : undefined}
           onLoad={handleLoad}
           className={`${showBackdrop ? "object-contain" : "object-cover"} ${className}`}
           onError={handleError}

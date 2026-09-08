@@ -27,7 +27,7 @@ export function mapNews(n: PrismaNewsArticle): NewsArticle {
 
 export async function readAdminNews(): Promise<NewsArticle[]> {
   const dbNews = await prisma.newsArticle.findMany({
-    orderBy: { createdAt: "desc" }
+    orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }]
   });
   return dbNews.map(mapNews);
 }
